@@ -4,24 +4,24 @@ package osint.osint;
 option go_package = "github.com/CyberAgent/mimosa-osint/proto/osint";
 
 message Osint {
-  uint64 osint_id = 1;
-  uint64 project_id = 2;
+  uint32 osint_id = 1;
+  uint32 project_id = 2;
   string name = 3;
   int64 created_at = 4;
   int64 updated_at = 5;
 }
 
 message OsintForUpsert {
-  uint64 osint_id = 1;
-  uint64 project_id = 2;
+  uint32 osint_id = 1;
+  uint32 project_id = 2;
   string name = 3;
 }
 
 message RelOsintDataSource {
-  uint64 rel_osint_datasource_id = 1;
-  uint64 osint_data_source_id = 2;
-  uint64 osint_id = 3;
-  uint64 project_id = 4;
+  uint32 rel_osint_datasource_id = 1;
+  uint32 osint_data_source_id = 2;
+  uint32 osint_id = 3;
+  uint32 project_id = 4;
   string resource_type = 5;
   string resource_name = 6;
   int64 created_at = 7;
@@ -29,17 +29,17 @@ message RelOsintDataSource {
 }
 
 message RelOsintDataSourceForUpsert {
-  uint64 rel_osint_datasource_id = 1;
-  uint64 osint_data_source_id = 2;
-  uint64 osint_id = 3;
+  uint32 rel_osint_datasource_id = 1;
+  uint32 osint_data_source_id = 2;
+  uint32 osint_id = 3;
   string name = 4;
-  uint64 project_id = 5;
+  uint32 project_id = 5;
   string resource_type = 6;
   string resource_name = 7;
 }
 
 message OsintDataSource {
-  uint64 osint_data_source_id = 1;
+  uint32 osint_data_source_id = 1;
   string name = 2;
   string description = 3;
   float max_score = 4;
@@ -48,7 +48,7 @@ message OsintDataSource {
 }
 
 message OsintDataSourceForUpsert {
-  uint64 osint_data_source_id = 1;
+  uint32 osint_data_source_id = 1;
   string name = 2;
   string description = 3;
   float max_score = 4;
