@@ -45,8 +45,6 @@ message ListOsintRequest {
   uint32 user_id = 1;
   uint32 project_id = 2;
   string name = 3;
-  int64 from_at = 4;
-  int64 to_at = 5;
 }
 
 message ListOsintResponse { repeated Osint osint = 1; }
@@ -97,8 +95,6 @@ message DeleteRelOsintDataSourceRequest {
 message ListOsintDataSourceRequest {
   uint32 user_id = 1;
   string name = 2;
-  int64 from_at = 3;
-  int64 to_at = 4;
 }
 
 message ListOsintDataSourceResponse {
@@ -131,8 +127,6 @@ message ListRelOsintDataSourceRequest {
   string resource_name = 3;
   uint32 osint_id = 4;
   uint32 osint_data_source_id = 5;
-  int64 from_at = 6;
-  int64 to_at = 7;
 }
 
 message ListRelOsintDataSourceResponse {

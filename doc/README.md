@@ -335,8 +335,6 @@ OsintDataSourceService
 | ----- | ---- | ----- | ----------- |
 | user_id | [uint32](#uint32) |  |  |
 | name | [string](#string) |  |  |
-| from_at | [int64](#int64) |  |  |
-| to_at | [int64](#int64) |  |  |
 
 
 
@@ -369,8 +367,6 @@ Osint Service
 | user_id | [uint32](#uint32) |  |  |
 | project_id | [uint32](#uint32) |  |  |
 | name | [string](#string) |  |  |
-| from_at | [int64](#int64) |  |  |
-| to_at | [int64](#int64) |  |  |
 
 
 
@@ -405,8 +401,6 @@ RelOsintDataSourceService
 | resource_name | [string](#string) |  |  |
 | osint_id | [uint32](#uint32) |  |  |
 | osint_data_source_id | [uint32](#uint32) |  |  |
-| from_at | [int64](#int64) |  |  |
-| to_at | [int64](#int64) |  |  |
 
 
 
