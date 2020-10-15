@@ -1,0 +1,146 @@
+syntax = "proto3";
+
+package osint.osint;
+option go_package = "github.com/CyberAgent/mimosa-osint/proto/osint";
+
+import "osint/entities.proto";
+import "google/protobuf/empty.proto";
+
+service OsintService {
+  // CRUD
+  rpc ListOsint(ListOsintRequest) returns (ListOsintResponse) {}
+  rpc GetOsint(GetOsintRequest) returns (GetOsintResponse) {}
+  rpc PutOsint(PutOsintRequest) returns (PutOsintResponse) {}
+  rpc DeleteOsint(DeleteOsintRequest) returns (google.protobuf.Empty) {}
+}
+
+service RelOsintDataSourceService {
+  // CRUD
+  rpc ListRelOsintDataSource(ListRelOsintDataSourceRequest)
+      returns (ListRelOsintDataSourceResponse) {}
+  rpc GetRelOsintDataSource(GetRelOsintDataSourceRequest)
+      returns (GetRelOsintDataSourceResponse) {}
+  rpc PutRelOsintDataSource(PutRelOsintDataSourceRequest)
+      returns (PutRelOsintDataSourceResponse) {}
+  rpc DeleteRelOsintDataSource(DeleteRelOsintDataSourceRequest)
+      returns (google.protobuf.Empty) {}
+  // KICK
+  rpc StartOsint(StartOsintRequest) returns (StartOsintResponse) {}
+}
+
+service OsintDataSourceService {
+  // CRUD
+  rpc ListOsintDataSource(ListOsintDataSourceRequest)
+      returns (ListOsintDataSourceResponse) {}
+  rpc GetOsintDataSource(GetOsintDataSourceRequest)
+      returns (GetOsintDataSourceResponse) {}
+  rpc PutOsintDataSource(PutOsintDataSourceRequest)
+      returns (PutOsintDataSourceResponse) {}
+  rpc DeleteOsintDataSource(DeleteOsintDataSourceRequest)
+      returns (google.protobuf.Empty) {}
+}
+
+// Osint Service
+message ListOsintRequest {
+  uint32 user_id = 1;
+  repeated uint32 project_id = 2;
+  string name = 3;
+  int64 from_at = 4;
+  int64 to_at = 5;
+}
+
+message ListOsintResponse { repeated Osint osint = 1; }
+
+message GetOsintRequest {
+  uint32 user_id = 1;
+  uint32 osint_id = 2;
+}
+
+message GetOsintResponse { Osint osint = 1; }
+
+message PutOsintRequest {
+  uint32 user_id = 1;
+  OsintForUpsert osint = 2;
+}
+
+message PutOsintResponse { Osint osint = 1; }
+
+message DeleteOsintRequest {
+  uint32 user_id = 1;
+  uint64 osint_id = 2;
+}
+
+// RelOsintDataSourceService
+message ListRelOsintDataSourceRequest {
+  uint64 user_id = 1;
+  repeated uint32 project_id = 2;
+  string resource_type = 3;
+  string resource_name = 4;
+  uint64 osint_id = 5;
+  uint64 osint_data_source_id = 6;
+  int64 from_at = 7;
+  int64 to_at = 8;
+}
+
+message ListRelOsintDataSourceResponse {
+  repeated RelOsintDataSource rel_osint_datasource = 1;
+}
+
+message GetRelOsintDataSourceRequest {
+  uint64 rel_osint_datasource_id = 1;
+  uint64 user_id = 2;
+}
+
+message GetRelOsintDataSourceResponse {
+  RelOsintDataSource rel_osint_datasource = 1;
+}
+
+message PutRelOsintDataSourceRequest {
+  uint32 user_id = 1;
+  RelOsintDataSourceForUpsert rel_osint_datasource = 2;
+}
+
+message PutRelOsintDataSourceResponse {
+  RelOsintDataSource rel_osint_datasource = 1;
+}
+
+message DeleteRelOsintDataSourceRequest {
+  uint32 user_id = 1;
+  uint64 rel_osint_datasource_id = 2;
+}
+
+// OsintDataSourceService
+message ListOsintDataSourceRequest {
+  uint64 user_id = 1;
+  string name = 2;
+  int64 from_at = 3;
+  int64 to_at = 4;
+}
+
+message ListOsintDataSourceResponse {
+  repeated OsintDataSource osint_data_source = 1;
+}
+
+message GetOsintDataSourceRequest {
+  uint64 osint_data_source_id = 1;
+  uint64 user_id = 2;
+}
+
+message GetOsintDataSourceResponse { OsintDataSource osint_data_source = 1; }
+
+message PutOsintDataSourceRequest {
+  uint32 user_id = 1;
+  OsintDataSourceForUpsert osint_data_source = 2;
+}
+
+message PutOsintDataSourceResponse { OsintDataSource osint_data_source = 1; }
+
+message DeleteOsintDataSourceRequest {
+  uint32 user_id = 1;
+  uint64 osint_data_source_id = 2;
+}
+
+// KICK Osint
+message StartOsintRequest { uint64 rel_osint_datasource_id = 1; }
+
+message StartOsintResponse { string message = 1; }
