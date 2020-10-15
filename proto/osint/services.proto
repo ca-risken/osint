@@ -127,12 +127,12 @@ message DeleteOsintDataSourceRequest {
 // RelOsintDataSourceService
 message ListRelOsintDataSourceRequest {
   uint32 project_id = 1;
-  string resource_type = 3;
-  string resource_name = 4;
-  uint64 osint_id = 5;
-  uint64 osint_data_source_id = 6;
-  int64 from_at = 7;
-  int64 to_at = 8;
+  string resource_type = 2;
+  string resource_name = 3;
+  uint64 osint_id = 4;
+  uint64 osint_data_source_id = 5;
+  int64 from_at = 6;
+  int64 to_at = 7;
 }
 
 message ListRelOsintDataSourceResponse {
