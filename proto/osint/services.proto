@@ -50,50 +50,32 @@ message ListOsintRequest {
 message ListOsintResponse { repeated Osint osint = 1; }
 
 message GetOsintRequest {
-  uint32 user_id = 1;
+  uint32 project_id = 1;
   uint32 osint_id = 2;
 }
 
 message GetOsintResponse { Osint osint = 1; }
 
 message PutOsintRequest {
-  uint32 user_id = 1;
+  uint32 project_id = 1;
   OsintForUpsert osint = 2;
 }
 
 message PutOsintResponse { Osint osint = 1; }
 
 message DeleteOsintRequest {
-  uint32 user_id = 1;
+  uint32 project_id = 1;
   uint32 osint_id = 2;
 }
 
 message GetRelOsintDataSourceRequest {
-  uint32 rel_osint_datasource_id = 1;
-  uint32 user_id = 2;
-}
-
-message GetRelOsintDataSourceResponse {
-  RelOsintDataSource rel_osint_datasource = 1;
-}
-
-message PutRelOsintDataSourceRequest {
-  uint32 user_id = 1;
-  RelOsintDataSourceForUpsert rel_osint_datasource = 2;
-}
-
-message PutRelOsintDataSourceResponse {
-  RelOsintDataSource rel_osint_datasource = 1;
-}
-
-message DeleteRelOsintDataSourceRequest {
-  uint32 user_id = 1;
-  uint32 rel_osint_datasource_id = 2;
+  uint32 rel_osint_data_source_id = 1;
+  uint32 project_id = 2;
 }
 
 // OsintDataSourceService
 message ListOsintDataSourceRequest {
-  uint32 user_id = 1;
+  uint32 project_id = 1;
   string name = 2;
 }
 
@@ -102,21 +84,21 @@ message ListOsintDataSourceResponse {
 }
 
 message GetOsintDataSourceRequest {
-  uint32 osint_data_source_id = 1;
-  uint32 user_id = 2;
+  uint32 project_id = 1;
+  uint32 osint_data_source_id = 2;
 }
 
 message GetOsintDataSourceResponse { OsintDataSource osint_data_source = 1; }
 
 message PutOsintDataSourceRequest {
-  uint32 user_id = 1;
+  uint32 project_id = 1;
   OsintDataSourceForUpsert osint_data_source = 2;
 }
 
 message PutOsintDataSourceResponse { OsintDataSource osint_data_source = 1; }
 
 message DeleteOsintDataSourceRequest {
-  uint32 user_id = 1;
+  uint32 project_id = 1;
   uint32 osint_data_source_id = 2;
 }
 
@@ -130,10 +112,31 @@ message ListRelOsintDataSourceRequest {
 }
 
 message ListRelOsintDataSourceResponse {
-  repeated RelOsintDataSource rel_osint_datasource = 1;
+  repeated RelOsintDataSource rel_osint_data_source = 1;
+}
+
+message GetRelOsintDataSourceResponse {
+  RelOsintDataSource rel_osint_data_source = 1;
+}
+
+message PutRelOsintDataSourceRequest {
+  uint32 project_id = 1;
+  RelOsintDataSourceForUpsert rel_osint_data_source = 2;
+}
+
+message PutRelOsintDataSourceResponse {
+  RelOsintDataSource rel_osint_data_source = 1;
+}
+
+message DeleteRelOsintDataSourceRequest {
+  uint32 project_id = 1;
+  uint32 rel_osint_data_source_id = 2;
 }
 
 // KICK Osint
-message StartOsintRequest { uint32 rel_osint_datasource_id = 1; }
+message StartOsintRequest {
+  uint32 project_id = 1;
+  uint32 rel_osint_data_source_id = 2;
+}
 
 message StartOsintResponse { string message = 1; }

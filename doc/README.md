@@ -11,6 +11,8 @@
     - [RelOsintDataSource](#osint.osint.RelOsintDataSource)
     - [RelOsintDataSourceForUpsert](#osint.osint.RelOsintDataSourceForUpsert)
   
+    - [Status](#osint.osint.Status)
+  
 - [osint/services.proto](#osint/services.proto)
     - [DeleteOsintDataSourceRequest](#osint.osint.DeleteOsintDataSourceRequest)
     - [DeleteOsintRequest](#osint.osint.DeleteOsintRequest)
@@ -133,12 +135,15 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| rel_osint_datasource_id | [uint32](#uint32) |  |  |
+| rel_osint_data_source_id | [uint32](#uint32) |  |  |
 | osint_data_source_id | [uint32](#uint32) |  |  |
 | osint_id | [uint32](#uint32) |  |  |
 | project_id | [uint32](#uint32) |  |  |
 | resource_type | [string](#string) |  |  |
 | resource_name | [string](#string) |  |  |
+| status | [Status](#osint.osint.Status) |  |  |
+| status_detail | [string](#string) |  |  |
+| scan_at | [int64](#int64) |  |  |
 | created_at | [int64](#int64) |  |  |
 | updated_at | [int64](#int64) |  |  |
 
@@ -155,19 +160,36 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| rel_osint_datasource_id | [uint32](#uint32) |  |  |
+| rel_osint_data_source_id | [uint32](#uint32) |  |  |
 | osint_data_source_id | [uint32](#uint32) |  |  |
 | osint_id | [uint32](#uint32) |  |  |
-| name | [string](#string) |  |  |
 | project_id | [uint32](#uint32) |  |  |
 | resource_type | [string](#string) |  |  |
 | resource_name | [string](#string) |  |  |
+| status | [Status](#osint.osint.Status) |  |  |
+| status_detail | [string](#string) |  |  |
+| scan_at | [int64](#int64) |  |  |
 
 
 
 
 
  
+
+
+<a name="osint.osint.Status"></a>
+
+### Status
+Status
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| UNKNOWN | 0 |  |
+| OK | 1 |  |
+| CONFIGURED | 2 |  |
+| NOT_CONFIGURED | 3 |  |
+| ERROR | 4 |  |
+
 
  
 
@@ -192,7 +214,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| user_id | [uint32](#uint32) |  |  |
+| project_id | [uint32](#uint32) |  |  |
 | osint_data_source_id | [uint32](#uint32) |  |  |
 
 
@@ -208,7 +230,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| user_id | [uint32](#uint32) |  |  |
+| project_id | [uint32](#uint32) |  |  |
 | osint_id | [uint32](#uint32) |  |  |
 
 
@@ -224,8 +246,8 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| user_id | [uint32](#uint32) |  |  |
-| rel_osint_datasource_id | [uint32](#uint32) |  |  |
+| project_id | [uint32](#uint32) |  |  |
+| rel_osint_data_source_id | [uint32](#uint32) |  |  |
 
 
 
@@ -240,8 +262,8 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
+| project_id | [uint32](#uint32) |  |  |
 | osint_data_source_id | [uint32](#uint32) |  |  |
-| user_id | [uint32](#uint32) |  |  |
 
 
 
@@ -271,7 +293,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| user_id | [uint32](#uint32) |  |  |
+| project_id | [uint32](#uint32) |  |  |
 | osint_id | [uint32](#uint32) |  |  |
 
 
@@ -302,8 +324,8 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| rel_osint_datasource_id | [uint32](#uint32) |  |  |
-| user_id | [uint32](#uint32) |  |  |
+| rel_osint_data_source_id | [uint32](#uint32) |  |  |
+| project_id | [uint32](#uint32) |  |  |
 
 
 
@@ -318,7 +340,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| rel_osint_datasource | [RelOsintDataSource](#osint.osint.RelOsintDataSource) |  |  |
+| rel_osint_data_source | [RelOsintDataSource](#osint.osint.RelOsintDataSource) |  |  |
 
 
 
@@ -333,7 +355,7 @@ OsintDataSourceService
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| user_id | [uint32](#uint32) |  |  |
+| project_id | [uint32](#uint32) |  |  |
 | name | [string](#string) |  |  |
 
 
@@ -415,7 +437,7 @@ RelOsintDataSourceService
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| rel_osint_datasource | [RelOsintDataSource](#osint.osint.RelOsintDataSource) | repeated |  |
+| rel_osint_data_source | [RelOsintDataSource](#osint.osint.RelOsintDataSource) | repeated |  |
 
 
 
@@ -430,7 +452,7 @@ RelOsintDataSourceService
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| user_id | [uint32](#uint32) |  |  |
+| project_id | [uint32](#uint32) |  |  |
 | osint_data_source | [OsintDataSourceForUpsert](#osint.osint.OsintDataSourceForUpsert) |  |  |
 
 
@@ -461,7 +483,7 @@ RelOsintDataSourceService
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| user_id | [uint32](#uint32) |  |  |
+| project_id | [uint32](#uint32) |  |  |
 | osint | [OsintForUpsert](#osint.osint.OsintForUpsert) |  |  |
 
 
@@ -492,8 +514,8 @@ RelOsintDataSourceService
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| user_id | [uint32](#uint32) |  |  |
-| rel_osint_datasource | [RelOsintDataSourceForUpsert](#osint.osint.RelOsintDataSourceForUpsert) |  |  |
+| project_id | [uint32](#uint32) |  |  |
+| rel_osint_data_source | [RelOsintDataSourceForUpsert](#osint.osint.RelOsintDataSourceForUpsert) |  |  |
 
 
 
@@ -508,7 +530,7 @@ RelOsintDataSourceService
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| rel_osint_datasource | [RelOsintDataSource](#osint.osint.RelOsintDataSource) |  |  |
+| rel_osint_data_source | [RelOsintDataSource](#osint.osint.RelOsintDataSource) |  |  |
 
 
 
@@ -523,7 +545,8 @@ KICK Osint
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| rel_osint_datasource_id | [uint32](#uint32) |  |  |
+| project_id | [uint32](#uint32) |  |  |
+| rel_osint_data_source_id | [uint32](#uint32) |  |  |
 
 
 
