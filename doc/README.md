@@ -367,7 +367,7 @@ Osint Service
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | user_id | [uint32](#uint32) |  |  |
-| project_id | [uint32](#uint32) | repeated |  |
+| project_id | [uint32](#uint32) |  |  |
 | name | [string](#string) |  |  |
 | from_at | [int64](#int64) |  |  |
 | to_at | [int64](#int64) |  |  |
@@ -400,8 +400,7 @@ RelOsintDataSourceService
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| user_id | [uint64](#uint64) |  |  |
-| project_id | [uint32](#uint32) | repeated |  |
+| project_id | [uint32](#uint32) |  |  |
 | resource_type | [string](#string) |  |  |
 | resource_name | [string](#string) |  |  |
 | osint_id | [uint64](#uint64) |  |  |

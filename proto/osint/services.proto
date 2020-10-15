@@ -43,7 +43,7 @@ service OsintDataSourceService {
 // Osint Service
 message ListOsintRequest {
   uint32 user_id = 1;
-  repeated uint32 project_id = 2;
+  uint32 project_id = 2;
   string name = 3;
   int64 from_at = 4;
   int64 to_at = 5;
@@ -68,22 +68,6 @@ message PutOsintResponse { Osint osint = 1; }
 message DeleteOsintRequest {
   uint32 user_id = 1;
   uint64 osint_id = 2;
-}
-
-// RelOsintDataSourceService
-message ListRelOsintDataSourceRequest {
-  uint64 user_id = 1;
-  repeated uint32 project_id = 2;
-  string resource_type = 3;
-  string resource_name = 4;
-  uint64 osint_id = 5;
-  uint64 osint_data_source_id = 6;
-  int64 from_at = 7;
-  int64 to_at = 8;
-}
-
-message ListRelOsintDataSourceResponse {
-  repeated RelOsintDataSource rel_osint_datasource = 1;
 }
 
 message GetRelOsintDataSourceRequest {
@@ -138,6 +122,21 @@ message PutOsintDataSourceResponse { OsintDataSource osint_data_source = 1; }
 message DeleteOsintDataSourceRequest {
   uint32 user_id = 1;
   uint64 osint_data_source_id = 2;
+}
+
+// RelOsintDataSourceService
+message ListRelOsintDataSourceRequest {
+  uint32 project_id = 1;
+  string resource_type = 3;
+  string resource_name = 4;
+  uint64 osint_id = 5;
+  uint64 osint_data_source_id = 6;
+  int64 from_at = 7;
+  int64 to_at = 8;
+}
+
+message ListRelOsintDataSourceResponse {
+  repeated RelOsintDataSource rel_osint_datasource = 1;
 }
 
 // KICK Osint
