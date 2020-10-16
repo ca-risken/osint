@@ -79,7 +79,6 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | osint_data_source_id | [uint32](#uint32) |  |  |
-| project_id | [uint32](#uint32) |  |  |
 | name | [string](#string) |  |  |
 | description | [string](#string) |  |  |
 | max_score | [float](#float) |  |  |
@@ -100,7 +99,6 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | osint_data_source_id | [uint32](#uint32) |  |  |
-| project_id | [uint32](#uint32) |  |  |
 | name | [string](#string) |  |  |
 | description | [string](#string) |  |  |
 | max_score | [float](#float) |  |  |

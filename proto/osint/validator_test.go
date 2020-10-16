@@ -210,7 +210,7 @@ func TestValidate_PutOsintDataSourceRequest(t *testing.T) {
 	}{
 		{
 			name:    "OK",
-			input:   &PutOsintDataSourceRequest{ProjectId: 1001, OsintDataSource: &OsintDataSourceForUpsert{Name: "name", ProjectId: 1001, Description: "description", MaxScore: 10.0}},
+			input:   &PutOsintDataSourceRequest{ProjectId: 1001, OsintDataSource: &OsintDataSourceForUpsert{Name: "name", Description: "description", MaxScore: 10.0}},
 			wantErr: false,
 		},
 		{
@@ -220,7 +220,7 @@ func TestValidate_PutOsintDataSourceRequest(t *testing.T) {
 		},
 		{
 			name:    "NG Required(ProjectId)",
-			input:   &PutOsintDataSourceRequest{OsintDataSource: &OsintDataSourceForUpsert{Name: "name", ProjectId: 1001, Description: "description", MaxScore: 10.0}},
+			input:   &PutOsintDataSourceRequest{OsintDataSource: &OsintDataSourceForUpsert{Name: "name", Description: "description", MaxScore: 10.0}},
 			wantErr: true,
 		},
 	}
@@ -489,47 +489,42 @@ func TestValidate_OsintDataSourceForUpsert(t *testing.T) {
 	}{
 		{
 			name:    "OK",
-			input:   &OsintDataSourceForUpsert{Name: "name", ProjectId: 1001, Description: "description", MaxScore: 100},
+			input:   &OsintDataSourceForUpsert{Name: "name", Description: "description", MaxScore: 100},
 			wantErr: false,
 		},
 		{
 			name:    "NG Length(name)",
-			input:   &OsintDataSourceForUpsert{Name: "123456789012345678901234567890123456789012345678901", ProjectId: 1001, Description: "description", MaxScore: 100},
+			input:   &OsintDataSourceForUpsert{Name: "123456789012345678901234567890123456789012345678901", Description: "description", MaxScore: 100},
 			wantErr: true,
 		},
 		{
 			name:    "NG Required(name)",
-			input:   &OsintDataSourceForUpsert{ProjectId: 1001, Description: "description", MaxScore: 100},
-			wantErr: true,
-		},
-		{
-			name:    "NG Required(ProjectId)",
-			input:   &OsintDataSourceForUpsert{Name: "name", Description: "description", MaxScore: 100},
+			input:   &OsintDataSourceForUpsert{Description: "description", MaxScore: 100},
 			wantErr: true,
 		},
 		{
 			name:    "NG Length(description)",
-			input:   &OsintDataSourceForUpsert{Name: "name", ProjectId: 1001, Description: "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012", MaxScore: 100},
+			input:   &OsintDataSourceForUpsert{Name: "name", Description: "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012", MaxScore: 100},
 			wantErr: true,
 		},
 		{
 			name:    "NG Required(description)",
-			input:   &OsintDataSourceForUpsert{Name: "name", ProjectId: 1001, MaxScore: 100},
+			input:   &OsintDataSourceForUpsert{Name: "name", MaxScore: 100},
 			wantErr: true,
 		},
 		{
 			name:    "NG Num Over(Max Score)",
-			input:   &OsintDataSourceForUpsert{Name: "name", ProjectId: 1001, Description: "description", MaxScore: 100000},
+			input:   &OsintDataSourceForUpsert{Name: "name", Description: "description", MaxScore: 100000},
 			wantErr: true,
 		},
 		{
 			name:    "NG Num Under(Max Score)",
-			input:   &OsintDataSourceForUpsert{Name: "name", ProjectId: 1001, Description: "description", MaxScore: -1.0},
+			input:   &OsintDataSourceForUpsert{Name: "name", Description: "description", MaxScore: -1.0},
 			wantErr: true,
 		},
 		{
 			name:    "NG Required(Max Score)",
-			input:   &OsintDataSourceForUpsert{Name: "name", ProjectId: 1001, Description: "description"},
+			input:   &OsintDataSourceForUpsert{Name: "name", Description: "description"},
 			wantErr: true,
 		},
 	}
