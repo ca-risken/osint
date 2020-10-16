@@ -6,7 +6,7 @@ import (
 
 // Osint entity
 type Osint struct {
-	OsintID   uint32 `gorm:"column:diagnosis_id"`
+	OsintID   uint32 `gorm:"primary_key"`
 	ProjectID uint32
 	Name      string
 	CreatedAt time.Time
