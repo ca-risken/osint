@@ -31,6 +31,9 @@ type RelOsintDataSource struct {
 	ProjectID            uint32
 	ResourceType         string
 	ResourceName         string
+	Status               string
+	StatusDetail         string
+	ScanAt               time.Time
 	CreatedAt            time.Time
 	UpdatedAt            time.Time
 }
