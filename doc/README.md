@@ -38,9 +38,7 @@
     - [StartOsintRequest](#osint.osint.StartOsintRequest)
     - [StartOsintResponse](#osint.osint.StartOsintResponse)
   
-    - [OsintDataSourceService](#osint.osint.OsintDataSourceService)
     - [OsintService](#osint.osint.OsintService)
-    - [RelOsintDataSourceService](#osint.osint.RelOsintDataSourceService)
   
 - [Scalar Value Types](#scalar-value-types)
 
@@ -350,7 +348,7 @@ Status
 <a name="osint.osint.ListOsintDataSourceRequest"></a>
 
 ### ListOsintDataSourceRequest
-OsintDataSourceService
+
 
 
 | Field | Type | Label | Description |
@@ -413,7 +411,7 @@ Osint Service
 <a name="osint.osint.ListRelOsintDataSourceRequest"></a>
 
 ### ListRelOsintDataSourceRequest
-RelOsintDataSourceService
+
 
 
 | Field | Type | Label | Description |
@@ -574,19 +572,6 @@ KICK Osint
  
 
 
-<a name="osint.osint.OsintDataSourceService"></a>
-
-### OsintDataSourceService
-
-
-| Method Name | Request Type | Response Type | Description |
-| ----------- | ------------ | ------------- | ------------|
-| ListOsintDataSource | [ListOsintDataSourceRequest](#osint.osint.ListOsintDataSourceRequest) | [ListOsintDataSourceResponse](#osint.osint.ListOsintDataSourceResponse) | CRUD |
-| GetOsintDataSource | [GetOsintDataSourceRequest](#osint.osint.GetOsintDataSourceRequest) | [GetOsintDataSourceResponse](#osint.osint.GetOsintDataSourceResponse) |  |
-| PutOsintDataSource | [PutOsintDataSourceRequest](#osint.osint.PutOsintDataSourceRequest) | [PutOsintDataSourceResponse](#osint.osint.PutOsintDataSourceResponse) |  |
-| DeleteOsintDataSource | [DeleteOsintDataSourceRequest](#osint.osint.DeleteOsintDataSourceRequest) | [.google.protobuf.Empty](#google.protobuf.Empty) |  |
-
-
 <a name="osint.osint.OsintService"></a>
 
 ### OsintService
@@ -594,23 +579,18 @@ KICK Osint
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| ListOsint | [ListOsintRequest](#osint.osint.ListOsintRequest) | [ListOsintResponse](#osint.osint.ListOsintResponse) | CRUD |
+| ListOsint | [ListOsintRequest](#osint.osint.ListOsintRequest) | [ListOsintResponse](#osint.osint.ListOsintResponse) | Osint |
 | GetOsint | [GetOsintRequest](#osint.osint.GetOsintRequest) | [GetOsintResponse](#osint.osint.GetOsintResponse) |  |
 | PutOsint | [PutOsintRequest](#osint.osint.PutOsintRequest) | [PutOsintResponse](#osint.osint.PutOsintResponse) |  |
 | DeleteOsint | [DeleteOsintRequest](#osint.osint.DeleteOsintRequest) | [.google.protobuf.Empty](#google.protobuf.Empty) |  |
-
-
-<a name="osint.osint.RelOsintDataSourceService"></a>
-
-### RelOsintDataSourceService
-
-
-| Method Name | Request Type | Response Type | Description |
-| ----------- | ------------ | ------------- | ------------|
-| ListRelOsintDataSource | [ListRelOsintDataSourceRequest](#osint.osint.ListRelOsintDataSourceRequest) | [ListRelOsintDataSourceResponse](#osint.osint.ListRelOsintDataSourceResponse) | CRUD |
+| ListRelOsintDataSource | [ListRelOsintDataSourceRequest](#osint.osint.ListRelOsintDataSourceRequest) | [ListRelOsintDataSourceResponse](#osint.osint.ListRelOsintDataSourceResponse) | RelOsintDataSource |
 | GetRelOsintDataSource | [GetRelOsintDataSourceRequest](#osint.osint.GetRelOsintDataSourceRequest) | [GetRelOsintDataSourceResponse](#osint.osint.GetRelOsintDataSourceResponse) |  |
 | PutRelOsintDataSource | [PutRelOsintDataSourceRequest](#osint.osint.PutRelOsintDataSourceRequest) | [PutRelOsintDataSourceResponse](#osint.osint.PutRelOsintDataSourceResponse) |  |
 | DeleteRelOsintDataSource | [DeleteRelOsintDataSourceRequest](#osint.osint.DeleteRelOsintDataSourceRequest) | [.google.protobuf.Empty](#google.protobuf.Empty) |  |
+| ListOsintDataSource | [ListOsintDataSourceRequest](#osint.osint.ListOsintDataSourceRequest) | [ListOsintDataSourceResponse](#osint.osint.ListOsintDataSourceResponse) | OsintDataSource |
+| GetOsintDataSource | [GetOsintDataSourceRequest](#osint.osint.GetOsintDataSourceRequest) | [GetOsintDataSourceResponse](#osint.osint.GetOsintDataSourceResponse) |  |
+| PutOsintDataSource | [PutOsintDataSourceRequest](#osint.osint.PutOsintDataSourceRequest) | [PutOsintDataSourceResponse](#osint.osint.PutOsintDataSourceResponse) |  |
+| DeleteOsintDataSource | [DeleteOsintDataSourceRequest](#osint.osint.DeleteOsintDataSourceRequest) | [.google.protobuf.Empty](#google.protobuf.Empty) |  |
 | StartOsint | [StartOsintRequest](#osint.osint.StartOsintRequest) | [StartOsintResponse](#osint.osint.StartOsintResponse) | KICK |
 
  

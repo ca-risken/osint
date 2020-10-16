@@ -7,15 +7,13 @@ import "osint/entities.proto";
 import "google/protobuf/empty.proto";
 
 service OsintService {
-  // CRUD
+  // Osint
   rpc ListOsint(ListOsintRequest) returns (ListOsintResponse) {}
   rpc GetOsint(GetOsintRequest) returns (GetOsintResponse) {}
   rpc PutOsint(PutOsintRequest) returns (PutOsintResponse) {}
   rpc DeleteOsint(DeleteOsintRequest) returns (google.protobuf.Empty) {}
-}
 
-service RelOsintDataSourceService {
-  // CRUD
+  // RelOsintDataSource
   rpc ListRelOsintDataSource(ListRelOsintDataSourceRequest)
       returns (ListRelOsintDataSourceResponse) {}
   rpc GetRelOsintDataSource(GetRelOsintDataSourceRequest)
@@ -24,12 +22,8 @@ service RelOsintDataSourceService {
       returns (PutRelOsintDataSourceResponse) {}
   rpc DeleteRelOsintDataSource(DeleteRelOsintDataSourceRequest)
       returns (google.protobuf.Empty) {}
-  // KICK
-  rpc StartOsint(StartOsintRequest) returns (StartOsintResponse) {}
-}
 
-service OsintDataSourceService {
-  // CRUD
+  // OsintDataSource
   rpc ListOsintDataSource(ListOsintDataSourceRequest)
       returns (ListOsintDataSourceResponse) {}
   rpc GetOsintDataSource(GetOsintDataSourceRequest)
@@ -38,6 +32,9 @@ service OsintDataSourceService {
       returns (PutOsintDataSourceResponse) {}
   rpc DeleteOsintDataSource(DeleteOsintDataSourceRequest)
       returns (google.protobuf.Empty) {}
+
+  // KICK
+  rpc StartOsint(StartOsintRequest) returns (StartOsintResponse) {}
 }
 
 // Osint Service
@@ -73,7 +70,6 @@ message GetRelOsintDataSourceRequest {
   uint32 project_id = 2;
 }
 
-// OsintDataSourceService
 message ListOsintDataSourceRequest {
   uint32 project_id = 1;
   string name = 2;
@@ -102,7 +98,6 @@ message DeleteOsintDataSourceRequest {
   uint32 osint_data_source_id = 2;
 }
 
-// RelOsintDataSourceService
 message ListRelOsintDataSourceRequest {
   uint32 project_id = 1;
   string resource_type = 2;
