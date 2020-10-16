@@ -39,9 +39,8 @@ service OsintService {
 
 // Osint Service
 message ListOsintRequest {
-  uint32 user_id = 1;
-  uint32 project_id = 2;
-  string name = 3;
+  uint32 project_id = 1;
+  string name = 2;
 }
 
 message ListOsintResponse { repeated Osint osint = 1; }

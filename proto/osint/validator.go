@@ -29,7 +29,7 @@ func (r *PutOsintRequest) Validate() error {
 		return errors.New("Required Osint")
 	}
 	if err := validation.ValidateStruct(r,
-		validation.Field(&r.ProjectId, validation.Required),
+		validation.Field(&r.ProjectId, validation.Required, validation.In(r.Osint.ProjectId)),
 	); err != nil {
 		return err
 	}
@@ -67,7 +67,7 @@ func (r *PutOsintDataSourceRequest) Validate() error {
 		return errors.New("Required OsintDataSource")
 	}
 	if err := validation.ValidateStruct(r,
-		validation.Field(&r.ProjectId, validation.Required),
+		validation.Field(&r.ProjectId, validation.Required, validation.In(r.OsintDataSource.ProjectId)),
 	); err != nil {
 		return err
 	}
@@ -105,7 +105,7 @@ func (r *PutRelOsintDataSourceRequest) Validate() error {
 		return errors.New("Required RelOsintDataSource")
 	}
 	if err := validation.ValidateStruct(r,
-		validation.Field(&r.ProjectId, validation.In(r.RelOsintDataSource.ProjectId), validation.Required),
+		validation.Field(&r.ProjectId, validation.Required, validation.In(r.RelOsintDataSource.ProjectId), validation.Required),
 	); err != nil {
 		return err
 	}
@@ -144,6 +144,7 @@ func (d *OsintForUpsert) Validate() error {
 func (d *OsintDataSourceForUpsert) Validate() error {
 	return validation.ValidateStruct(d,
 		validation.Field(&d.Name, validation.Required, validation.Length(0, 50)),
+		validation.Field(&d.ProjectId, validation.Required),
 		validation.Field(&d.Description, validation.Required, validation.Length(0, 200)),
 		validation.Field(&d.MaxScore, validation.Required, validation.Min(0.0), validation.Max(99999.0)),
 	)

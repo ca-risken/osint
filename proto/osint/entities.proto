@@ -19,18 +19,20 @@ message OsintForUpsert {
 
 message OsintDataSource {
   uint32 osint_data_source_id = 1;
-  string name = 2;
-  string description = 3;
-  float max_score = 4;
-  int64 created_at = 5;
-  int64 updated_at = 6;
+  uint32 project_id = 2;
+  string name = 3;
+  string description = 4;
+  float max_score = 5;
+  int64 created_at = 6;
+  int64 updated_at = 7;
 }
 
 message OsintDataSourceForUpsert {
   uint32 osint_data_source_id = 1;
-  string name = 2;
-  string description = 3;
-  float max_score = 4;
+  uint32 project_id = 2;
+  string name = 3;
+  string description = 4;
+  float max_score = 5;
 }
 
 message RelOsintDataSource {
