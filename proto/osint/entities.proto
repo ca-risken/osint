@@ -6,15 +6,17 @@ option go_package = "github.com/CyberAgent/mimosa-osint/proto/osint";
 message Osint {
   uint32 osint_id = 1;
   uint32 project_id = 2;
-  string name = 3;
-  int64 created_at = 4;
-  int64 updated_at = 5;
+  string resource_type = 3;
+  string resource_name = 4;
+  int64 created_at = 5;
+  int64 updated_at = 6;
 }
 
 message OsintForUpsert {
   uint32 osint_id = 1;
   uint32 project_id = 2;
-  string name = 3;
+  string resource_type = 3;
+  string resource_name = 4;
 }
 
 message OsintDataSource {
@@ -38,13 +40,11 @@ message RelOsintDataSource {
   uint32 osint_data_source_id = 2;
   uint32 osint_id = 3;
   uint32 project_id = 4;
-  string resource_type = 5;
-  string resource_name = 6;
-  Status status = 7;
-  string status_detail = 8;
-  int64 scan_at = 9;
-  int64 created_at = 10;
-  int64 updated_at = 11;
+  Status status = 5;
+  string status_detail = 6;
+  int64 scan_at = 7;
+  int64 created_at = 8;
+  int64 updated_at = 9;
 }
 
 message RelOsintDataSourceForUpsert {
@@ -52,11 +52,39 @@ message RelOsintDataSourceForUpsert {
   uint32 osint_data_source_id = 2;
   uint32 osint_id = 3;
   uint32 project_id = 4;
-  string resource_type = 5;
-  string resource_name = 6;
-  Status status = 7;
-  string status_detail = 8;
-  int64 scan_at = 9;
+  Status status = 5;
+  string status_detail = 6;
+  int64 scan_at = 7;
+}
+
+message RelOsintDetectWord {
+  uint32 rel_osint_detect_word_id = 1;
+  uint32 rel_osint_data_source_id = 2;
+  uint32 osint_detect_word_id = 3;
+  uint32 project_id = 4;
+  int64 created_at = 5;
+  int64 updated_at = 6;
+}
+
+message RelOsintDetectWordForUpsert {
+  uint32 rel_osint_detect_word_id = 1;
+  uint32 rel_osint_data_source_id = 2;
+  uint32 osint_detect_word_id = 3;
+  uint32 project_id = 4;
+}
+
+message OsintDetectWord {
+  uint32 osint_detect_word_id = 1;
+  string word = 2;
+  uint32 project_id = 3;
+  int64 created_at = 4;
+  int64 updated_at = 5;
+}
+
+message OsintDetectWordForUpsert {
+  uint32 osint_detect_word_id = 1;
+  string word = 2;
+  uint32 project_id = 3;
 }
 
 // Status

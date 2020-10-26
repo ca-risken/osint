@@ -37,3 +37,16 @@ type RelOsintDataSource struct {
 	CreatedAt            time.Time
 	UpdatedAt            time.Time
 }
+
+// RelOsintDetectWord entity
+type RelOsintDetectWord struct {
+	RelOsintDetectWordID uint32 `gorm:"primary_key"`
+	RelOsintDataSourceID uint32
+	OsintDetectWordID    uint32
+}
+
+// OsintDetectWord entity
+type OsintDetectWord struct {
+	OsintDetectWordID uint32 `gorm:"primary_key"`
+	Word              string
+}

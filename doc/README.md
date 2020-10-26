@@ -7,34 +7,52 @@
     - [Osint](#osint.osint.Osint)
     - [OsintDataSource](#osint.osint.OsintDataSource)
     - [OsintDataSourceForUpsert](#osint.osint.OsintDataSourceForUpsert)
+    - [OsintDetectWord](#osint.osint.OsintDetectWord)
+    - [OsintDetectWordForUpsert](#osint.osint.OsintDetectWordForUpsert)
     - [OsintForUpsert](#osint.osint.OsintForUpsert)
     - [RelOsintDataSource](#osint.osint.RelOsintDataSource)
     - [RelOsintDataSourceForUpsert](#osint.osint.RelOsintDataSourceForUpsert)
+    - [RelOsintDetectWord](#osint.osint.RelOsintDetectWord)
+    - [RelOsintDetectWordForUpsert](#osint.osint.RelOsintDetectWordForUpsert)
   
     - [Status](#osint.osint.Status)
   
 - [osint/services.proto](#osint/services.proto)
     - [DeleteOsintDataSourceRequest](#osint.osint.DeleteOsintDataSourceRequest)
+    - [DeleteOsintDetectWordRequest](#osint.osint.DeleteOsintDetectWordRequest)
     - [DeleteOsintRequest](#osint.osint.DeleteOsintRequest)
     - [DeleteRelOsintDataSourceRequest](#osint.osint.DeleteRelOsintDataSourceRequest)
+    - [DeleteRelOsintDetectWordRequest](#osint.osint.DeleteRelOsintDetectWordRequest)
     - [GetOsintDataSourceRequest](#osint.osint.GetOsintDataSourceRequest)
     - [GetOsintDataSourceResponse](#osint.osint.GetOsintDataSourceResponse)
+    - [GetOsintDetectWordRequest](#osint.osint.GetOsintDetectWordRequest)
+    - [GetOsintDetectWordResponse](#osint.osint.GetOsintDetectWordResponse)
     - [GetOsintRequest](#osint.osint.GetOsintRequest)
     - [GetOsintResponse](#osint.osint.GetOsintResponse)
     - [GetRelOsintDataSourceRequest](#osint.osint.GetRelOsintDataSourceRequest)
     - [GetRelOsintDataSourceResponse](#osint.osint.GetRelOsintDataSourceResponse)
+    - [GetRelOsintDetectWordRequest](#osint.osint.GetRelOsintDetectWordRequest)
+    - [GetRelOsintDetectWordResponse](#osint.osint.GetRelOsintDetectWordResponse)
     - [ListOsintDataSourceRequest](#osint.osint.ListOsintDataSourceRequest)
     - [ListOsintDataSourceResponse](#osint.osint.ListOsintDataSourceResponse)
+    - [ListOsintDetectWordRequest](#osint.osint.ListOsintDetectWordRequest)
+    - [ListOsintDetectWordResponse](#osint.osint.ListOsintDetectWordResponse)
     - [ListOsintRequest](#osint.osint.ListOsintRequest)
     - [ListOsintResponse](#osint.osint.ListOsintResponse)
     - [ListRelOsintDataSourceRequest](#osint.osint.ListRelOsintDataSourceRequest)
     - [ListRelOsintDataSourceResponse](#osint.osint.ListRelOsintDataSourceResponse)
+    - [ListRelOsintDetectWordRequest](#osint.osint.ListRelOsintDetectWordRequest)
+    - [ListRelOsintDetectWordResponse](#osint.osint.ListRelOsintDetectWordResponse)
     - [PutOsintDataSourceRequest](#osint.osint.PutOsintDataSourceRequest)
     - [PutOsintDataSourceResponse](#osint.osint.PutOsintDataSourceResponse)
+    - [PutOsintDetectWordRequest](#osint.osint.PutOsintDetectWordRequest)
+    - [PutOsintDetectWordResponse](#osint.osint.PutOsintDetectWordResponse)
     - [PutOsintRequest](#osint.osint.PutOsintRequest)
     - [PutOsintResponse](#osint.osint.PutOsintResponse)
     - [PutRelOsintDataSourceRequest](#osint.osint.PutRelOsintDataSourceRequest)
     - [PutRelOsintDataSourceResponse](#osint.osint.PutRelOsintDataSourceResponse)
+    - [PutRelOsintDetectWordRequest](#osint.osint.PutRelOsintDetectWordRequest)
+    - [PutRelOsintDetectWordResponse](#osint.osint.PutRelOsintDetectWordResponse)
     - [StartOsintRequest](#osint.osint.StartOsintRequest)
     - [StartOsintResponse](#osint.osint.StartOsintResponse)
   
@@ -61,7 +79,8 @@
 | ----- | ---- | ----- | ----------- |
 | osint_id | [uint32](#uint32) |  |  |
 | project_id | [uint32](#uint32) |  |  |
-| name | [string](#string) |  |  |
+| resource_type | [string](#string) |  |  |
+| resource_name | [string](#string) |  |  |
 | created_at | [int64](#int64) |  |  |
 | updated_at | [int64](#int64) |  |  |
 
@@ -108,6 +127,42 @@
 
 
 
+<a name="osint.osint.OsintDetectWord"></a>
+
+### OsintDetectWord
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| osint_detect_word_id | [uint32](#uint32) |  |  |
+| word | [string](#string) |  |  |
+| project_id | [uint32](#uint32) |  |  |
+| created_at | [int64](#int64) |  |  |
+| updated_at | [int64](#int64) |  |  |
+
+
+
+
+
+
+<a name="osint.osint.OsintDetectWordForUpsert"></a>
+
+### OsintDetectWordForUpsert
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| osint_detect_word_id | [uint32](#uint32) |  |  |
+| word | [string](#string) |  |  |
+| project_id | [uint32](#uint32) |  |  |
+
+
+
+
+
+
 <a name="osint.osint.OsintForUpsert"></a>
 
 ### OsintForUpsert
@@ -118,7 +173,8 @@
 | ----- | ---- | ----- | ----------- |
 | osint_id | [uint32](#uint32) |  |  |
 | project_id | [uint32](#uint32) |  |  |
-| name | [string](#string) |  |  |
+| resource_type | [string](#string) |  |  |
+| resource_name | [string](#string) |  |  |
 
 
 
@@ -137,8 +193,6 @@
 | osint_data_source_id | [uint32](#uint32) |  |  |
 | osint_id | [uint32](#uint32) |  |  |
 | project_id | [uint32](#uint32) |  |  |
-| resource_type | [string](#string) |  |  |
-| resource_name | [string](#string) |  |  |
 | status | [Status](#osint.osint.Status) |  |  |
 | status_detail | [string](#string) |  |  |
 | scan_at | [int64](#int64) |  |  |
@@ -162,11 +216,47 @@
 | osint_data_source_id | [uint32](#uint32) |  |  |
 | osint_id | [uint32](#uint32) |  |  |
 | project_id | [uint32](#uint32) |  |  |
-| resource_type | [string](#string) |  |  |
-| resource_name | [string](#string) |  |  |
 | status | [Status](#osint.osint.Status) |  |  |
 | status_detail | [string](#string) |  |  |
 | scan_at | [int64](#int64) |  |  |
+
+
+
+
+
+
+<a name="osint.osint.RelOsintDetectWord"></a>
+
+### RelOsintDetectWord
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| rel_osint_detect_word_id | [uint32](#uint32) |  |  |
+| rel_osint_data_source_id | [uint32](#uint32) |  |  |
+| osint_detect_word_id | [uint32](#uint32) |  |  |
+| project_id | [uint32](#uint32) |  |  |
+| created_at | [int64](#int64) |  |  |
+| updated_at | [int64](#int64) |  |  |
+
+
+
+
+
+
+<a name="osint.osint.RelOsintDetectWordForUpsert"></a>
+
+### RelOsintDetectWordForUpsert
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| rel_osint_detect_word_id | [uint32](#uint32) |  |  |
+| rel_osint_data_source_id | [uint32](#uint32) |  |  |
+| osint_detect_word_id | [uint32](#uint32) |  |  |
+| project_id | [uint32](#uint32) |  |  |
 
 
 
@@ -220,6 +310,22 @@ Status
 
 
 
+<a name="osint.osint.DeleteOsintDetectWordRequest"></a>
+
+### DeleteOsintDetectWordRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| project_id | [uint32](#uint32) |  |  |
+| osint_detect_word_id | [uint32](#uint32) |  |  |
+
+
+
+
+
+
 <a name="osint.osint.DeleteOsintRequest"></a>
 
 ### DeleteOsintRequest
@@ -252,6 +358,22 @@ Status
 
 
 
+<a name="osint.osint.DeleteRelOsintDetectWordRequest"></a>
+
+### DeleteRelOsintDetectWordRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| project_id | [uint32](#uint32) |  |  |
+| rel_osint_detect_word_id | [uint32](#uint32) |  |  |
+
+
+
+
+
+
 <a name="osint.osint.GetOsintDataSourceRequest"></a>
 
 ### GetOsintDataSourceRequest
@@ -277,6 +399,37 @@ Status
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | osint_data_source | [OsintDataSource](#osint.osint.OsintDataSource) |  |  |
+
+
+
+
+
+
+<a name="osint.osint.GetOsintDetectWordRequest"></a>
+
+### GetOsintDetectWordRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| project_id | [uint32](#uint32) |  |  |
+| osint_detect_word_id | [uint32](#uint32) |  |  |
+
+
+
+
+
+
+<a name="osint.osint.GetOsintDetectWordResponse"></a>
+
+### GetOsintDetectWordResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| osint_detect_word | [OsintDetectWord](#osint.osint.OsintDetectWord) |  |  |
 
 
 
@@ -345,6 +498,37 @@ Status
 
 
 
+<a name="osint.osint.GetRelOsintDetectWordRequest"></a>
+
+### GetRelOsintDetectWordRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| project_id | [uint32](#uint32) |  |  |
+| rel_osint_detect_word_id | [uint32](#uint32) |  |  |
+
+
+
+
+
+
+<a name="osint.osint.GetRelOsintDetectWordResponse"></a>
+
+### GetRelOsintDetectWordResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| rel_osint_detect_word | [RelOsintDetectWord](#osint.osint.RelOsintDetectWord) |  |  |
+
+
+
+
+
+
 <a name="osint.osint.ListOsintDataSourceRequest"></a>
 
 ### ListOsintDataSourceRequest
@@ -370,6 +554,36 @@ Status
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | osint_data_source | [OsintDataSource](#osint.osint.OsintDataSource) | repeated |  |
+
+
+
+
+
+
+<a name="osint.osint.ListOsintDetectWordRequest"></a>
+
+### ListOsintDetectWordRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| project_id | [uint32](#uint32) |  |  |
+
+
+
+
+
+
+<a name="osint.osint.ListOsintDetectWordResponse"></a>
+
+### ListOsintDetectWordResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| osint_detect_word | [OsintDetectWord](#osint.osint.OsintDetectWord) | repeated |  |
 
 
 
@@ -441,6 +655,37 @@ Osint Service
 
 
 
+<a name="osint.osint.ListRelOsintDetectWordRequest"></a>
+
+### ListRelOsintDetectWordRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| project_id | [uint32](#uint32) |  |  |
+| rel_osint_data_source_id | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="osint.osint.ListRelOsintDetectWordResponse"></a>
+
+### ListRelOsintDetectWordResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| rel_osint_detect_word | [RelOsintDetectWord](#osint.osint.RelOsintDetectWord) | repeated |  |
+
+
+
+
+
+
 <a name="osint.osint.PutOsintDataSourceRequest"></a>
 
 ### PutOsintDataSourceRequest
@@ -466,6 +711,37 @@ Osint Service
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | osint_data_source | [OsintDataSource](#osint.osint.OsintDataSource) |  |  |
+
+
+
+
+
+
+<a name="osint.osint.PutOsintDetectWordRequest"></a>
+
+### PutOsintDetectWordRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| project_id | [uint32](#uint32) |  |  |
+| osint_detect_word | [OsintDetectWordForUpsert](#osint.osint.OsintDetectWordForUpsert) |  |  |
+
+
+
+
+
+
+<a name="osint.osint.PutOsintDetectWordResponse"></a>
+
+### PutOsintDetectWordResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| osint_detect_word | [OsintDetectWord](#osint.osint.OsintDetectWord) |  |  |
 
 
 
@@ -534,6 +810,37 @@ Osint Service
 
 
 
+<a name="osint.osint.PutRelOsintDetectWordRequest"></a>
+
+### PutRelOsintDetectWordRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| project_id | [uint32](#uint32) |  |  |
+| rel_osint_detect_word | [RelOsintDetectWordForUpsert](#osint.osint.RelOsintDetectWordForUpsert) |  |  |
+
+
+
+
+
+
+<a name="osint.osint.PutRelOsintDetectWordResponse"></a>
+
+### PutRelOsintDetectWordResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| rel_osint_detect_word | [RelOsintDetectWord](#osint.osint.RelOsintDetectWord) |  |  |
+
+
+
+
+
+
 <a name="osint.osint.StartOsintRequest"></a>
 
 ### StartOsintRequest
@@ -590,6 +897,14 @@ KICK Osint
 | GetOsintDataSource | [GetOsintDataSourceRequest](#osint.osint.GetOsintDataSourceRequest) | [GetOsintDataSourceResponse](#osint.osint.GetOsintDataSourceResponse) |  |
 | PutOsintDataSource | [PutOsintDataSourceRequest](#osint.osint.PutOsintDataSourceRequest) | [PutOsintDataSourceResponse](#osint.osint.PutOsintDataSourceResponse) |  |
 | DeleteOsintDataSource | [DeleteOsintDataSourceRequest](#osint.osint.DeleteOsintDataSourceRequest) | [.google.protobuf.Empty](#google.protobuf.Empty) |  |
+| ListRelOsintDetectWord | [ListRelOsintDetectWordRequest](#osint.osint.ListRelOsintDetectWordRequest) | [ListRelOsintDetectWordResponse](#osint.osint.ListRelOsintDetectWordResponse) | RelOsintDetectWord |
+| GetRelOsintDetectWord | [GetRelOsintDetectWordRequest](#osint.osint.GetRelOsintDetectWordRequest) | [GetRelOsintDetectWordResponse](#osint.osint.GetRelOsintDetectWordResponse) |  |
+| PutRelOsintDetectWord | [PutRelOsintDetectWordRequest](#osint.osint.PutRelOsintDetectWordRequest) | [PutRelOsintDetectWordResponse](#osint.osint.PutRelOsintDetectWordResponse) |  |
+| DeleteRelOsintDetectWord | [DeleteRelOsintDetectWordRequest](#osint.osint.DeleteRelOsintDetectWordRequest) | [.google.protobuf.Empty](#google.protobuf.Empty) |  |
+| ListOsintDetectWord | [ListOsintDetectWordRequest](#osint.osint.ListOsintDetectWordRequest) | [ListOsintDetectWordResponse](#osint.osint.ListOsintDetectWordResponse) | OsintDetectWord |
+| GetOsintDetectWord | [GetOsintDetectWordRequest](#osint.osint.GetOsintDetectWordRequest) | [GetOsintDetectWordResponse](#osint.osint.GetOsintDetectWordResponse) |  |
+| PutOsintDetectWord | [PutOsintDetectWordRequest](#osint.osint.PutOsintDetectWordRequest) | [PutOsintDetectWordResponse](#osint.osint.PutOsintDetectWordResponse) |  |
+| DeleteOsintDetectWord | [DeleteOsintDetectWordRequest](#osint.osint.DeleteOsintDetectWordRequest) | [.google.protobuf.Empty](#google.protobuf.Empty) |  |
 | StartOsint | [StartOsintRequest](#osint.osint.StartOsintRequest) | [StartOsintResponse](#osint.osint.StartOsintResponse) | KICK |
 
  

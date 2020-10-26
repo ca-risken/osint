@@ -33,6 +33,25 @@ service OsintService {
   rpc DeleteOsintDataSource(DeleteOsintDataSourceRequest)
       returns (google.protobuf.Empty) {}
 
+  // RelOsintDetectWord
+  rpc ListRelOsintDetectWord(ListRelOsintDetectWordRequest)
+      returns (ListRelOsintDetectWordResponse) {}
+  rpc GetRelOsintDetectWord(GetRelOsintDetectWordRequest)
+      returns (GetRelOsintDetectWordResponse) {}
+  rpc PutRelOsintDetectWord(PutRelOsintDetectWordRequest)
+      returns (PutRelOsintDetectWordResponse) {}
+  rpc DeleteRelOsintDetectWord(DeleteRelOsintDetectWordRequest)
+      returns (google.protobuf.Empty) {}
+
+  // OsintDetectWord
+  rpc ListOsintDetectWord(ListOsintDetectWordRequest)
+      returns (ListOsintDetectWordResponse) {}
+  rpc GetOsintDetectWord(GetOsintDetectWordRequest)
+      returns (GetOsintDetectWordResponse) {}
+  rpc PutOsintDetectWord(PutOsintDetectWordRequest)
+      returns (PutOsintDetectWordResponse) {}
+  rpc DeleteOsintDetectWord(DeleteOsintDetectWordRequest)
+      returns (google.protobuf.Empty) {}
   // KICK
   rpc StartOsint(StartOsintRequest) returns (StartOsintResponse) {}
 }
@@ -62,11 +81,6 @@ message PutOsintResponse { Osint osint = 1; }
 message DeleteOsintRequest {
   uint32 project_id = 1;
   uint32 osint_id = 2;
-}
-
-message GetRelOsintDataSourceRequest {
-  uint32 rel_osint_data_source_id = 1;
-  uint32 project_id = 2;
 }
 
 message ListOsintDataSourceRequest {
@@ -109,6 +123,11 @@ message ListRelOsintDataSourceResponse {
   repeated RelOsintDataSource rel_osint_data_source = 1;
 }
 
+message GetRelOsintDataSourceRequest {
+  uint32 rel_osint_data_source_id = 1;
+  uint32 project_id = 2;
+}
+
 message GetRelOsintDataSourceResponse {
   RelOsintDataSource rel_osint_data_source = 1;
 }
@@ -125,6 +144,63 @@ message PutRelOsintDataSourceResponse {
 message DeleteRelOsintDataSourceRequest {
   uint32 project_id = 1;
   uint32 rel_osint_data_source_id = 2;
+}
+
+message ListRelOsintDetectWordRequest {
+  uint32 project_id = 1;
+  string rel_osint_data_source_id = 2;
+}
+
+message ListRelOsintDetectWordResponse {
+  repeated RelOsintDetectWord rel_osint_detect_word = 1;
+}
+
+message GetRelOsintDetectWordRequest {
+  uint32 project_id = 1;
+  uint32 rel_osint_detect_word_id = 2;
+}
+
+message GetRelOsintDetectWordResponse {
+  RelOsintDetectWord rel_osint_detect_word = 1;
+}
+
+message PutRelOsintDetectWordRequest {
+  uint32 project_id = 1;
+  RelOsintDetectWordForUpsert rel_osint_detect_word = 2;
+}
+
+message PutRelOsintDetectWordResponse {
+  RelOsintDetectWord rel_osint_detect_word = 1;
+}
+
+message DeleteRelOsintDetectWordRequest {
+  uint32 project_id = 1;
+  uint32 rel_osint_detect_word_id = 2;
+}
+
+message ListOsintDetectWordRequest { uint32 project_id = 1; }
+
+message ListOsintDetectWordResponse {
+  repeated OsintDetectWord osint_detect_word = 1;
+}
+
+message GetOsintDetectWordRequest {
+  uint32 project_id = 1;
+  uint32 osint_detect_word_id = 2;
+}
+
+message GetOsintDetectWordResponse { OsintDetectWord osint_detect_word = 1; }
+
+message PutOsintDetectWordRequest {
+  uint32 project_id = 1;
+  OsintDetectWordForUpsert osint_detect_word = 2;
+}
+
+message PutOsintDetectWordResponse { OsintDetectWord osint_detect_word = 1; }
+
+message DeleteOsintDetectWordRequest {
+  uint32 project_id = 1;
+  uint32 osint_detect_word_id = 2;
 }
 
 // KICK Osint
