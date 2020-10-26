@@ -7,5 +7,5 @@ type OsintQueueMessage struct {
 	ProjectID            uint32 `json:"project_id"`
 	ResourceName         string `json:"resource_name"`
 	ResourceType         string `json:"resoorce_type"`
-	DetectWort           string `json:"detect_word"`
+	DetectWord           string `json:"detect_word"`
 }
