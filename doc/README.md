@@ -692,7 +692,7 @@ Osint Service
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | project_id | [uint32](#uint32) |  |  |
-| rel_osint_data_source_id | [string](#string) |  |  |
+| rel_osint_data_source_id | [uint32](#uint32) |  |  |
 
 
 
