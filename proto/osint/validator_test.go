@@ -685,25 +685,25 @@ func TestValidate_DeleteOsintDetectWordRequest(t *testing.T) {
 	}
 }
 
-func TestValidate_StartOsintRequest(t *testing.T) {
+func TestValidate_InvokeScanRequest(t *testing.T) {
 	cases := []struct {
 		name    string
-		input   *StartOsintRequest
+		input   *InvokeScanRequest
 		wantErr bool
 	}{
 		{
 			name:    "OK",
-			input:   &StartOsintRequest{ProjectId: 1001, RelOsintDataSourceId: 1002},
+			input:   &InvokeScanRequest{ProjectId: 1001, RelOsintDataSourceId: 1002},
 			wantErr: false,
 		},
 		{
 			name:    "NG Required(project_id)",
-			input:   &StartOsintRequest{RelOsintDataSourceId: 1002},
+			input:   &InvokeScanRequest{RelOsintDataSourceId: 1002},
 			wantErr: true,
 		},
 		{
 			name:    "NG Required(rel_osint_data_source_id)",
-			input:   &StartOsintRequest{ProjectId: 1001},
+			input:   &InvokeScanRequest{ProjectId: 1001},
 			wantErr: true,
 		},
 	}

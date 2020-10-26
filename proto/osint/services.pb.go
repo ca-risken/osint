@@ -1852,8 +1852,8 @@ func (x *DeleteOsintDetectWordRequest) GetOsintDetectWordId() uint32 {
 	return 0
 }
 
-// KICK Osint
-type StartOsintRequest struct {
+// Invoke Scan
+type InvokeScanRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1862,8 +1862,8 @@ type StartOsintRequest struct {
 	RelOsintDataSourceId uint32 `protobuf:"varint,2,opt,name=rel_osint_data_source_id,json=relOsintDataSourceId,proto3" json:"rel_osint_data_source_id,omitempty"`
 }
 
-func (x *StartOsintRequest) Reset() {
-	*x = StartOsintRequest{}
+func (x *InvokeScanRequest) Reset() {
+	*x = InvokeScanRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_osint_services_proto_msgTypes[35]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1871,13 +1871,13 @@ func (x *StartOsintRequest) Reset() {
 	}
 }
 
-func (x *StartOsintRequest) String() string {
+func (x *InvokeScanRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*StartOsintRequest) ProtoMessage() {}
+func (*InvokeScanRequest) ProtoMessage() {}
 
-func (x *StartOsintRequest) ProtoReflect() protoreflect.Message {
+func (x *InvokeScanRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_osint_services_proto_msgTypes[35]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1889,26 +1889,26 @@ func (x *StartOsintRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use StartOsintRequest.ProtoReflect.Descriptor instead.
-func (*StartOsintRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use InvokeScanRequest.ProtoReflect.Descriptor instead.
+func (*InvokeScanRequest) Descriptor() ([]byte, []int) {
 	return file_osint_services_proto_rawDescGZIP(), []int{35}
 }
 
-func (x *StartOsintRequest) GetProjectId() uint32 {
+func (x *InvokeScanRequest) GetProjectId() uint32 {
 	if x != nil {
 		return x.ProjectId
 	}
 	return 0
 }
 
-func (x *StartOsintRequest) GetRelOsintDataSourceId() uint32 {
+func (x *InvokeScanRequest) GetRelOsintDataSourceId() uint32 {
 	if x != nil {
 		return x.RelOsintDataSourceId
 	}
 	return 0
 }
 
-type StartOsintResponse struct {
+type InvokeScanResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1916,8 +1916,8 @@ type StartOsintResponse struct {
 	Message string `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
 }
 
-func (x *StartOsintResponse) Reset() {
-	*x = StartOsintResponse{}
+func (x *InvokeScanResponse) Reset() {
+	*x = InvokeScanResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_osint_services_proto_msgTypes[36]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1925,13 +1925,13 @@ func (x *StartOsintResponse) Reset() {
 	}
 }
 
-func (x *StartOsintResponse) String() string {
+func (x *InvokeScanResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*StartOsintResponse) ProtoMessage() {}
+func (*InvokeScanResponse) ProtoMessage() {}
 
-func (x *StartOsintResponse) ProtoReflect() protoreflect.Message {
+func (x *InvokeScanResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_osint_services_proto_msgTypes[36]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1943,12 +1943,12 @@ func (x *StartOsintResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use StartOsintResponse.ProtoReflect.Descriptor instead.
-func (*StartOsintResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use InvokeScanResponse.ProtoReflect.Descriptor instead.
+func (*InvokeScanResponse) Descriptor() ([]byte, []int) {
 	return file_osint_services_proto_rawDescGZIP(), []int{36}
 }
 
-func (x *StartOsintResponse) GetMessage() string {
+func (x *InvokeScanResponse) GetMessage() string {
 	if x != nil {
 		return x.Message
 	}
@@ -2204,14 +2204,14 @@ var file_osint_services_proto_rawDesc = []byte{
 	0x0a, 0x14, 0x6f, 0x73, 0x69, 0x6e, 0x74, 0x5f, 0x64, 0x65, 0x74, 0x65, 0x63, 0x74, 0x5f, 0x77,
 	0x6f, 0x72, 0x64, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x11, 0x6f, 0x73,
 	0x69, 0x6e, 0x74, 0x44, 0x65, 0x74, 0x65, 0x63, 0x74, 0x57, 0x6f, 0x72, 0x64, 0x49, 0x64, 0x22,
-	0x6a, 0x0a, 0x11, 0x53, 0x74, 0x61, 0x72, 0x74, 0x4f, 0x73, 0x69, 0x6e, 0x74, 0x52, 0x65, 0x71,
+	0x6a, 0x0a, 0x11, 0x49, 0x6e, 0x76, 0x6f, 0x6b, 0x65, 0x53, 0x63, 0x61, 0x6e, 0x52, 0x65, 0x71,
 	0x75, 0x65, 0x73, 0x74, 0x12, 0x1d, 0x0a, 0x0a, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x5f,
 	0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x09, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63,
 	0x74, 0x49, 0x64, 0x12, 0x36, 0x0a, 0x18, 0x72, 0x65, 0x6c, 0x5f, 0x6f, 0x73, 0x69, 0x6e, 0x74,
 	0x5f, 0x64, 0x61, 0x74, 0x61, 0x5f, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x5f, 0x69, 0x64, 0x18,
 	0x02, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x14, 0x72, 0x65, 0x6c, 0x4f, 0x73, 0x69, 0x6e, 0x74, 0x44,
-	0x61, 0x74, 0x61, 0x53, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x49, 0x64, 0x22, 0x2e, 0x0a, 0x12, 0x53,
-	0x74, 0x61, 0x72, 0x74, 0x4f, 0x73, 0x69, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x61, 0x74, 0x61, 0x53, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x49, 0x64, 0x22, 0x2e, 0x0a, 0x12, 0x49,
+	0x6e, 0x76, 0x6f, 0x6b, 0x65, 0x53, 0x63, 0x61, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
 	0x65, 0x12, 0x18, 0x0a, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01,
 	0x28, 0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x32, 0xbf, 0x10, 0x0a, 0x0c,
 	0x4f, 0x73, 0x69, 0x6e, 0x74, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x4c, 0x0a, 0x09,
@@ -2341,11 +2341,11 @@ var file_osint_services_proto_rawDesc = []byte{
 	0x74, 0x44, 0x65, 0x74, 0x65, 0x63, 0x74, 0x57, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65,
 	0x73, 0x74, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74,
 	0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x12, 0x4f, 0x0a, 0x0a,
-	0x53, 0x74, 0x61, 0x72, 0x74, 0x4f, 0x73, 0x69, 0x6e, 0x74, 0x12, 0x1e, 0x2e, 0x6f, 0x73, 0x69,
-	0x6e, 0x74, 0x2e, 0x6f, 0x73, 0x69, 0x6e, 0x74, 0x2e, 0x53, 0x74, 0x61, 0x72, 0x74, 0x4f, 0x73,
-	0x69, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1f, 0x2e, 0x6f, 0x73, 0x69,
-	0x6e, 0x74, 0x2e, 0x6f, 0x73, 0x69, 0x6e, 0x74, 0x2e, 0x53, 0x74, 0x61, 0x72, 0x74, 0x4f, 0x73,
-	0x69, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x30, 0x5a,
+	0x49, 0x6e, 0x76, 0x6f, 0x6b, 0x65, 0x53, 0x63, 0x61, 0x6e, 0x12, 0x1e, 0x2e, 0x6f, 0x73, 0x69,
+	0x6e, 0x74, 0x2e, 0x6f, 0x73, 0x69, 0x6e, 0x74, 0x2e, 0x49, 0x6e, 0x76, 0x6f, 0x6b, 0x65, 0x53,
+	0x63, 0x61, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1f, 0x2e, 0x6f, 0x73, 0x69,
+	0x6e, 0x74, 0x2e, 0x6f, 0x73, 0x69, 0x6e, 0x74, 0x2e, 0x49, 0x6e, 0x76, 0x6f, 0x6b, 0x65, 0x53,
+	0x63, 0x61, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x30, 0x5a,
 	0x2e, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x43, 0x79, 0x62, 0x65,
 	0x72, 0x41, 0x67, 0x65, 0x6e, 0x74, 0x2f, 0x6d, 0x69, 0x6d, 0x6f, 0x73, 0x61, 0x2d, 0x6f, 0x73,
 	0x69, 0x6e, 0x74, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x6f, 0x73, 0x69, 0x6e, 0x74, 0x62,
@@ -2401,8 +2401,8 @@ var file_osint_services_proto_goTypes = []interface{}{
 	(*PutOsintDetectWordRequest)(nil),       // 32: osint.osint.PutOsintDetectWordRequest
 	(*PutOsintDetectWordResponse)(nil),      // 33: osint.osint.PutOsintDetectWordResponse
 	(*DeleteOsintDetectWordRequest)(nil),    // 34: osint.osint.DeleteOsintDetectWordRequest
-	(*StartOsintRequest)(nil),               // 35: osint.osint.StartOsintRequest
-	(*StartOsintResponse)(nil),              // 36: osint.osint.StartOsintResponse
+	(*InvokeScanRequest)(nil),               // 35: osint.osint.InvokeScanRequest
+	(*InvokeScanResponse)(nil),              // 36: osint.osint.InvokeScanResponse
 	(*Osint)(nil),                           // 37: osint.osint.Osint
 	(*OsintForUpsert)(nil),                  // 38: osint.osint.OsintForUpsert
 	(*OsintDataSource)(nil),                 // 39: osint.osint.OsintDataSource
@@ -2456,7 +2456,7 @@ var file_osint_services_proto_depIdxs = []int32{
 	30, // 37: osint.osint.OsintService.GetOsintDetectWord:input_type -> osint.osint.GetOsintDetectWordRequest
 	32, // 38: osint.osint.OsintService.PutOsintDetectWord:input_type -> osint.osint.PutOsintDetectWordRequest
 	34, // 39: osint.osint.OsintService.DeleteOsintDetectWord:input_type -> osint.osint.DeleteOsintDetectWordRequest
-	35, // 40: osint.osint.OsintService.StartOsint:input_type -> osint.osint.StartOsintRequest
+	35, // 40: osint.osint.OsintService.InvokeScan:input_type -> osint.osint.InvokeScanRequest
 	1,  // 41: osint.osint.OsintService.ListOsint:output_type -> osint.osint.ListOsintResponse
 	3,  // 42: osint.osint.OsintService.GetOsint:output_type -> osint.osint.GetOsintResponse
 	5,  // 43: osint.osint.OsintService.PutOsint:output_type -> osint.osint.PutOsintResponse
@@ -2477,7 +2477,7 @@ var file_osint_services_proto_depIdxs = []int32{
 	31, // 58: osint.osint.OsintService.GetOsintDetectWord:output_type -> osint.osint.GetOsintDetectWordResponse
 	33, // 59: osint.osint.OsintService.PutOsintDetectWord:output_type -> osint.osint.PutOsintDetectWordResponse
 	47, // 60: osint.osint.OsintService.DeleteOsintDetectWord:output_type -> google.protobuf.Empty
-	36, // 61: osint.osint.OsintService.StartOsint:output_type -> osint.osint.StartOsintResponse
+	36, // 61: osint.osint.OsintService.InvokeScan:output_type -> osint.osint.InvokeScanResponse
 	41, // [41:62] is the sub-list for method output_type
 	20, // [20:41] is the sub-list for method input_type
 	20, // [20:20] is the sub-list for extension type_name
@@ -2913,7 +2913,7 @@ func file_osint_services_proto_init() {
 			}
 		}
 		file_osint_services_proto_msgTypes[35].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*StartOsintRequest); i {
+			switch v := v.(*InvokeScanRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2925,7 +2925,7 @@ func file_osint_services_proto_init() {
 			}
 		}
 		file_osint_services_proto_msgTypes[36].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*StartOsintResponse); i {
+			switch v := v.(*InvokeScanResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2995,7 +2995,7 @@ type OsintServiceClient interface {
 	PutOsintDetectWord(ctx context.Context, in *PutOsintDetectWordRequest, opts ...grpc.CallOption) (*PutOsintDetectWordResponse, error)
 	DeleteOsintDetectWord(ctx context.Context, in *DeleteOsintDetectWordRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	// KICK
-	StartOsint(ctx context.Context, in *StartOsintRequest, opts ...grpc.CallOption) (*StartOsintResponse, error)
+	InvokeScan(ctx context.Context, in *InvokeScanRequest, opts ...grpc.CallOption) (*InvokeScanResponse, error)
 }
 
 type osintServiceClient struct {
@@ -3186,9 +3186,9 @@ func (c *osintServiceClient) DeleteOsintDetectWord(ctx context.Context, in *Dele
 	return out, nil
 }
 
-func (c *osintServiceClient) StartOsint(ctx context.Context, in *StartOsintRequest, opts ...grpc.CallOption) (*StartOsintResponse, error) {
-	out := new(StartOsintResponse)
-	err := c.cc.Invoke(ctx, "/osint.osint.OsintService/StartOsint", in, out, opts...)
+func (c *osintServiceClient) InvokeScan(ctx context.Context, in *InvokeScanRequest, opts ...grpc.CallOption) (*InvokeScanResponse, error) {
+	out := new(InvokeScanResponse)
+	err := c.cc.Invoke(ctx, "/osint.osint.OsintService/InvokeScan", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -3223,7 +3223,7 @@ type OsintServiceServer interface {
 	PutOsintDetectWord(context.Context, *PutOsintDetectWordRequest) (*PutOsintDetectWordResponse, error)
 	DeleteOsintDetectWord(context.Context, *DeleteOsintDetectWordRequest) (*empty.Empty, error)
 	// KICK
-	StartOsint(context.Context, *StartOsintRequest) (*StartOsintResponse, error)
+	InvokeScan(context.Context, *InvokeScanRequest) (*InvokeScanResponse, error)
 }
 
 // UnimplementedOsintServiceServer can be embedded to have forward compatible implementations.
@@ -3290,8 +3290,8 @@ func (*UnimplementedOsintServiceServer) PutOsintDetectWord(context.Context, *Put
 func (*UnimplementedOsintServiceServer) DeleteOsintDetectWord(context.Context, *DeleteOsintDetectWordRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteOsintDetectWord not implemented")
 }
-func (*UnimplementedOsintServiceServer) StartOsint(context.Context, *StartOsintRequest) (*StartOsintResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method StartOsint not implemented")
+func (*UnimplementedOsintServiceServer) InvokeScan(context.Context, *InvokeScanRequest) (*InvokeScanResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InvokeScan not implemented")
 }
 
 func RegisterOsintServiceServer(s *grpc.Server, srv OsintServiceServer) {
@@ -3658,20 +3658,20 @@ func _OsintService_DeleteOsintDetectWord_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OsintService_StartOsint_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(StartOsintRequest)
+func _OsintService_InvokeScan_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(InvokeScanRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OsintServiceServer).StartOsint(ctx, in)
+		return srv.(OsintServiceServer).InvokeScan(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/osint.osint.OsintService/StartOsint",
+		FullMethod: "/osint.osint.OsintService/InvokeScan",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OsintServiceServer).StartOsint(ctx, req.(*StartOsintRequest))
+		return srv.(OsintServiceServer).InvokeScan(ctx, req.(*InvokeScanRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -3761,8 +3761,8 @@ var _OsintService_serviceDesc = grpc.ServiceDesc{
 			Handler:    _OsintService_DeleteOsintDetectWord_Handler,
 		},
 		{
-			MethodName: "StartOsint",
-			Handler:    _OsintService_StartOsint_Handler,
+			MethodName: "InvokeScan",
+			Handler:    _OsintService_InvokeScan_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -33,6 +33,8 @@
     - [GetRelOsintDataSourceResponse](#osint.osint.GetRelOsintDataSourceResponse)
     - [GetRelOsintDetectWordRequest](#osint.osint.GetRelOsintDetectWordRequest)
     - [GetRelOsintDetectWordResponse](#osint.osint.GetRelOsintDetectWordResponse)
+    - [InvokeScanRequest](#osint.osint.InvokeScanRequest)
+    - [InvokeScanResponse](#osint.osint.InvokeScanResponse)
     - [ListOsintDataSourceRequest](#osint.osint.ListOsintDataSourceRequest)
     - [ListOsintDataSourceResponse](#osint.osint.ListOsintDataSourceResponse)
     - [ListOsintDetectWordRequest](#osint.osint.ListOsintDetectWordRequest)
@@ -53,8 +55,6 @@
     - [PutRelOsintDataSourceResponse](#osint.osint.PutRelOsintDataSourceResponse)
     - [PutRelOsintDetectWordRequest](#osint.osint.PutRelOsintDetectWordRequest)
     - [PutRelOsintDetectWordResponse](#osint.osint.PutRelOsintDetectWordResponse)
-    - [StartOsintRequest](#osint.osint.StartOsintRequest)
-    - [StartOsintResponse](#osint.osint.StartOsintResponse)
   
     - [OsintService](#osint.osint.OsintService)
   
@@ -529,6 +529,37 @@ Status
 
 
 
+<a name="osint.osint.InvokeScanRequest"></a>
+
+### InvokeScanRequest
+Invoke Scan
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| project_id | [uint32](#uint32) |  |  |
+| rel_osint_data_source_id | [uint32](#uint32) |  |  |
+
+
+
+
+
+
+<a name="osint.osint.InvokeScanResponse"></a>
+
+### InvokeScanResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| message | [string](#string) |  |  |
+
+
+
+
+
+
 <a name="osint.osint.ListOsintDataSourceRequest"></a>
 
 ### ListOsintDataSourceRequest
@@ -840,37 +871,6 @@ Osint Service
 
 
 
-
-<a name="osint.osint.StartOsintRequest"></a>
-
-### StartOsintRequest
-KICK Osint
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| project_id | [uint32](#uint32) |  |  |
-| rel_osint_data_source_id | [uint32](#uint32) |  |  |
-
-
-
-
-
-
-<a name="osint.osint.StartOsintResponse"></a>
-
-### StartOsintResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| message | [string](#string) |  |  |
-
-
-
-
-
  
 
  
@@ -905,7 +905,7 @@ KICK Osint
 | GetOsintDetectWord | [GetOsintDetectWordRequest](#osint.osint.GetOsintDetectWordRequest) | [GetOsintDetectWordResponse](#osint.osint.GetOsintDetectWordResponse) |  |
 | PutOsintDetectWord | [PutOsintDetectWordRequest](#osint.osint.PutOsintDetectWordRequest) | [PutOsintDetectWordResponse](#osint.osint.PutOsintDetectWordResponse) |  |
 | DeleteOsintDetectWord | [DeleteOsintDetectWordRequest](#osint.osint.DeleteOsintDetectWordRequest) | [.google.protobuf.Empty](#google.protobuf.Empty) |  |
-| StartOsint | [StartOsintRequest](#osint.osint.StartOsintRequest) | [StartOsintResponse](#osint.osint.StartOsintResponse) | KICK |
+| InvokeScan | [InvokeScanRequest](#osint.osint.InvokeScanRequest) | [InvokeScanResponse](#osint.osint.InvokeScanResponse) | KICK |
 
  
 

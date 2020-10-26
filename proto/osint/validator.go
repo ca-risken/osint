@@ -192,8 +192,8 @@ func (r *DeleteOsintDetectWordRequest) Validate() error {
 	)
 }
 
-// Validate StartOsintRequest
-func (r *StartOsintRequest) Validate() error {
+// Validate InvokeScanRequest
+func (r *InvokeScanRequest) Validate() error {
 	return validation.ValidateStruct(r,
 		validation.Field(&r.ProjectId, validation.Required),
 		validation.Field(&r.RelOsintDataSourceId, validation.Required),

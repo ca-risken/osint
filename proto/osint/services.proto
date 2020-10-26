@@ -53,7 +53,7 @@ service OsintService {
   rpc DeleteOsintDetectWord(DeleteOsintDetectWordRequest)
       returns (google.protobuf.Empty) {}
   // KICK
-  rpc StartOsint(StartOsintRequest) returns (StartOsintResponse) {}
+  rpc InvokeScan(InvokeScanRequest) returns (InvokeScanResponse) {}
 }
 
 // Osint Service
@@ -203,10 +203,10 @@ message DeleteOsintDetectWordRequest {
   uint32 osint_detect_word_id = 2;
 }
 
-// KICK Osint
-message StartOsintRequest {
+// Invoke Scan
+message InvokeScanRequest {
   uint32 project_id = 1;
   uint32 rel_osint_data_source_id = 2;
 }
 
-message StartOsintResponse { string message = 1; }
+message InvokeScanResponse { string message = 1; }
