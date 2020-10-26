@@ -57,10 +57,7 @@ service OsintService {
 }
 
 // Osint Service
-message ListOsintRequest {
-  uint32 project_id = 1;
-  string name = 2;
-}
+message ListOsintRequest { uint32 project_id = 1; }
 
 message ListOsintResponse { repeated Osint osint = 1; }
 
@@ -113,10 +110,8 @@ message DeleteOsintDataSourceRequest {
 
 message ListRelOsintDataSourceRequest {
   uint32 project_id = 1;
-  string resource_type = 2;
-  string resource_name = 3;
-  uint32 osint_id = 4;
-  uint32 osint_data_source_id = 5;
+  uint32 osint_id = 2;
+  uint32 osint_data_source_id = 3;
 }
 
 message ListRelOsintDataSourceResponse {

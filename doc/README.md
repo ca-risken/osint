@@ -630,7 +630,6 @@ Osint Service
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | project_id | [uint32](#uint32) |  |  |
-| name | [string](#string) |  |  |
 
 
 
@@ -661,8 +660,6 @@ Osint Service
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | project_id | [uint32](#uint32) |  |  |
-| resource_type | [string](#string) |  |  |
-| resource_name | [string](#string) |  |  |
 | osint_id | [uint32](#uint32) |  |  |
 | osint_data_source_id | [uint32](#uint32) |  |  |
 
