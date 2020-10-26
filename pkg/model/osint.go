@@ -6,11 +6,12 @@ import (
 
 // Osint entity
 type Osint struct {
-	OsintID   uint32 `gorm:"primary_key"`
-	ProjectID uint32
-	Name      string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	OsintID      uint32 `gorm:"primary_key"`
+	ProjectID    uint32
+	ResourceType string
+	ResourceName string
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }
 
 // OsintDataSource entity
@@ -29,8 +30,6 @@ type RelOsintDataSource struct {
 	OsintID              uint32
 	OsintDataSourceID    uint32
 	ProjectID            uint32
-	ResourceType         string
-	ResourceName         string
 	Status               string
 	StatusDetail         string
 	ScanAt               time.Time
