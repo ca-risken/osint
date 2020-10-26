@@ -120,6 +120,78 @@ func (r *DeleteRelOsintDataSourceRequest) Validate() error {
 	)
 }
 
+// Validate ListRelOsintDetectWordRequest
+func (r *ListRelOsintDetectWordRequest) Validate() error {
+	return validation.ValidateStruct(r,
+		validation.Field(&r.ProjectId, validation.Required),
+	)
+}
+
+// Validate GetRelOsintDetectWordRequest
+func (r *GetRelOsintDetectWordRequest) Validate() error {
+	return validation.ValidateStruct(r,
+		validation.Field(&r.ProjectId, validation.Required),
+		validation.Field(&r.RelOsintDetectWordId, validation.Required),
+	)
+}
+
+// Validate PutRelOsintDetectWordRequest
+func (r *PutRelOsintDetectWordRequest) Validate() error {
+	if r.RelOsintDetectWord == nil {
+		return errors.New("Required RelOsintDetectWord")
+	}
+	if err := validation.ValidateStruct(r,
+		validation.Field(&r.ProjectId, validation.Required, validation.In(r.RelOsintDetectWord.ProjectId), validation.Required),
+	); err != nil {
+		return err
+	}
+	return r.RelOsintDetectWord.Validate()
+}
+
+// Validate DeleteResultRequest
+func (r *DeleteRelOsintDetectWordRequest) Validate() error {
+	return validation.ValidateStruct(r,
+		validation.Field(&r.ProjectId, validation.Required),
+		validation.Field(&r.RelOsintDetectWordId, validation.Required),
+	)
+}
+
+// Validate ListOsintDetectWordRequest
+func (r *ListOsintDetectWordRequest) Validate() error {
+	return validation.ValidateStruct(r,
+		validation.Field(&r.ProjectId, validation.Required),
+	)
+}
+
+// Validate GetOsintDetectWordRequest
+func (r *GetOsintDetectWordRequest) Validate() error {
+	return validation.ValidateStruct(r,
+		validation.Field(&r.ProjectId, validation.Required),
+		validation.Field(&r.OsintDetectWordId, validation.Required),
+	)
+}
+
+// Validate PutOsintDetectWordRequest
+func (r *PutOsintDetectWordRequest) Validate() error {
+	if r.OsintDetectWord == nil {
+		return errors.New("Required OsintDetectWord")
+	}
+	if err := validation.ValidateStruct(r,
+		validation.Field(&r.ProjectId, validation.Required, validation.In(r.OsintDetectWord.ProjectId), validation.Required),
+	); err != nil {
+		return err
+	}
+	return r.OsintDetectWord.Validate()
+}
+
+// Validate DeleteResultRequest
+func (r *DeleteOsintDetectWordRequest) Validate() error {
+	return validation.ValidateStruct(r,
+		validation.Field(&r.ProjectId, validation.Required),
+		validation.Field(&r.OsintDetectWordId, validation.Required),
+	)
+}
+
 // Validate StartOsintRequest
 func (r *StartOsintRequest) Validate() error {
 	return validation.ValidateStruct(r,
@@ -135,7 +207,8 @@ func (r *StartOsintRequest) Validate() error {
 // Validate Osint
 func (d *OsintForUpsert) Validate() error {
 	return validation.ValidateStruct(d,
-		validation.Field(&d.Name, validation.Required, validation.Length(0, 50)),
+		validation.Field(&d.ResourceType, validation.Required, validation.Length(0, 50)),
+		validation.Field(&d.ResourceName, validation.Required, validation.Length(0, 200)),
 		validation.Field(&d.ProjectId, validation.Required),
 	)
 }
@@ -155,9 +228,24 @@ func (r *RelOsintDataSourceForUpsert) Validate() error {
 		validation.Field(&r.OsintDataSourceId, validation.Required),
 		validation.Field(&r.OsintId, validation.Required),
 		validation.Field(&r.ProjectId, validation.Required),
-		validation.Field(&r.ResourceType, validation.Required, validation.Length(0, 50)),
-		validation.Field(&r.ResourceName, validation.Required, validation.Length(0, 200)),
 		validation.Field(&r.ScanAt, validation.Min(0), validation.Max(253402268399)), //  1970-01-01T00:00:00 ~ 9999-12-31T23:59:59
 		validation.Field(&r.StatusDetail, validation.Length(0, 255)),
+	)
+}
+
+// Validate RelOsintDetectWordForUpsert
+func (r *RelOsintDetectWordForUpsert) Validate() error {
+	return validation.ValidateStruct(r,
+		validation.Field(&r.RelOsintDataSourceId, validation.Required),
+		validation.Field(&r.OsintDetectWordId, validation.Required),
+		validation.Field(&r.ProjectId, validation.Required),
+	)
+}
+
+// Validate OsintDetectWordForUpsert
+func (r *OsintDetectWordForUpsert) Validate() error {
+	return validation.ValidateStruct(r,
+		validation.Field(&r.ProjectId, validation.Required),
+		validation.Field(&r.Word, validation.Required, validation.Length(0, 50)),
 	)
 }
