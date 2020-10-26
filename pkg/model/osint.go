@@ -42,10 +42,16 @@ type RelOsintDetectWord struct {
 	RelOsintDetectWordID uint32 `gorm:"primary_key"`
 	RelOsintDataSourceID uint32
 	OsintDetectWordID    uint32
+	ProjectID            uint32
+	CreatedAt            time.Time
+	UpdatedAt            time.Time
 }
 
 // OsintDetectWord entity
 type OsintDetectWord struct {
 	OsintDetectWordID uint32 `gorm:"primary_key"`
 	Word              string
+	ProjectID         uint32
+	CreatedAt         time.Time
+	UpdatedAt         time.Time
 }
