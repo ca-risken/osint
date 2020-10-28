@@ -52,8 +52,9 @@ service OsintService {
       returns (PutOsintDetectWordResponse) {}
   rpc DeleteOsintDetectWord(DeleteOsintDetectWordRequest)
       returns (google.protobuf.Empty) {}
-  // KICK
+  // Invoke
   rpc InvokeScan(InvokeScanRequest) returns (InvokeScanResponse) {}
+  rpc InvokeScanAll(google.protobuf.Empty) returns (google.protobuf.Empty) {}
 }
 
 // Osint Service

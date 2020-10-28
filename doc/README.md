@@ -902,7 +902,8 @@ Osint Service
 | GetOsintDetectWord | [GetOsintDetectWordRequest](#osint.osint.GetOsintDetectWordRequest) | [GetOsintDetectWordResponse](#osint.osint.GetOsintDetectWordResponse) |  |
 | PutOsintDetectWord | [PutOsintDetectWordRequest](#osint.osint.PutOsintDetectWordRequest) | [PutOsintDetectWordResponse](#osint.osint.PutOsintDetectWordResponse) |  |
 | DeleteOsintDetectWord | [DeleteOsintDetectWordRequest](#osint.osint.DeleteOsintDetectWordRequest) | [.google.protobuf.Empty](#google.protobuf.Empty) |  |
-| InvokeScan | [InvokeScanRequest](#osint.osint.InvokeScanRequest) | [InvokeScanResponse](#osint.osint.InvokeScanResponse) | KICK |
+| InvokeScan | [InvokeScanRequest](#osint.osint.InvokeScanRequest) | [InvokeScanResponse](#osint.osint.InvokeScanResponse) | Invoke |
+| InvokeScanAll | [.google.protobuf.Empty](#google.protobuf.Empty) | [.google.protobuf.Empty](#google.protobuf.Empty) |  |
 
  
 

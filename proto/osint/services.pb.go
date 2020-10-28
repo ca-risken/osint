@@ -2183,7 +2183,7 @@ var file_osint_services_proto_rawDesc = []byte{
 	0x74, 0x44, 0x61, 0x74, 0x61, 0x53, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x49, 0x64, 0x22, 0x2e, 0x0a,
 	0x12, 0x49, 0x6e, 0x76, 0x6f, 0x6b, 0x65, 0x53, 0x63, 0x61, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f,
 	0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x32, 0xbf, 0x10,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x32, 0x82, 0x11,
 	0x0a, 0x0c, 0x4f, 0x73, 0x69, 0x6e, 0x74, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x4c,
 	0x0a, 0x09, 0x4c, 0x69, 0x73, 0x74, 0x4f, 0x73, 0x69, 0x6e, 0x74, 0x12, 0x1d, 0x2e, 0x6f, 0x73,
 	0x69, 0x6e, 0x74, 0x2e, 0x6f, 0x73, 0x69, 0x6e, 0x74, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x4f, 0x73,
@@ -2315,11 +2315,15 @@ var file_osint_services_proto_rawDesc = []byte{
 	0x73, 0x69, 0x6e, 0x74, 0x2e, 0x6f, 0x73, 0x69, 0x6e, 0x74, 0x2e, 0x49, 0x6e, 0x76, 0x6f, 0x6b,
 	0x65, 0x53, 0x63, 0x61, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1f, 0x2e, 0x6f,
 	0x73, 0x69, 0x6e, 0x74, 0x2e, 0x6f, 0x73, 0x69, 0x6e, 0x74, 0x2e, 0x49, 0x6e, 0x76, 0x6f, 0x6b,
-	0x65, 0x53, 0x63, 0x61, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42,
-	0x30, 0x5a, 0x2e, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x43, 0x79,
-	0x62, 0x65, 0x72, 0x41, 0x67, 0x65, 0x6e, 0x74, 0x2f, 0x6d, 0x69, 0x6d, 0x6f, 0x73, 0x61, 0x2d,
-	0x6f, 0x73, 0x69, 0x6e, 0x74, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x6f, 0x73, 0x69, 0x6e,
-	0x74, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x65, 0x53, 0x63, 0x61, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12,
+	0x41, 0x0a, 0x0d, 0x49, 0x6e, 0x76, 0x6f, 0x6b, 0x65, 0x53, 0x63, 0x61, 0x6e, 0x41, 0x6c, 0x6c,
+	0x12, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62,
+	0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c,
+	0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79,
+	0x22, 0x00, 0x42, 0x30, 0x5a, 0x2e, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d,
+	0x2f, 0x43, 0x79, 0x62, 0x65, 0x72, 0x41, 0x67, 0x65, 0x6e, 0x74, 0x2f, 0x6d, 0x69, 0x6d, 0x6f,
+	0x73, 0x61, 0x2d, 0x6f, 0x73, 0x69, 0x6e, 0x74, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x6f,
+	0x73, 0x69, 0x6e, 0x74, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -2427,29 +2431,31 @@ var file_osint_services_proto_depIdxs = []int32{
 	32, // 38: osint.osint.OsintService.PutOsintDetectWord:input_type -> osint.osint.PutOsintDetectWordRequest
 	34, // 39: osint.osint.OsintService.DeleteOsintDetectWord:input_type -> osint.osint.DeleteOsintDetectWordRequest
 	35, // 40: osint.osint.OsintService.InvokeScan:input_type -> osint.osint.InvokeScanRequest
-	1,  // 41: osint.osint.OsintService.ListOsint:output_type -> osint.osint.ListOsintResponse
-	3,  // 42: osint.osint.OsintService.GetOsint:output_type -> osint.osint.GetOsintResponse
-	5,  // 43: osint.osint.OsintService.PutOsint:output_type -> osint.osint.PutOsintResponse
-	47, // 44: osint.osint.OsintService.DeleteOsint:output_type -> google.protobuf.Empty
-	15, // 45: osint.osint.OsintService.ListRelOsintDataSource:output_type -> osint.osint.ListRelOsintDataSourceResponse
-	17, // 46: osint.osint.OsintService.GetRelOsintDataSource:output_type -> osint.osint.GetRelOsintDataSourceResponse
-	19, // 47: osint.osint.OsintService.PutRelOsintDataSource:output_type -> osint.osint.PutRelOsintDataSourceResponse
-	47, // 48: osint.osint.OsintService.DeleteRelOsintDataSource:output_type -> google.protobuf.Empty
-	8,  // 49: osint.osint.OsintService.ListOsintDataSource:output_type -> osint.osint.ListOsintDataSourceResponse
-	10, // 50: osint.osint.OsintService.GetOsintDataSource:output_type -> osint.osint.GetOsintDataSourceResponse
-	12, // 51: osint.osint.OsintService.PutOsintDataSource:output_type -> osint.osint.PutOsintDataSourceResponse
-	47, // 52: osint.osint.OsintService.DeleteOsintDataSource:output_type -> google.protobuf.Empty
-	22, // 53: osint.osint.OsintService.ListRelOsintDetectWord:output_type -> osint.osint.ListRelOsintDetectWordResponse
-	24, // 54: osint.osint.OsintService.GetRelOsintDetectWord:output_type -> osint.osint.GetRelOsintDetectWordResponse
-	26, // 55: osint.osint.OsintService.PutRelOsintDetectWord:output_type -> osint.osint.PutRelOsintDetectWordResponse
-	47, // 56: osint.osint.OsintService.DeleteRelOsintDetectWord:output_type -> google.protobuf.Empty
-	29, // 57: osint.osint.OsintService.ListOsintDetectWord:output_type -> osint.osint.ListOsintDetectWordResponse
-	31, // 58: osint.osint.OsintService.GetOsintDetectWord:output_type -> osint.osint.GetOsintDetectWordResponse
-	33, // 59: osint.osint.OsintService.PutOsintDetectWord:output_type -> osint.osint.PutOsintDetectWordResponse
-	47, // 60: osint.osint.OsintService.DeleteOsintDetectWord:output_type -> google.protobuf.Empty
-	36, // 61: osint.osint.OsintService.InvokeScan:output_type -> osint.osint.InvokeScanResponse
-	41, // [41:62] is the sub-list for method output_type
-	20, // [20:41] is the sub-list for method input_type
+	47, // 41: osint.osint.OsintService.InvokeScanAll:input_type -> google.protobuf.Empty
+	1,  // 42: osint.osint.OsintService.ListOsint:output_type -> osint.osint.ListOsintResponse
+	3,  // 43: osint.osint.OsintService.GetOsint:output_type -> osint.osint.GetOsintResponse
+	5,  // 44: osint.osint.OsintService.PutOsint:output_type -> osint.osint.PutOsintResponse
+	47, // 45: osint.osint.OsintService.DeleteOsint:output_type -> google.protobuf.Empty
+	15, // 46: osint.osint.OsintService.ListRelOsintDataSource:output_type -> osint.osint.ListRelOsintDataSourceResponse
+	17, // 47: osint.osint.OsintService.GetRelOsintDataSource:output_type -> osint.osint.GetRelOsintDataSourceResponse
+	19, // 48: osint.osint.OsintService.PutRelOsintDataSource:output_type -> osint.osint.PutRelOsintDataSourceResponse
+	47, // 49: osint.osint.OsintService.DeleteRelOsintDataSource:output_type -> google.protobuf.Empty
+	8,  // 50: osint.osint.OsintService.ListOsintDataSource:output_type -> osint.osint.ListOsintDataSourceResponse
+	10, // 51: osint.osint.OsintService.GetOsintDataSource:output_type -> osint.osint.GetOsintDataSourceResponse
+	12, // 52: osint.osint.OsintService.PutOsintDataSource:output_type -> osint.osint.PutOsintDataSourceResponse
+	47, // 53: osint.osint.OsintService.DeleteOsintDataSource:output_type -> google.protobuf.Empty
+	22, // 54: osint.osint.OsintService.ListRelOsintDetectWord:output_type -> osint.osint.ListRelOsintDetectWordResponse
+	24, // 55: osint.osint.OsintService.GetRelOsintDetectWord:output_type -> osint.osint.GetRelOsintDetectWordResponse
+	26, // 56: osint.osint.OsintService.PutRelOsintDetectWord:output_type -> osint.osint.PutRelOsintDetectWordResponse
+	47, // 57: osint.osint.OsintService.DeleteRelOsintDetectWord:output_type -> google.protobuf.Empty
+	29, // 58: osint.osint.OsintService.ListOsintDetectWord:output_type -> osint.osint.ListOsintDetectWordResponse
+	31, // 59: osint.osint.OsintService.GetOsintDetectWord:output_type -> osint.osint.GetOsintDetectWordResponse
+	33, // 60: osint.osint.OsintService.PutOsintDetectWord:output_type -> osint.osint.PutOsintDetectWordResponse
+	47, // 61: osint.osint.OsintService.DeleteOsintDetectWord:output_type -> google.protobuf.Empty
+	36, // 62: osint.osint.OsintService.InvokeScan:output_type -> osint.osint.InvokeScanResponse
+	47, // 63: osint.osint.OsintService.InvokeScanAll:output_type -> google.protobuf.Empty
+	42, // [42:64] is the sub-list for method output_type
+	20, // [20:42] is the sub-list for method input_type
 	20, // [20:20] is the sub-list for extension type_name
 	20, // [20:20] is the sub-list for extension extendee
 	0,  // [0:20] is the sub-list for field type_name
@@ -2964,8 +2970,9 @@ type OsintServiceClient interface {
 	GetOsintDetectWord(ctx context.Context, in *GetOsintDetectWordRequest, opts ...grpc.CallOption) (*GetOsintDetectWordResponse, error)
 	PutOsintDetectWord(ctx context.Context, in *PutOsintDetectWordRequest, opts ...grpc.CallOption) (*PutOsintDetectWordResponse, error)
 	DeleteOsintDetectWord(ctx context.Context, in *DeleteOsintDetectWordRequest, opts ...grpc.CallOption) (*empty.Empty, error)
-	// KICK
+	// Invoke
 	InvokeScan(ctx context.Context, in *InvokeScanRequest, opts ...grpc.CallOption) (*InvokeScanResponse, error)
+	InvokeScanAll(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*empty.Empty, error)
 }
 
 type osintServiceClient struct {
@@ -3165,6 +3172,15 @@ func (c *osintServiceClient) InvokeScan(ctx context.Context, in *InvokeScanReque
 	return out, nil
 }
 
+func (c *osintServiceClient) InvokeScanAll(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/osint.osint.OsintService/InvokeScanAll", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OsintServiceServer is the server API for OsintService service.
 type OsintServiceServer interface {
 	// Osint
@@ -3192,8 +3208,9 @@ type OsintServiceServer interface {
 	GetOsintDetectWord(context.Context, *GetOsintDetectWordRequest) (*GetOsintDetectWordResponse, error)
 	PutOsintDetectWord(context.Context, *PutOsintDetectWordRequest) (*PutOsintDetectWordResponse, error)
 	DeleteOsintDetectWord(context.Context, *DeleteOsintDetectWordRequest) (*empty.Empty, error)
-	// KICK
+	// Invoke
 	InvokeScan(context.Context, *InvokeScanRequest) (*InvokeScanResponse, error)
+	InvokeScanAll(context.Context, *empty.Empty) (*empty.Empty, error)
 }
 
 // UnimplementedOsintServiceServer can be embedded to have forward compatible implementations.
@@ -3262,6 +3279,9 @@ func (*UnimplementedOsintServiceServer) DeleteOsintDetectWord(context.Context, *
 }
 func (*UnimplementedOsintServiceServer) InvokeScan(context.Context, *InvokeScanRequest) (*InvokeScanResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InvokeScan not implemented")
+}
+func (*UnimplementedOsintServiceServer) InvokeScanAll(context.Context, *empty.Empty) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InvokeScanAll not implemented")
 }
 
 func RegisterOsintServiceServer(s *grpc.Server, srv OsintServiceServer) {
@@ -3646,6 +3666,24 @@ func _OsintService_InvokeScan_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _OsintService_InvokeScanAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(empty.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OsintServiceServer).InvokeScanAll(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/osint.osint.OsintService/InvokeScanAll",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OsintServiceServer).InvokeScanAll(ctx, req.(*empty.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _OsintService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "osint.osint.OsintService",
 	HandlerType: (*OsintServiceServer)(nil),
@@ -3733,6 +3771,10 @@ var _OsintService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "InvokeScan",
 			Handler:    _OsintService_InvokeScan_Handler,
+		},
+		{
+			MethodName: "InvokeScanAll",
+			Handler:    _OsintService_InvokeScanAll_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
