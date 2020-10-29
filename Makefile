@@ -53,8 +53,8 @@ go-mod-tidy: build
 	cd pkg/common   && go mod tidy
 	cd pkg/model   && go mod tidy
 	cd pkg/message   && go mod tidy
-	cd cmd/osint && go mod tidy
-	cd cmd/subdomain      && go mod tidy
+	cd src/osint && go mod tidy
+	cd src/subdomain      && go mod tidy
 
 run: go-test network
 	. env.sh && docker-compose up -d --build
