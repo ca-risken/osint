@@ -19,11 +19,17 @@ phases:
   pre_build:
     commands:
       - echo Setting environment variables
-      - SRC=${CODEBUILD_SRC_DIR}/cmd
+      - SRC=${CODEBUILD_SRC_DIR}/src
       - BUILD_OPT="--no-cache --pull"
       - TAG=v0.0.${CODEBUILD_BUILD_NUMBER}
       - AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
       - REGISTORY=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com
+
+      - echo Testing the sources...
+      - cd ${SRC}/aws        && go test ./...
+      - cd ${SRC}/guard-duty && go test ./...
+      - cd ${SRC}/access-analyzer && go test ./...
+      - cd ${SRC}/admin-checker   && go test ./...
 
       - echo Logging in to Amazon ECR...
       - $(aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION})
@@ -33,3 +39,24 @@ phases:
       - echo Pushing the Docker images...
       - cd ${SRC}/osint        && docker build ${BUILD_OPT} --build-arg GITHUB_USER=${GITHUB_USER} --build-arg GITHUB_TOKEN=${GITHUB_TOKEN} -t ${IMAGE_OSINT}:${TAG} .
       - cd ${SRC}/subdomain && docker build ${BUILD_OPT} --build-arg GITHUB_USER=${GITHUB_USER} --build-arg GITHUB_TOKEN=${GITHUB_TOKEN} -t ${IMAGE_SUBDOMAIN}:${TAG} .
+
+      - echo Tagging the images...
+      # tag the specific version
+      - docker tag ${IMAGE_OSINT}:${TAG}       ${REGISTORY}/${IMAGE_OSINT}:${TAG}
+      - docker tag ${IMAGE_SUBDOMAIN}:${TAG} ${REGISTORY}/${IMAGE_SUBDOMAIN}:${TAG}
+
+      # update latest version
+      - docker tag ${IMAGE_OSINT}:${TAG}       ${REGISTORY}/${IMAGE_OSINT}:latest
+      - docker tag ${IMAGE_SUBDOMAIN}:${TAG} ${REGISTORY}/${IMAGE_SUBDOMAIN}:latest
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+
+      # specific version
+      - docker push ${REGISTORY}/${IMAGE_OSINT}:${TAG}
+      - docker push ${REGISTORY}/${IMAGE_SUBDOMAIN}:${TAG}
+
+      # latest version
+      - docker push ${REGISTORY}/${IMAGE_OSINT}:latest
+      - docker push ${REGISTORY}/${IMAGE_SUBDOMAIN}:latest
