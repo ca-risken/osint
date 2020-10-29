@@ -1,3 +1,3 @@
-module github.com/CyberAgent/mimosa-osint-go/pkg/model
+module github.com/CyberAgent/mimosa-osint/pkg/model
 
 go 1.15
