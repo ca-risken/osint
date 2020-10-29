@@ -12,9 +12,10 @@ type sqsConfig struct {
 	AWSRegion string `envconfig:"aws_region" default:"ap-northeast-1"`
 	Endpoint  string `envconfig:"sqs_endpoint" default:"http://localhost:9324"`
 
-	SubdomainSearchQueueURL string `split_words:"true" default:"http://localhost:9324/queue/osint-subdomainsearch"`
-	MaxNumberOfMessage      int64  `split_words:"true" default:"10"`
-	WaitTimeSecond          int64  `split_words:"true" default:"20"`
+	SubdomainSearchQueueName string `split_words:"true" default:"osint-subdomainsearch"`
+	SubdomainSearchQueueURL  string `split_words:"true" default:"http://localhost:9324/queue/osint-subdomainsearch"`
+	MaxNumberOfMessage       int64  `split_words:"true" default:"10"`
+	WaitTimeSecond           int64  `split_words:"true" default:"20"`
 }
 
 func newSQSConsumer() *worker.Worker {
@@ -29,6 +30,7 @@ func newSQSConsumer() *worker.Worker {
 	})
 	return &worker.Worker{
 		Config: &worker.Config{
+			QueueName:          conf.SubdomainSearchQueueName,
 			QueueURL:           conf.SubdomainSearchQueueURL,
 			MaxNumberOfMessage: conf.MaxNumberOfMessage,
 			WaitTimeSecond:     conf.WaitTimeSecond,
