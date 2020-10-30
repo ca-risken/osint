@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/CyberAgent/mimosa-osint-go/pkg/model"
+	"github.com/CyberAgent/mimosa-osint/pkg/model"
 	_ "github.com/go-sql-driver/mysql"
 )
 

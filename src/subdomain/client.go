@@ -6,7 +6,7 @@ import (
 
 	"github.com/CyberAgent/mimosa-core/proto/alert"
 	"github.com/CyberAgent/mimosa-core/proto/finding"
-	"github.com/CyberAgent/mimosa-osint-go/proto/osint"
+	"github.com/CyberAgent/mimosa-osint/proto/osint"
 	"github.com/kelseyhightower/envconfig"
 	"google.golang.org/grpc"
 )

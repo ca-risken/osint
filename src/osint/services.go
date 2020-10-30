@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/CyberAgent/mimosa-osint-go/proto/osint"
+	"github.com/CyberAgent/mimosa-osint/proto/osint"
 )
 
 type osintService struct {

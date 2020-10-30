@@ -95,34 +95,6 @@ delete-rel_osint_datasource:
 		-d '{"project_id":1001, "rel_osint_data_source_id":1001}' \
 		localhost:18081 osint.osint.OsintService.DeleteRelOsintDataSource
 
-.PHONY: list-rel_osint_detect_word
-list-rel_osint_detect_word:
-	grpcurl \
-		-plaintext \
-		-d '{"project_id":1001}' \
-		localhost:18081 osint.osint.OsintService.ListRelOsintDetectWord
-
-.PHONY: get-rel_osint_detect_word
-get-rel_osint_detect_word:
-	grpcurl \
-		-plaintext \
-		-d '{"project_id":1001, "rel_osint_detect_word_id":1001}' \
-		localhost:18081 osint.osint.OsintService.GetRelOsintDetectWord
-
-.PHONY: put-rel_osint_detect_word
-put-rel_osint_detect_word:
-	grpcurl \
-		-plaintext \
-		-d '{"project_id":1001, "rel_osint_detect_word": {"osint_detect_word_id":1001, "rel_osint_data_source_id":1001, "project_id":1001}}' \
-		localhost:18081 osint.osint.OsintService.PutRelOsintDetectWord
-
-.PHONY: delete-rel_osint_detect_word
-delete-rel_osint_detect_word:
-	grpcurl \
-		-plaintext \
-		-d '{"project_id":1001, "rel_osint_detect_word_id":1001}' \
-		localhost:18081 osint.osint.OsintService.DeleteRelOsintDetectWord
-
 .PHONY: list-osint_detect_word
 list-osint_detect_word:
 	grpcurl \
@@ -141,7 +113,7 @@ get-osint_detect_word:
 put-osint_detect_word:
 	grpcurl \
 		-plaintext \
-		-d '{"project_id":1001, "osint_detect_word": {"word":"hoge", "project_id":1001}}' \
+		-d '{"project_id":1001, "osint_detect_word": {"word":"fuga","rel_osint_data_source_id":1001, "project_id":1001}}' \
 		localhost:18081 osint.osint.OsintService.PutOsintDetectWord
 
 .PHONY: delete-osint_detect_word
@@ -162,5 +134,4 @@ invoke-scan:
 invoke-scan_all:
 	grpcurl \
 		-plaintext \
-		-d '{}' \
 		localhost:18081 osint.osint.OsintService.InvokeScanAll

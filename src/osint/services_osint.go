@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 
-	"github.com/CyberAgent/mimosa-osint-go/pkg/model"
-	"github.com/CyberAgent/mimosa-osint-go/proto/osint"
+	"github.com/CyberAgent/mimosa-osint/pkg/model"
+	"github.com/CyberAgent/mimosa-osint/proto/osint"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/jinzhu/gorm"
 )

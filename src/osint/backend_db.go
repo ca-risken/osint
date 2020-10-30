@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/CyberAgent/mimosa-osint-go/pkg/model"
+	"github.com/CyberAgent/mimosa-osint/pkg/model"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	"github.com/kelseyhightower/envconfig"
@@ -22,16 +22,11 @@ type osintRepoInterface interface {
 	GetRelOsintDataSource(uint32, uint32) (*model.RelOsintDataSource, error)
 	UpsertRelOsintDataSource(*model.RelOsintDataSource) (*model.RelOsintDataSource, error)
 	DeleteRelOsintDataSource(uint32, uint32) error
-	ListRelOsintDetectWord(uint32, uint32) (*[]model.RelOsintDetectWord, error)
-	GetRelOsintDetectWord(uint32, uint32) (*model.RelOsintDetectWord, error)
-	UpsertRelOsintDetectWord(*model.RelOsintDetectWord) (*model.RelOsintDetectWord, error)
-	DeleteRelOsintDetectWord(uint32, uint32) error
-	ListOsintDetectWord(uint32) (*[]model.OsintDetectWord, error)
+	ListOsintDetectWord(uint32, uint32) (*[]model.OsintDetectWord, error)
 	GetOsintDetectWord(uint32, uint32) (*model.OsintDetectWord, error)
 	UpsertOsintDetectWord(*model.OsintDetectWord) (*model.OsintDetectWord, error)
 	DeleteOsintDetectWord(uint32, uint32) error
 	// For Invoke
-	ListOsintDetectWordFromRelOsintDataSourceID(uint32, uint32) (*[]model.OsintDetectWord, error)
 	ListAllRelOsintDataSource() (*[]model.RelOsintDataSource, error)
 }
 
