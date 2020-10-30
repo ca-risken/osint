@@ -120,42 +120,6 @@ func (r *DeleteRelOsintDataSourceRequest) Validate() error {
 	)
 }
 
-// Validate ListRelOsintDetectWordRequest
-func (r *ListRelOsintDetectWordRequest) Validate() error {
-	return validation.ValidateStruct(r,
-		validation.Field(&r.ProjectId, validation.Required),
-	)
-}
-
-// Validate GetRelOsintDetectWordRequest
-func (r *GetRelOsintDetectWordRequest) Validate() error {
-	return validation.ValidateStruct(r,
-		validation.Field(&r.ProjectId, validation.Required),
-		validation.Field(&r.RelOsintDetectWordId, validation.Required),
-	)
-}
-
-// Validate PutRelOsintDetectWordRequest
-func (r *PutRelOsintDetectWordRequest) Validate() error {
-	if r.RelOsintDetectWord == nil {
-		return errors.New("Required RelOsintDetectWord")
-	}
-	if err := validation.ValidateStruct(r,
-		validation.Field(&r.ProjectId, validation.Required, validation.In(r.RelOsintDetectWord.ProjectId), validation.Required),
-	); err != nil {
-		return err
-	}
-	return r.RelOsintDetectWord.Validate()
-}
-
-// Validate DeleteResultRequest
-func (r *DeleteRelOsintDetectWordRequest) Validate() error {
-	return validation.ValidateStruct(r,
-		validation.Field(&r.ProjectId, validation.Required),
-		validation.Field(&r.RelOsintDetectWordId, validation.Required),
-	)
-}
-
 // Validate ListOsintDetectWordRequest
 func (r *ListOsintDetectWordRequest) Validate() error {
 	return validation.ValidateStruct(r,
@@ -233,19 +197,11 @@ func (r *RelOsintDataSourceForUpsert) Validate() error {
 	)
 }
 
-// Validate RelOsintDetectWordForUpsert
-func (r *RelOsintDetectWordForUpsert) Validate() error {
-	return validation.ValidateStruct(r,
-		validation.Field(&r.RelOsintDataSourceId, validation.Required),
-		validation.Field(&r.OsintDetectWordId, validation.Required),
-		validation.Field(&r.ProjectId, validation.Required),
-	)
-}
-
 // Validate OsintDetectWordForUpsert
 func (r *OsintDetectWordForUpsert) Validate() error {
 	return validation.ValidateStruct(r,
 		validation.Field(&r.ProjectId, validation.Required),
+		validation.Field(&r.RelOsintDataSourceId, validation.Required),
 		validation.Field(&r.Word, validation.Required, validation.Length(0, 50)),
 	)
 }

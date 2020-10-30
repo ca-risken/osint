@@ -408,145 +408,6 @@ func TestValidate_DeleteRelOsintDataSourceRequest(t *testing.T) {
 	}
 }
 
-//RelOsintDetectWord DataSource
-
-func TestValidate_ListRelOsintDetectWordRequest(t *testing.T) {
-	cases := []struct {
-		name    string
-		input   *ListRelOsintDetectWordRequest
-		wantErr bool
-	}{
-		{
-			name:    "OK",
-			input:   &ListRelOsintDetectWordRequest{ProjectId: 1001},
-			wantErr: false,
-		},
-		{
-			name:    "NG required(project_id)",
-			input:   &ListRelOsintDetectWordRequest{},
-			wantErr: true,
-		},
-	}
-	for _, c := range cases {
-		t.Run(c.name, func(t *testing.T) {
-			err := c.input.Validate()
-			if c.wantErr && err == nil {
-				t.Fatal("Unexpected no error")
-			} else if !c.wantErr && err != nil {
-				t.Fatalf("Unexpected error occured: wantErr=%t, err=%+v", c.wantErr, err)
-			}
-		})
-	}
-}
-
-func TestValidate_GetRelOsintDetectWordRequest(t *testing.T) {
-	cases := []struct {
-		name    string
-		input   *GetRelOsintDetectWordRequest
-		wantErr bool
-	}{
-		{
-			name:    "OK",
-			input:   &GetRelOsintDetectWordRequest{ProjectId: 1001, RelOsintDetectWordId: 1002},
-			wantErr: false,
-		},
-		{
-			name:    "NG required(project_id)",
-			input:   &GetRelOsintDetectWordRequest{RelOsintDetectWordId: 1002},
-			wantErr: true,
-		},
-		{
-			name:    "NG required(rel_osint_detect_word_id)",
-			input:   &GetRelOsintDetectWordRequest{ProjectId: 1001},
-			wantErr: true,
-		},
-	}
-	for _, c := range cases {
-		t.Run(c.name, func(t *testing.T) {
-			err := c.input.Validate()
-			if c.wantErr && err == nil {
-				t.Fatal("Unexpected no error")
-			} else if !c.wantErr && err != nil {
-				t.Fatalf("Unexpected error occured: wantErr=%t, err=%+v", c.wantErr, err)
-			}
-		})
-	}
-}
-
-func TestValidate_PutRelOsintDetectWordRequest(t *testing.T) {
-	cases := []struct {
-		name    string
-		input   *PutRelOsintDetectWordRequest
-		wantErr bool
-	}{
-		{
-			name:    "OK",
-			input:   &PutRelOsintDetectWordRequest{ProjectId: 1001, RelOsintDetectWord: &RelOsintDetectWordForUpsert{ProjectId: 1001, RelOsintDataSourceId: 1001, OsintDetectWordId: 1001}},
-			wantErr: false,
-		},
-		{
-			name:    "NG Required(RelOsintDetectWord)",
-			input:   &PutRelOsintDetectWordRequest{ProjectId: 1001},
-			wantErr: true,
-		},
-		{
-			name:  "NG Not Equal(project_id != rel_osint_data_source.project_id)",
-			input: &PutRelOsintDetectWordRequest{ProjectId: 1002, RelOsintDetectWord: &RelOsintDetectWordForUpsert{ProjectId: 1001, RelOsintDataSourceId: 1001, OsintDetectWordId: 1001}},
-
-			wantErr: true,
-		},
-		{
-			name:    "NG Required(ProjectId)",
-			input:   &PutRelOsintDetectWordRequest{RelOsintDetectWord: &RelOsintDetectWordForUpsert{ProjectId: 1001, RelOsintDataSourceId: 1001, OsintDetectWordId: 1001}},
-			wantErr: true,
-		},
-	}
-	for _, c := range cases {
-		t.Run(c.name, func(t *testing.T) {
-			err := c.input.Validate()
-			if c.wantErr && err == nil {
-				t.Fatal("Unexpected no error")
-			} else if !c.wantErr && err != nil {
-				t.Fatalf("Unexpected error occured: wantErr=%t, err=%+v", c.wantErr, err)
-			}
-		})
-	}
-}
-
-func TestValidate_DeleteRelOsintDetectWordRequest(t *testing.T) {
-	cases := []struct {
-		name    string
-		input   *DeleteRelOsintDetectWordRequest
-		wantErr bool
-	}{
-		{
-			name:    "OK",
-			input:   &DeleteRelOsintDetectWordRequest{ProjectId: 1001, RelOsintDetectWordId: 1002},
-			wantErr: false,
-		},
-		{
-			name:    "NG Required(project_id)",
-			input:   &DeleteRelOsintDetectWordRequest{RelOsintDetectWordId: 1001},
-			wantErr: true,
-		},
-		{
-			name:    "NG Required(osint_data_source_id)",
-			input:   &DeleteRelOsintDetectWordRequest{ProjectId: 1001},
-			wantErr: true,
-		},
-	}
-	for _, c := range cases {
-		t.Run(c.name, func(t *testing.T) {
-			err := c.input.Validate()
-			if c.wantErr && err == nil {
-				t.Fatal("Unexpected no error")
-			} else if !c.wantErr && err != nil {
-				t.Fatalf("Unexpected error occured: wantErr=%t, err=%+v", c.wantErr, err)
-			}
-		})
-	}
-}
-
 //OsintDetectWord DataSource
 
 func TestValidate_ListOsintDetectWordRequest(t *testing.T) {
@@ -620,7 +481,7 @@ func TestValidate_PutOsintDetectWordRequest(t *testing.T) {
 	}{
 		{
 			name:    "OK",
-			input:   &PutOsintDetectWordRequest{ProjectId: 1001, OsintDetectWord: &OsintDetectWordForUpsert{ProjectId: 1001, Word: "hoge"}},
+			input:   &PutOsintDetectWordRequest{ProjectId: 1001, OsintDetectWord: &OsintDetectWordForUpsert{ProjectId: 1001, RelOsintDataSourceId: 1001, Word: "hoge"}},
 			wantErr: false,
 		},
 		{
@@ -630,7 +491,7 @@ func TestValidate_PutOsintDetectWordRequest(t *testing.T) {
 		},
 		{
 			name:    "NG Not Equal(project_id != rel_osint_data_source.project_id)",
-			input:   &PutOsintDetectWordRequest{ProjectId: 1002, OsintDetectWord: &OsintDetectWordForUpsert{ProjectId: 1001, Word: "hoge"}},
+			input:   &PutOsintDetectWordRequest{ProjectId: 1002, OsintDetectWord: &OsintDetectWordForUpsert{ProjectId: 1001, RelOsintDataSourceId: 1001, Word: "hoge"}},
 			wantErr: true,
 		},
 		{
@@ -876,40 +737,6 @@ func TestValidate_RelOsintDataSourceForUpsert(t *testing.T) {
 	}
 }
 
-func TestValidate_RelOsintDetectWordForUpsert(t *testing.T) {
-	cases := []struct {
-		name    string
-		input   *RelOsintDetectWordForUpsert
-		wantErr bool
-	}{
-		{
-			name:    "OK",
-			input:   &RelOsintDetectWordForUpsert{ProjectId: 1001, RelOsintDataSourceId: 1001, OsintDetectWordId: 1001},
-			wantErr: false,
-		},
-		{
-			name:    "NG Required(rel_osint_data_source_id)",
-			input:   &RelOsintDetectWordForUpsert{ProjectId: 1001, OsintDetectWordId: 1001},
-			wantErr: true,
-		},
-		{
-			name:    "NG Required(osint_detect_word_id)",
-			input:   &RelOsintDetectWordForUpsert{ProjectId: 1001, RelOsintDataSourceId: 1001},
-			wantErr: true,
-		},
-	}
-	for _, c := range cases {
-		t.Run(c.name, func(t *testing.T) {
-			err := c.input.Validate()
-			if c.wantErr && err == nil {
-				t.Fatal("Unexpected no error")
-			} else if !c.wantErr && err != nil {
-				t.Fatalf("Unexpected error occured: wantErr=%t, err=%+v", c.wantErr, err)
-			}
-		})
-	}
-}
-
 func TestValidate_OsintDetectWordForUpsert(t *testing.T) {
 	cases := []struct {
 		name    string
@@ -918,22 +745,27 @@ func TestValidate_OsintDetectWordForUpsert(t *testing.T) {
 	}{
 		{
 			name:    "OK",
-			input:   &OsintDetectWordForUpsert{ProjectId: 1001, Word: "hoge"},
+			input:   &OsintDetectWordForUpsert{ProjectId: 1001, RelOsintDataSourceId: 1001, Word: "hoge"},
 			wantErr: false,
 		},
 		{
 			name:    "NG Required(project_id)",
-			input:   &OsintDetectWordForUpsert{Word: "hoge"},
+			input:   &OsintDetectWordForUpsert{RelOsintDataSourceId: 1001, Word: "hoge"},
+			wantErr: true,
+		},
+		{
+			name:    "NG Required(RelOsintDataSourceId)",
+			input:   &OsintDetectWordForUpsert{ProjectId: 1001, Word: "hoge"},
 			wantErr: true,
 		},
 		{
 			name:    "Too long(word)",
-			input:   &OsintDetectWordForUpsert{ProjectId: 1001, Word: "123456789012345678901234567890123456789012345678901"},
+			input:   &OsintDetectWordForUpsert{ProjectId: 1001, RelOsintDataSourceId: 1001, Word: "123456789012345678901234567890123456789012345678901"},
 			wantErr: true,
 		},
 		{
 			name:    "NG Required(word)",
-			input:   &OsintDetectWordForUpsert{ProjectId: 1001},
+			input:   &OsintDetectWordForUpsert{ProjectId: 1001, RelOsintDataSourceId: 1001},
 			wantErr: true,
 		},
 	}

@@ -33,16 +33,6 @@ service OsintService {
   rpc DeleteOsintDataSource(DeleteOsintDataSourceRequest)
       returns (google.protobuf.Empty) {}
 
-  // RelOsintDetectWord
-  rpc ListRelOsintDetectWord(ListRelOsintDetectWordRequest)
-      returns (ListRelOsintDetectWordResponse) {}
-  rpc GetRelOsintDetectWord(GetRelOsintDetectWordRequest)
-      returns (GetRelOsintDetectWordResponse) {}
-  rpc PutRelOsintDetectWord(PutRelOsintDetectWordRequest)
-      returns (PutRelOsintDetectWordResponse) {}
-  rpc DeleteRelOsintDetectWord(DeleteRelOsintDetectWordRequest)
-      returns (google.protobuf.Empty) {}
-
   // OsintDetectWord
   rpc ListOsintDetectWord(ListOsintDetectWordRequest)
       returns (ListOsintDetectWordResponse) {}
@@ -142,39 +132,10 @@ message DeleteRelOsintDataSourceRequest {
   uint32 rel_osint_data_source_id = 2;
 }
 
-message ListRelOsintDetectWordRequest {
+message ListOsintDetectWordRequest {
   uint32 project_id = 1;
   uint32 rel_osint_data_source_id = 2;
 }
-
-message ListRelOsintDetectWordResponse {
-  repeated RelOsintDetectWord rel_osint_detect_word = 1;
-}
-
-message GetRelOsintDetectWordRequest {
-  uint32 project_id = 1;
-  uint32 rel_osint_detect_word_id = 2;
-}
-
-message GetRelOsintDetectWordResponse {
-  RelOsintDetectWord rel_osint_detect_word = 1;
-}
-
-message PutRelOsintDetectWordRequest {
-  uint32 project_id = 1;
-  RelOsintDetectWordForUpsert rel_osint_detect_word = 2;
-}
-
-message PutRelOsintDetectWordResponse {
-  RelOsintDetectWord rel_osint_detect_word = 1;
-}
-
-message DeleteRelOsintDetectWordRequest {
-  uint32 project_id = 1;
-  uint32 rel_osint_detect_word_id = 2;
-}
-
-message ListOsintDetectWordRequest { uint32 project_id = 1; }
 
 message ListOsintDetectWordResponse {
   repeated OsintDetectWord osint_detect_word = 1;
