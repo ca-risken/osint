@@ -57,34 +57,20 @@ message RelOsintDataSourceForUpsert {
   int64 scan_at = 7;
 }
 
-message RelOsintDetectWord {
-  uint32 rel_osint_detect_word_id = 1;
+message OsintDetectWord {
+  uint32 osint_detect_word_id = 1;
   uint32 rel_osint_data_source_id = 2;
-  uint32 osint_detect_word_id = 3;
+  string word = 3;
   uint32 project_id = 4;
   int64 created_at = 5;
   int64 updated_at = 6;
 }
 
-message RelOsintDetectWordForUpsert {
-  uint32 rel_osint_detect_word_id = 1;
-  uint32 rel_osint_data_source_id = 2;
-  uint32 osint_detect_word_id = 3;
-  uint32 project_id = 4;
-}
-
-message OsintDetectWord {
-  uint32 osint_detect_word_id = 1;
-  string word = 2;
-  uint32 project_id = 3;
-  int64 created_at = 4;
-  int64 updated_at = 5;
-}
-
 message OsintDetectWordForUpsert {
   uint32 osint_detect_word_id = 1;
-  string word = 2;
-  uint32 project_id = 3;
+  uint32 rel_osint_data_source_id = 2;
+  string word = 3;
+  uint32 project_id = 4;
 }
 
 // Status
