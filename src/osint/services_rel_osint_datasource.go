@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/CyberAgent/mimosa-osint-go/pkg/message"
-	"github.com/CyberAgent/mimosa-osint-go/pkg/model"
-	"github.com/CyberAgent/mimosa-osint-go/proto/osint"
+	"github.com/CyberAgent/mimosa-osint/pkg/message"
+	"github.com/CyberAgent/mimosa-osint/pkg/model"
+	"github.com/CyberAgent/mimosa-osint/proto/osint"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/jinzhu/gorm"
 )
@@ -115,7 +115,7 @@ func (s *osintService) InvokeScan(ctx context.Context, req *osint.InvokeScanRequ
 	if err != nil {
 		return nil, err
 	}
-	detectWord, err := s.repository.ListOsintDetectWordFromRelOsintDataSourceID(relOsintDataSourceData.ProjectID, relOsintDataSourceData.RelOsintDataSourceID)
+	detectWord, err := s.repository.ListOsintDetectWord(relOsintDataSourceData.ProjectID, relOsintDataSourceData.RelOsintDataSourceID)
 	if err != nil {
 		return nil, err
 	}

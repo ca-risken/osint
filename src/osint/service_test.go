@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/CyberAgent/mimosa-osint-go/pkg/model"
-	"github.com/CyberAgent/mimosa-osint-go/proto/osint"
+	"github.com/CyberAgent/mimosa-osint/pkg/model"
+	"github.com/CyberAgent/mimosa-osint/proto/osint"
 	"github.com/jinzhu/gorm"
 	"github.com/stretchr/testify/mock"
 )
@@ -370,6 +370,360 @@ func TestDeleteOsintDataSource(t *testing.T) {
 	}
 }
 
+func TestListRelOsintDataSource(t *testing.T) {
+	var ctx context.Context
+	now := time.Now()
+	mockDB := mockOsintRepository{}
+	svc := osintService{repository: &mockDB}
+	cases := []struct {
+		name         string
+		input        *osint.ListRelOsintDataSourceRequest
+		want         *osint.ListRelOsintDataSourceResponse
+		mockResponce *[]model.RelOsintDataSource
+		mockError    error
+	}{
+		{
+			name:  "OK",
+			input: &osint.ListRelOsintDataSourceRequest{ProjectId: 1001},
+			want: &osint.ListRelOsintDataSourceResponse{RelOsintDataSource: []*osint.RelOsintDataSource{
+				{RelOsintDataSourceId: 1001, OsintId: 1001, OsintDataSourceId: 1001, Status: osint.Status_OK, StatusDetail: "", ScanAt: now.Unix(), CreatedAt: now.Unix(), UpdatedAt: now.Unix()},
+				{RelOsintDataSourceId: 1002, OsintId: 1002, OsintDataSourceId: 1001, Status: osint.Status_OK, StatusDetail: "", ScanAt: now.Unix(), CreatedAt: now.Unix(), UpdatedAt: now.Unix()},
+			}},
+			mockResponce: &[]model.RelOsintDataSource{
+				{RelOsintDataSourceID: 1001, OsintID: 1001, OsintDataSourceID: 1001, Status: "OK", StatusDetail: "", ScanAt: now, CreatedAt: now, UpdatedAt: now},
+				{RelOsintDataSourceID: 1002, OsintID: 1002, OsintDataSourceID: 1001, Status: "OK", StatusDetail: "", ScanAt: now, CreatedAt: now, UpdatedAt: now},
+			},
+		},
+		{
+			name:      "OK Record not found",
+			input:     &osint.ListRelOsintDataSourceRequest{ProjectId: 1001},
+			want:      &osint.ListRelOsintDataSourceResponse{},
+			mockError: gorm.ErrRecordNotFound,
+		},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if c.mockResponce != nil || c.mockError != nil {
+				mockDB.On("ListRelOsintDataSource").Return(c.mockResponce, c.mockError).Once()
+			}
+			got, err := svc.ListRelOsintDataSource(ctx, c.input)
+			if err != nil {
+				t.Fatalf("unexpected error: %+v", err)
+			}
+			if !reflect.DeepEqual(c.want, got) {
+				t.Fatalf("Unexpected mapping: want=%+v, got=%+v", c.want, got)
+			}
+		})
+	}
+}
+
+func TestGetRelOsintDataSource(t *testing.T) {
+	var ctx context.Context
+	now := time.Now()
+	mockDB := mockOsintRepository{}
+	svc := osintService{repository: &mockDB}
+	cases := []struct {
+		name         string
+		input        *osint.GetRelOsintDataSourceRequest
+		want         *osint.GetRelOsintDataSourceResponse
+		mockResponce *model.RelOsintDataSource
+		mockError    error
+	}{
+		{
+			name:  "OK",
+			input: &osint.GetRelOsintDataSourceRequest{ProjectId: 1001, RelOsintDataSourceId: 1001},
+			want: &osint.GetRelOsintDataSourceResponse{RelOsintDataSource: &osint.RelOsintDataSource{
+				RelOsintDataSourceId: 1001, OsintId: 1001, OsintDataSourceId: 1001, Status: osint.Status_OK, StatusDetail: "", ScanAt: now.Unix(), CreatedAt: now.Unix(), UpdatedAt: now.Unix(),
+			}},
+			mockResponce: &model.RelOsintDataSource{RelOsintDataSourceID: 1001, OsintID: 1001, OsintDataSourceID: 1001, Status: "OK", StatusDetail: "", ScanAt: now, CreatedAt: now, UpdatedAt: now},
+		},
+		{
+			name:      "OK Record not found",
+			input:     &osint.GetRelOsintDataSourceRequest{ProjectId: 1001, RelOsintDataSourceId: 1001},
+			want:      &osint.GetRelOsintDataSourceResponse{},
+			mockError: gorm.ErrRecordNotFound,
+		},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if c.mockResponce != nil || c.mockError != nil {
+				mockDB.On("GetRelOsintDataSource").Return(c.mockResponce, c.mockError).Once()
+			}
+			got, err := svc.GetRelOsintDataSource(ctx, c.input)
+			if err != nil {
+				t.Fatalf("unexpected error: %+v", err)
+			}
+			if !reflect.DeepEqual(c.want, got) {
+				t.Fatalf("Unexpected mapping: want=%+v, got=%+v", c.want, got)
+			}
+		})
+	}
+}
+
+func TestPutRelOsintDataSource(t *testing.T) {
+	var ctx context.Context
+	now := time.Now()
+	mockDB := mockOsintRepository{}
+	svc := osintService{repository: &mockDB}
+	cases := []struct {
+		name        string
+		input       *osint.PutRelOsintDataSourceRequest
+		want        *osint.PutRelOsintDataSourceResponse
+		wantErr     bool
+		mockUpdResp *model.RelOsintDataSource
+		mockUpdErr  error
+	}{
+		{
+			name:        "OK Update",
+			input:       &osint.PutRelOsintDataSourceRequest{ProjectId: 1001, RelOsintDataSource: &osint.RelOsintDataSourceForUpsert{RelOsintDataSourceId: 1001, OsintId: 1001, ProjectId: 1001, OsintDataSourceId: 1001, Status: osint.Status_OK, ScanAt: now.Unix()}},
+			want:        &osint.PutRelOsintDataSourceResponse{RelOsintDataSource: &osint.RelOsintDataSource{RelOsintDataSourceId: 1001, OsintId: 1001, OsintDataSourceId: 1001, Status: osint.Status_OK, StatusDetail: "", ScanAt: now.Unix(), CreatedAt: now.Unix(), UpdatedAt: now.Unix()}},
+			mockUpdResp: &model.RelOsintDataSource{RelOsintDataSourceID: 1001, OsintID: 1001, OsintDataSourceID: 1001, Status: "OK", StatusDetail: "", ScanAt: now, CreatedAt: now, UpdatedAt: now},
+		},
+		{
+			name:        "OK Insert",
+			input:       &osint.PutRelOsintDataSourceRequest{ProjectId: 1001, RelOsintDataSource: &osint.RelOsintDataSourceForUpsert{OsintId: 1001, OsintDataSourceId: 1001, ProjectId: 1001, Status: osint.Status_OK, ScanAt: now.Unix()}},
+			want:        &osint.PutRelOsintDataSourceResponse{RelOsintDataSource: &osint.RelOsintDataSource{RelOsintDataSourceId: 1001, OsintId: 1001, OsintDataSourceId: 1001, Status: osint.Status_OK, StatusDetail: "", ScanAt: now.Unix(), CreatedAt: now.Unix(), UpdatedAt: now.Unix()}},
+			mockUpdResp: &model.RelOsintDataSource{RelOsintDataSourceID: 1001, OsintID: 1001, OsintDataSourceID: 1001, Status: "OK", StatusDetail: "", ScanAt: now, CreatedAt: now, UpdatedAt: now},
+		},
+		{
+			name:    "NG Invalid parameter(required project_id)",
+			input:   &osint.PutRelOsintDataSourceRequest{RelOsintDataSource: &osint.RelOsintDataSourceForUpsert{OsintId: 1001, OsintDataSourceId: 1001, ProjectId: 1001, Status: osint.Status_OK, ScanAt: now.Unix()}},
+			wantErr: true,
+		},
+		{
+			name:        "NG DB error(UpsertRelOsintDataSource)",
+			input:       &osint.PutRelOsintDataSourceRequest{ProjectId: 1001, RelOsintDataSource: &osint.RelOsintDataSourceForUpsert{RelOsintDataSourceId: 1001, OsintId: 1001, ProjectId: 1001, OsintDataSourceId: 1001, Status: osint.Status_OK, ScanAt: now.Unix()}},
+			mockUpdResp: nil,
+			mockUpdErr:  errors.New("Something error"),
+			wantErr:     true,
+		},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if c.mockUpdResp != nil || c.mockUpdErr != nil {
+				mockDB.On("UpsertRelOsintDataSource").Return(c.mockUpdResp, c.mockUpdErr).Once()
+			}
+			got, err := svc.PutRelOsintDataSource(ctx, c.input)
+			if err != nil && !c.wantErr {
+				t.Fatalf("unexpected error: %+v", err)
+			}
+			if !reflect.DeepEqual(c.want, got) {
+				t.Fatalf("Unexpected mapping: want=%+v, got=%+v", c.want, got)
+			}
+		})
+	}
+}
+
+func TestDeleteRelOsintDataSource(t *testing.T) {
+	var ctx context.Context
+	mockDB := mockOsintRepository{}
+	svc := osintService{repository: &mockDB}
+	cases := []struct {
+		name     string
+		input    *osint.DeleteRelOsintDataSourceRequest
+		wantErr  bool
+		mockResp error
+	}{
+		{
+			name:    "OK",
+			input:   &osint.DeleteRelOsintDataSourceRequest{ProjectId: 1001, RelOsintDataSourceId: 1001},
+			wantErr: false,
+		},
+		{
+			name:     "NG DB error",
+			input:    &osint.DeleteRelOsintDataSourceRequest{ProjectId: 1001, RelOsintDataSourceId: 1001},
+			wantErr:  true,
+			mockResp: gorm.ErrInvalidSQL,
+		},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			mockDB.On("DeleteRelOsintDataSource").Return(c.mockResp).Once()
+			_, err := svc.DeleteRelOsintDataSource(ctx, c.input)
+			if err != nil && !c.wantErr {
+				t.Fatalf("unexpected error: %+v", err)
+			}
+		})
+	}
+}
+
+func TestListOsintDetectWord(t *testing.T) {
+	var ctx context.Context
+	now := time.Now()
+	mockDB := mockOsintRepository{}
+	svc := osintService{repository: &mockDB}
+	cases := []struct {
+		name         string
+		input        *osint.ListOsintDetectWordRequest
+		want         *osint.ListOsintDetectWordResponse
+		mockResponce *[]model.OsintDetectWord
+		mockError    error
+	}{
+		{
+			name:  "OK",
+			input: &osint.ListOsintDetectWordRequest{ProjectId: 1001},
+			want: &osint.ListOsintDetectWordResponse{OsintDetectWord: []*osint.OsintDetectWord{
+				{OsintDetectWordId: 1001, RelOsintDataSourceId: 1001, Word: "hoge", CreatedAt: now.Unix(), UpdatedAt: now.Unix()},
+				{OsintDetectWordId: 1002, RelOsintDataSourceId: 1002, Word: "hoge", CreatedAt: now.Unix(), UpdatedAt: now.Unix()},
+			}},
+			mockResponce: &[]model.OsintDetectWord{
+				{OsintDetectWordID: 1001, RelOsintDataSourceID: 1001, Word: "hoge", CreatedAt: now, UpdatedAt: now},
+				{OsintDetectWordID: 1002, RelOsintDataSourceID: 1002, Word: "hoge", CreatedAt: now, UpdatedAt: now},
+			},
+		},
+		{
+			name:      "OK Record not found",
+			input:     &osint.ListOsintDetectWordRequest{ProjectId: 1001},
+			want:      &osint.ListOsintDetectWordResponse{},
+			mockError: gorm.ErrRecordNotFound,
+		},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if c.mockResponce != nil || c.mockError != nil {
+				mockDB.On("ListOsintDetectWord").Return(c.mockResponce, c.mockError).Once()
+			}
+			got, err := svc.ListOsintDetectWord(ctx, c.input)
+			if err != nil {
+				t.Fatalf("unexpected error: %+v", err)
+			}
+			if !reflect.DeepEqual(c.want, got) {
+				t.Fatalf("Unexpected mapping: want=%+v, got=%+v", c.want, got)
+			}
+		})
+	}
+}
+
+func TestGetOsintDetectWord(t *testing.T) {
+	var ctx context.Context
+	now := time.Now()
+	mockDB := mockOsintRepository{}
+	svc := osintService{repository: &mockDB}
+	cases := []struct {
+		name         string
+		input        *osint.GetOsintDetectWordRequest
+		want         *osint.GetOsintDetectWordResponse
+		mockResponce *model.OsintDetectWord
+		mockError    error
+	}{
+		{
+			name:  "OK",
+			input: &osint.GetOsintDetectWordRequest{ProjectId: 1001, OsintDetectWordId: 1001},
+			want: &osint.GetOsintDetectWordResponse{OsintDetectWord: &osint.OsintDetectWord{
+				OsintDetectWordId: 1001, RelOsintDataSourceId: 1001, Word: "hoge", CreatedAt: now.Unix(), UpdatedAt: now.Unix(),
+			}},
+			mockResponce: &model.OsintDetectWord{OsintDetectWordID: 1001, RelOsintDataSourceID: 1001, Word: "hoge", CreatedAt: now, UpdatedAt: now},
+		},
+		{
+			name:      "OK Record not found",
+			input:     &osint.GetOsintDetectWordRequest{ProjectId: 1001, OsintDetectWordId: 1001},
+			want:      &osint.GetOsintDetectWordResponse{},
+			mockError: gorm.ErrRecordNotFound,
+		},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if c.mockResponce != nil || c.mockError != nil {
+				mockDB.On("GetOsintDetectWord").Return(c.mockResponce, c.mockError).Once()
+			}
+			got, err := svc.GetOsintDetectWord(ctx, c.input)
+			if err != nil {
+				t.Fatalf("unexpected error: %+v", err)
+			}
+			if !reflect.DeepEqual(c.want, got) {
+				t.Fatalf("Unexpected mapping: want=%+v, got=%+v", c.want, got)
+			}
+		})
+	}
+}
+
+func TestPutOsintDetectWord(t *testing.T) {
+	var ctx context.Context
+	now := time.Now()
+	mockDB := mockOsintRepository{}
+	svc := osintService{repository: &mockDB}
+	cases := []struct {
+		name        string
+		input       *osint.PutOsintDetectWordRequest
+		want        *osint.PutOsintDetectWordResponse
+		wantErr     bool
+		mockUpdResp *model.OsintDetectWord
+		mockUpdErr  error
+	}{
+		{
+			name:        "OK Update",
+			input:       &osint.PutOsintDetectWordRequest{ProjectId: 1001, OsintDetectWord: &osint.OsintDetectWordForUpsert{OsintDetectWordId: 1001, RelOsintDataSourceId: 1001, ProjectId: 1001, Word: "hoge"}},
+			want:        &osint.PutOsintDetectWordResponse{OsintDetectWord: &osint.OsintDetectWord{OsintDetectWordId: 1001, RelOsintDataSourceId: 1001, Word: "hoge", CreatedAt: now.Unix(), UpdatedAt: now.Unix()}},
+			mockUpdResp: &model.OsintDetectWord{OsintDetectWordID: 1001, RelOsintDataSourceID: 1001, Word: "hoge", CreatedAt: now, UpdatedAt: now},
+		},
+		{
+			name:        "OK Insert",
+			input:       &osint.PutOsintDetectWordRequest{ProjectId: 1001, OsintDetectWord: &osint.OsintDetectWordForUpsert{RelOsintDataSourceId: 1001, ProjectId: 1001, Word: "hoge"}},
+			want:        &osint.PutOsintDetectWordResponse{OsintDetectWord: &osint.OsintDetectWord{OsintDetectWordId: 1001, RelOsintDataSourceId: 1001, Word: "hoge", CreatedAt: now.Unix(), UpdatedAt: now.Unix()}},
+			mockUpdResp: &model.OsintDetectWord{OsintDetectWordID: 1001, RelOsintDataSourceID: 1001, Word: "hoge", CreatedAt: now, UpdatedAt: now},
+		},
+		{
+			name:    "NG Invalid parameter(required project_id)",
+			input:   &osint.PutOsintDetectWordRequest{OsintDetectWord: &osint.OsintDetectWordForUpsert{RelOsintDataSourceId: 1001, ProjectId: 1001, Word: "hoge"}},
+			wantErr: true,
+		},
+		{
+			name:        "NG DB error(UpsertOsintDetectWord)",
+			input:       &osint.PutOsintDetectWordRequest{ProjectId: 1001, OsintDetectWord: &osint.OsintDetectWordForUpsert{OsintDetectWordId: 1001, RelOsintDataSourceId: 1001, Word: "hoge", ProjectId: 1001}},
+			mockUpdResp: nil,
+			mockUpdErr:  errors.New("Something error"),
+			wantErr:     true,
+		},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if c.mockUpdResp != nil || c.mockUpdErr != nil {
+				mockDB.On("UpsertOsintDetectWord").Return(c.mockUpdResp, c.mockUpdErr).Once()
+			}
+			got, err := svc.PutOsintDetectWord(ctx, c.input)
+			if err != nil && !c.wantErr {
+				t.Fatalf("unexpected error: %+v", err)
+			}
+			if !reflect.DeepEqual(c.want, got) {
+				t.Fatalf("Unexpected mapping: want=%+v, got=%+v", c.want, got)
+			}
+		})
+	}
+}
+
+func TestDeleteOsintDetectWord(t *testing.T) {
+	var ctx context.Context
+	mockDB := mockOsintRepository{}
+	svc := osintService{repository: &mockDB}
+	cases := []struct {
+		name     string
+		input    *osint.DeleteOsintDetectWordRequest
+		wantErr  bool
+		mockResp error
+	}{
+		{
+			name:    "OK",
+			input:   &osint.DeleteOsintDetectWordRequest{ProjectId: 1001, OsintDetectWordId: 1001},
+			wantErr: false,
+		},
+		{
+			name:     "NG DB error",
+			input:    &osint.DeleteOsintDetectWordRequest{ProjectId: 1001, OsintDetectWordId: 1001},
+			wantErr:  true,
+			mockResp: gorm.ErrInvalidSQL,
+		},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			mockDB.On("DeleteOsintDetectWord").Return(c.mockResp).Once()
+			_, err := svc.DeleteOsintDetectWord(ctx, c.input)
+			if err != nil && !c.wantErr {
+				t.Fatalf("unexpected error: %+v", err)
+			}
+		})
+	}
+}
+
 /**
  * Mock Repository
 **/
@@ -425,23 +779,7 @@ func (m *mockOsintRepository) DeleteRelOsintDataSource(uint32, uint32) error {
 	args := m.Called()
 	return args.Error(0)
 }
-func (m *mockOsintRepository) ListRelOsintDetectWord(uint32, uint32) (*[]model.RelOsintDetectWord, error) {
-	args := m.Called()
-	return args.Get(0).(*[]model.RelOsintDetectWord), args.Error(1)
-}
-func (m *mockOsintRepository) GetRelOsintDetectWord(uint32, uint32) (*model.RelOsintDetectWord, error) {
-	args := m.Called()
-	return args.Get(0).(*model.RelOsintDetectWord), args.Error(1)
-}
-func (m *mockOsintRepository) UpsertRelOsintDetectWord(*model.RelOsintDetectWord) (*model.RelOsintDetectWord, error) {
-	args := m.Called()
-	return args.Get(0).(*model.RelOsintDetectWord), args.Error(1)
-}
-func (m *mockOsintRepository) DeleteRelOsintDetectWord(uint32, uint32) error {
-	args := m.Called()
-	return args.Error(0)
-}
-func (m *mockOsintRepository) ListOsintDetectWord(uint32) (*[]model.OsintDetectWord, error) {
+func (m *mockOsintRepository) ListOsintDetectWord(uint32, uint32) (*[]model.OsintDetectWord, error) {
 	args := m.Called()
 	return args.Get(0).(*[]model.OsintDetectWord), args.Error(1)
 }
@@ -456,10 +794,6 @@ func (m *mockOsintRepository) UpsertOsintDetectWord(*model.OsintDetectWord) (*mo
 func (m *mockOsintRepository) DeleteOsintDetectWord(uint32, uint32) error {
 	args := m.Called()
 	return args.Error(0)
-}
-func (m *mockOsintRepository) ListOsintDetectWordFromRelOsintDataSourceID(uint32, uint32) (*[]model.OsintDetectWord, error) {
-	args := m.Called()
-	return args.Get(0).(*[]model.OsintDetectWord), args.Error(1)
 }
 func (m *mockOsintRepository) ListAllRelOsintDataSource() (*[]model.RelOsintDataSource, error) {
 	args := m.Called()

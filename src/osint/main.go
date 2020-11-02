@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/CyberAgent/mimosa-osint-go/proto/osint"
+	"github.com/CyberAgent/mimosa-osint/proto/osint"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
