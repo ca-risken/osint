@@ -26,8 +26,8 @@ type sqsHandler struct {
 
 func newHandler() *sqsHandler {
 	h := &sqsHandler{}
-	h.subdomainSearch = newSubdomainSearchClient()
-	appLogger.Info("Start subdomainsearch Client")
+	h.subdomainSearch = newSubdomainClient()
+	appLogger.Info("Start subdomain Client")
 	h.findingClient = newFindingClient()
 	appLogger.Info("Start Finding Client")
 	h.alertClient = newAlertClient()
@@ -100,7 +100,7 @@ func (s *sqsHandler) putFindings(ctx context.Context, findings []*finding.Findin
 			return err
 		}
 		s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagOsint)
-		s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagSubdomainSearch)
+		s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagSubdomain)
 		s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagDomain)
 		appLogger.Infof("Success to PutFinding. finding: %v", f)
 	}

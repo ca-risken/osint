@@ -15,7 +15,7 @@ type sqsConfig struct {
 	AWSRegion string `envconfig:"aws_region" default:"ap-northeast-1"`
 	Endpoint  string `envconfig:"sqs_endpoint" default:"http://localhost:9324"`
 
-	SubdomainSearchQueueURL string `split_words:"true" required:"true"`
+	SubdomainQueueURL string `split_words:"true" required:"true"`
 }
 
 type sqsAPI interface {
@@ -42,7 +42,7 @@ func newSQSClient() *sqsClient {
 		svc: session,
 		queueURLMap: map[string]string{
 			// queueURLMap:
-			"osint:subdomainsearch": conf.SubdomainSearchQueueURL,
+			"osint:subdomain": conf.SubdomainQueueURL,
 		},
 	}
 }

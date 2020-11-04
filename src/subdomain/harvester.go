@@ -27,7 +27,7 @@ type subdomainSearchConfig struct {
 	HarvesterPath string `required:"true" split_words:"true"`
 }
 
-func newSubdomainSearchClient() *subdomainSearchClient {
+func newSubdomainClient() *subdomainSearchClient {
 	var conf subdomainSearchConfig
 	err := envconfig.Process("", &conf)
 	if err != nil {
