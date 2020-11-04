@@ -34,7 +34,7 @@ ENV PORT=18081 \
     AWS_SECRET_ACCESS_KEY= \
     AWS_SESSION_TOKEN= \
     SQS_ENDPOINT= \
-    SUBDOMAIN_SEARCH_QUEUE_URL= \
+    SUBDOMAIN_QUEUE_URL= \
     TZ=Asia/Tokyo
 WORKDIR /usr/local/osint
 ENTRYPOINT ["/usr/local/bin/env-injector"]

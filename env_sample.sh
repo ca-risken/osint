@@ -19,8 +19,8 @@ export AWS_REGION="ap-northeast-1"
 export AWS_ACCESS_KEY_ID="hogehoge"
 export AWS_SECRET_ACCESS_KEY="hugahuga"
 export AWS_SESSION_TOKEN="piyopiyo"
-export SUBDOMAIN_SEARCH_QUEUE_NAME="osint-subdomainsearch"
-export SUBDOMAIN_SEARCH_QUEUE_URL="http://sqs:9324/queue/osint-subdomainsearch"
+export SUBDOMAIN_QUEUE_NAME="osint-subdomain"
+export SUBDOMAIN_QUEUE_URL="http://sqs:9324/queue/osint-subdomain"
 export SQS_ENDPOINT="http://sqs:9324"
 
 # mimosa
