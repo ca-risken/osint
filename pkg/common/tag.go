@@ -3,8 +3,8 @@ package common
 const (
 	// TagOsint osint tag
 	TagOsint = "osint"
-	// TagSubdomainSearch subdomainsearch tag
-	TagSubdomainSearch = "subdomain"
+	// TagSubdomain subdomain tag
+	TagSubdomain = "subdomain"
 
 	// Osint Resource Type
 
