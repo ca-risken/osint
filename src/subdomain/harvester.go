@@ -89,35 +89,31 @@ func getHTTPStatus(detectedHosts *[]string) *[]httpStatus {
 	retList := []httpStatus{}
 
 	for _, host := range *detectedHosts {
-		http, _ := getStatusCode(host, "http")
-		https, _ := getStatusCode(host, "https")
+		http, urlHTTP, _ := getStatusCodeHost(host, "http")
+		https, urlHTTPS, _ := getStatusCodeHost(host, "https")
 		if !zero.IsZeroVal(http) && !zero.IsZeroVal(https) {
-			retList = append(retList, httpStatus{HostName: host, HTTP: http, HTTPS: https})
+			retList = append(retList, httpStatus{HostName: host, HTTP: http, UrlHTTP: urlHTTP, HTTPS: https, UrlHTTPS: urlHTTPS})
 		}
 	}
 	return &retList
 }
 
-func getStatusCode(host, protocol string) (int, error) {
+func getStatusCodeHost(host, protocol string) (int, string, error) {
 	url := fmt.Sprintf("%s://%s", protocol, host)
 	req, _ := http.NewRequest("GET", url, nil)
 	client := http.Client{
 		Timeout: 5 * time.Second,
 	}
 
-	// リダイレクトをさせない
-	client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
-		return http.ErrUseLastResponse
-	}
 	res, err := client.Do(req)
 
 	// Timeoutもエラーに入るので、特にログも出さないでスルー(ドメインを見つけてもHTTPで使われているとは限らないため)
 	if err != nil {
-		return 0, err
+		return 0, "", err
 	}
 
 	defer res.Body.Close()
-	return res.StatusCode, nil
+	return res.StatusCode, res.Request.URL.String(), nil
 }
 
 func isDetected(host string, detectList *[]string) bool {
@@ -164,5 +160,7 @@ type host struct {
 type httpStatus struct {
 	HostName string `json:"hostname"`
 	HTTP     int    `json:"http"`
+	UrlHTTP  string `json:"url_http"`
 	HTTPS    int    `json:"https"`
+	UrlHTTPS string `json:"url_https"`
 }

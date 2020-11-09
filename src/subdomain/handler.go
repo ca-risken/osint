@@ -197,18 +197,9 @@ func makeFindings(arrStatus *[]httpStatus, message *message.OsintQueueMessage) (
 }
 
 func getScore(status *httpStatus) float32 {
-	var score float32 = 1.0
-	if !zero.IsZeroVal(status.HTTP) {
-		score = score + 1.0
-	}
-	if !zero.IsZeroVal(status.HTTPS) {
-		score = score + 1.0
-	}
-	if status.HTTP != 401 && status.HTTP != 403 {
-		score = score + 1.0
-	}
-	if status.HTTPS != 401 && status.HTTPS != 403 {
-		score = score + 1.0
+	var score float32 = 3.0
+	if (status.HTTP != 401 && status.HTTP != 403) || (status.HTTPS != 401 && status.HTTPS != 403) {
+		score = score + 3.0
 	}
 	return score
 }
