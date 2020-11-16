@@ -1,5 +1,5 @@
 FROM golang:1.15 AS builder
-WORKDIR /go/src/github.com/CyberAgent/mimosa-osint/src/subdomain/
+WORKDIR /go/src/github.com/CyberAgent/mimosa-osint/src/private-expose/
 ADD *.go go.* ./
 ENV CGO_ENABLED=0 GO111MODULE=on GOPRIVATE="github.com/CyberAgent/*"
 ARG GITHUB_USER
@@ -17,15 +17,15 @@ RUN apk add --no-cache ca-certificates tzdata build-base python3 py-pip python3-
   && cd /tmp/ && wget -q https://github.com/okzk/env-injector/releases/download/v0.0.5/env-injector_0.0.5_linux_amd64.tar.gz \
   && tar xvfz env-injector_0.0.5_linux_amd64.tar.gz && mv env-injector /usr/local/bin/ && rm /tmp/* \
   && mkdir /results
-COPY --from=builder /go/bin/subdomain /usr/local/subdomain/bin/
+COPY --from=builder /go/bin/private-expose /usr/local/private-expose/bin/
 ENV PORT=19002 \
     AWS_REGION= \
     AWS_ACCESS_KEY_ID= \
     AWS_SECRET_ACCESS_KEY= \
     AWS_SESSION_TOKEN= \
     SQS_ENDPOINT= \
-    SUBDOMAIN_QUEUE_NAME= \
-    SUBDOMAIN_QUEUE_URL= \
+    PRIVATE_EXPOSE_QUEUE_NAME= \
+    PRIVATE_EXPOSE_QUEUE_URL= \
     MAX_NUMBER_OF_MESSAGE=10 \
     WAIT_TIME_SECOND=20 \
     FINDING_SVC_ADDR= \
@@ -35,6 +35,6 @@ ENV PORT=19002 \
     HARVESTER_PATH=/theHarvester \
     TZ=Asia/Tokyo
 
-WORKDIR /usr/local/subdomain
+WORKDIR /usr/local/private-expose
 ENTRYPOINT ["/usr/local/bin/env-injector"]
-CMD ["bin/subdomain"]
+CMD ["bin/private-expose"]

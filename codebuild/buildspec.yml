@@ -2,7 +2,7 @@ version: 0.2
 env:
   variables:
     IMAGE_OSINT: "osint/osint"
-    IMAGE_SUBDOMAIN: "osint/subdomain"
+    IMAGE_PRIVATE_EXPOSE: "osint/privateexpose"
   parameter-store:
     GITHUB_USER: "/build/GITHUB_USER"
     GITHUB_TOKEN: "/build/GITHUB_TOKEN"
@@ -26,7 +26,7 @@ phases:
 
       - echo Testing the sources...
       - cd ${SRC}/osint        && go test ./...
-#      - cd ${SRC}/subdomain && go test ./...
+#      - cd ${SRC}/private-expose && go test ./...
 
       - echo Logging in to Amazon ECR...
       - $(aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION})
@@ -35,16 +35,16 @@ phases:
       - echo Build gateway started on `date`
       - echo Pushing the Docker images...
       - cd ${SRC}/osint        && docker build ${BUILD_OPT} --build-arg GITHUB_USER=${GITHUB_USER} --build-arg GITHUB_TOKEN=${GITHUB_TOKEN} -t ${IMAGE_OSINT}:${TAG} .
-      - cd ${SRC}/subdomain && docker build ${BUILD_OPT} --build-arg GITHUB_USER=${GITHUB_USER} --build-arg GITHUB_TOKEN=${GITHUB_TOKEN} -t ${IMAGE_SUBDOMAIN}:${TAG} .
+      - cd ${SRC}/private-expose && docker build ${BUILD_OPT} --build-arg GITHUB_USER=${GITHUB_USER} --build-arg GITHUB_TOKEN=${GITHUB_TOKEN} -t ${IMAGE_PRIVATE_EXPOSE}:${TAG} .
 
       - echo Tagging the images...
       # tag the specific version
       - docker tag ${IMAGE_OSINT}:${TAG}       ${REGISTORY}/${IMAGE_OSINT}:${TAG}
-      - docker tag ${IMAGE_SUBDOMAIN}:${TAG} ${REGISTORY}/${IMAGE_SUBDOMAIN}:${TAG}
+      - docker tag ${IMAGE_PRIVATE_EXPOSE}:${TAG} ${REGISTORY}/${IMAGE_PRIVATE_EXPOSE}:${TAG}
 
       # update latest version
       - docker tag ${IMAGE_OSINT}:${TAG}       ${REGISTORY}/${IMAGE_OSINT}:latest
-      - docker tag ${IMAGE_SUBDOMAIN}:${TAG} ${REGISTORY}/${IMAGE_SUBDOMAIN}:latest
+      - docker tag ${IMAGE_PRIVATE_EXPOSE}:${TAG} ${REGISTORY}/${IMAGE_PRIVATE_EXPOSE}:latest
   post_build:
     commands:
       - echo Build completed on `date`
@@ -52,8 +52,8 @@ phases:
 
       # specific version
       - docker push ${REGISTORY}/${IMAGE_OSINT}:${TAG}
-      - docker push ${REGISTORY}/${IMAGE_SUBDOMAIN}:${TAG}
+      - docker push ${REGISTORY}/${IMAGE_PRIVATE_EXPOSE}:${TAG}
 
       # latest version
       - docker push ${REGISTORY}/${IMAGE_OSINT}:latest
-      - docker push ${REGISTORY}/${IMAGE_SUBDOMAIN}:latest
+      - docker push ${REGISTORY}/${IMAGE_PRIVATE_EXPOSE}:latest

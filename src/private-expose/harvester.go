@@ -14,29 +14,29 @@ import (
 	"github.com/vikyd/zero"
 )
 
-type subdomainSearchAPI interface {
+type privateExposeAPI interface {
 	run(string, uint32) (*[]host, error)
 }
 
-type subdomainSearchClient struct {
-	config subdomainSearchConfig
+type privateExposeClient struct {
+	config privateExposeConfig
 }
 
-type subdomainSearchConfig struct {
+type privateExposeConfig struct {
 	ResultPath    string `required:"true" split_words:"true"`
 	HarvesterPath string `required:"true" split_words:"true"`
 }
 
-func newSubdomainClient() *subdomainSearchClient {
-	var conf subdomainSearchConfig
+func newPrivateExposeClient() *privateExposeClient {
+	var conf privateExposeConfig
 	err := envconfig.Process("", &conf)
 	if err != nil {
 		panic(err)
 	}
-	return &subdomainSearchClient{config: conf}
+	return &privateExposeClient{config: conf}
 }
 
-func (h *subdomainSearchClient) run(domain string, relAlertFindingID uint32) (*[]host, error) {
+func (h *privateExposeClient) run(domain string, relAlertFindingID uint32) (*[]host, error) {
 	now := time.Now().Unix()
 	filePath := fmt.Sprintf("%s/%v_%v.xml", h.config.ResultPath, relAlertFindingID, now)
 	harvesterPath := fmt.Sprintf("%s/theHarvester.py", h.config.HarvesterPath)
