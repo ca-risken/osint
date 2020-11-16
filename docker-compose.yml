@@ -28,13 +28,14 @@ services:
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
       - SQS_ENDPOINT=${SQS_ENDPOINT}
-      - SUBDOMAIN_QUEUE_URL=${SUBDOMAIN_QUEUE_URL}
-  subdomain:
+      - PRIVATE_EXPOSE_QUEUE_URL=${PRIVATE_EXPOSE_QUEUE_URL}
+      - TAKEOVER_QUEUE_URL=${TAKEOVER_QUEUE_URL}
+  private-expose:
     networks:
       - local-shared
       - osint
     build:
-      context: ./src/subdomain
+      context: ./src/private-expose
       args:
         - GITHUB_USER=${GITHUB_USER}
         - GITHUB_TOKEN=${GITHUB_TOKEN}
@@ -48,7 +49,7 @@ services:
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
       - SQS_ENDPOINT=${SQS_ENDPOINT}
-      - SUBDOMAIN_QUEUE_URL=${SUBDOMAIN_QUEUE_URL}
+      - PRIVATE_EXPOSE_QUEUE_URL=${PRIVATE_EXPOSE_QUEUE_URL}
       - FINDING_SVC_ADDR=${FINDING_SVC_ADDR}
       - ALERT_SVC_ADDR=${ALERT_SVC_ADDR}
       - OSINT_SVC_ADDR=${OSINT_SVC_ADDR}

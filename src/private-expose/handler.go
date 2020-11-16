@@ -18,16 +18,16 @@ import (
 )
 
 type sqsHandler struct {
-	findingClient   finding.FindingServiceClient
-	alertClient     alert.AlertServiceClient
-	osintClient     osint.OsintServiceClient
-	subdomainSearch subdomainSearchAPI
+	findingClient finding.FindingServiceClient
+	alertClient   alert.AlertServiceClient
+	osintClient   osint.OsintServiceClient
+	privateExpose privateExposeAPI
 }
 
 func newHandler() *sqsHandler {
 	h := &sqsHandler{}
-	h.subdomainSearch = newSubdomainClient()
-	appLogger.Info("Start subdomain Client")
+	h.privateExpose = newPrivateExposeClient()
+	appLogger.Info("Start privateExpose Client")
 	h.findingClient = newFindingClient()
 	appLogger.Info("Start Finding Client")
 	h.alertClient = newAlertClient()
@@ -54,7 +54,7 @@ func (s *sqsHandler) HandleMessage(msg *sqs.Message) error {
 	}
 
 	// Run Harvester
-	hosts, err := s.subdomainSearch.run(message.ResourceName, message.RelOsintDataSourceID)
+	hosts, err := s.privateExpose.run(message.ResourceName, message.RelOsintDataSourceID)
 	detectedHosts := detectHost(hosts, message.ResourceName, detectList)
 	statusList := getHTTPStatus(detectedHosts)
 	findings, err := makeFindings(statusList, message)
@@ -100,7 +100,7 @@ func (s *sqsHandler) putFindings(ctx context.Context, findings []*finding.Findin
 			return err
 		}
 		s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagOsint)
-		s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagSubdomain)
+		s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagPrivateExpose)
 		s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagDomain)
 		appLogger.Infof("Success to PutFinding. finding: %v", f)
 	}

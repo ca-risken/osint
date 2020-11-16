@@ -38,13 +38,13 @@ go-test: build
 	cd proto/osint  && go test ./...
 	cd pkg/message      && go test ./...
 	cd src/osint    && go test ./...
-	cd src/subdomain         && go test ./...
+	cd src/private-expose         && go test ./...
 
 go-mod-update:
 	cd src/osint \
 		&& go get -u \
 			github.com/CyberAgent/mimosa-osint/...
-	cd src/subdomain \
+	cd src/private-expose \
 		&& go get -u \
 			github.com/CyberAgent/mimosa-core/... \
 			github.com/CyberAgent/mimosa-osint/...
@@ -54,7 +54,7 @@ go-mod-tidy: build
 	cd pkg/model   && go mod tidy
 	cd pkg/message   && go mod tidy
 	cd src/osint && go mod tidy
-	cd src/subdomain      && go mod tidy
+	cd src/private-expose      && go mod tidy
 
 run: go-test network
 	. env.sh && docker-compose up -d --build

@@ -12,10 +12,10 @@ type sqsConfig struct {
 	AWSRegion string `envconfig:"aws_region" default:"ap-northeast-1"`
 	Endpoint  string `envconfig:"sqs_endpoint" default:"http://localhost:9324"`
 
-	SubdomainQueueName string `split_words:"true" default:"osint-subdomain"`
-	SubdomainQueueURL  string `split_words:"true" default:"http://localhost:9324/queue/osint-subdomain"`
-	MaxNumberOfMessage       int64  `split_words:"true" default:"10"`
-	WaitTimeSecond           int64  `split_words:"true" default:"20"`
+	PrivateExposeQueueName string `split_words:"true" default:"osint-privateexpose"`
+	PrivateExposeQueueURL  string `split_words:"true" default:"http://localhost:9324/queue/osint-privateexpose"`
+	MaxNumberOfMessage     int64  `split_words:"true" default:"10"`
+	WaitTimeSecond         int64  `split_words:"true" default:"20"`
 }
 
 func newSQSConsumer() *worker.Worker {
@@ -30,8 +30,8 @@ func newSQSConsumer() *worker.Worker {
 	})
 	return &worker.Worker{
 		Config: &worker.Config{
-			QueueName:          conf.SubdomainQueueName,
-			QueueURL:           conf.SubdomainQueueURL,
+			QueueName:          conf.PrivateExposeQueueName,
+			QueueURL:           conf.PrivateExposeQueueURL,
 			MaxNumberOfMessage: conf.MaxNumberOfMessage,
 			WaitTimeSecond:     conf.WaitTimeSecond,
 		},
