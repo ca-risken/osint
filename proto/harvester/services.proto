@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package osint.harvester;
+option go_package = "github.com/CyberAgent/mimosa-osint/proto/harvester";
+
+import "google/protobuf/empty.proto";
+
+service ResourceService {
+  // Resource
+  // rpc ListOsint(ListOsintRequest) returns (ListOsintResponse) {}
+
+  // InvokeScan
+  rpc InvokeScan(InvokeScanRequest) returns (google.protobuf.Empty) {}
+}
+
+// Invoke Scan
+message InvokeScanRequest {
+  string resource_name = 1;
+  string resource_type = 2;
+}
