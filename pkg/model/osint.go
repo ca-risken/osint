@@ -46,3 +46,21 @@ type OsintDetectWord struct {
 	CreatedAt            time.Time
 	UpdatedAt            time.Time
 }
+
+// OsintResource entity
+type OsintResource struct {
+	OsintResourceID uint32 `gorm:"primary_key"`
+	ResourceName    string
+	ResourceType    string
+	ScanAt          time.Time
+	CreatedAt       time.Time
+	UpdatedAt       time.Time
+}
+
+// OsintRelatedResource entity
+type OsintRelatedResource struct {
+	OsintResourceID     uint32
+	RelatedResourceName string
+	RelatedResourceType string
+	ScanAt              time.Time
+}
