@@ -108,7 +108,7 @@ Resource
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| osint_resource | [OsintRelatedResource](#osint.harvester.OsintRelatedResource) | repeated |  |
+| osint_related_resource | [OsintRelatedResource](#osint.harvester.OsintRelatedResource) | repeated |  |
 
 
 

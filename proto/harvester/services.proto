@@ -21,7 +21,7 @@ message ListOsintRelatedResourceRequest {
 }
 
 message ListOsintRelatedResourceResponse {
-  repeated OsintRelatedResource osint_resource = 1;
+  repeated OsintRelatedResource osint_related_resource = 1;
 }
 
 // Invoke Scan
