@@ -5,6 +5,9 @@
 
 - [harvester/services.proto](#harvester/services.proto)
     - [InvokeScanRequest](#osint.harvester.InvokeScanRequest)
+    - [ListOsintRelatedResourceRequest](#osint.harvester.ListOsintRelatedResourceRequest)
+    - [ListOsintRelatedResourceResponse](#osint.harvester.ListOsintRelatedResourceResponse)
+    - [OsintRelatedResource](#osint.harvester.OsintRelatedResource)
   
     - [ResourceService](#osint.harvester.ResourceService)
   
@@ -80,6 +83,54 @@ Invoke Scan
 
 
 
+
+<a name="osint.harvester.ListOsintRelatedResourceRequest"></a>
+
+### ListOsintRelatedResourceRequest
+Resource
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| resource_name | [string](#string) |  |  |
+| resource_type | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="osint.harvester.ListOsintRelatedResourceResponse"></a>
+
+### ListOsintRelatedResourceResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| osint_resource | [OsintRelatedResource](#osint.harvester.OsintRelatedResource) | repeated |  |
+
+
+
+
+
+
+<a name="osint.harvester.OsintRelatedResource"></a>
+
+### OsintRelatedResource
+Entity
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| osint_resource_id | [uint32](#uint32) |  |  |
+| related_resource_name | [uint32](#uint32) |  |  |
+| related_resource_type | [string](#string) |  |  |
+
+
+
+
+
  
 
  
@@ -90,11 +141,11 @@ Invoke Scan
 <a name="osint.harvester.ResourceService"></a>
 
 ### ResourceService
-Resource
-rpc ListOsint(ListOsintRequest) returns (ListOsintResponse) {}
+
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
+| ListOsintRelatedResource | [ListOsintRelatedResourceRequest](#osint.harvester.ListOsintRelatedResourceRequest) | [ListOsintRelatedResourceResponse](#osint.harvester.ListOsintRelatedResourceResponse) | Resource |
 | InvokeScan | [InvokeScanRequest](#osint.harvester.InvokeScanRequest) | [.google.protobuf.Empty](#google.protobuf.Empty) | InvokeScan |
 
  
