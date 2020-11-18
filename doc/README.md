@@ -124,7 +124,7 @@ Entity
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | osint_resource_id | [uint32](#uint32) |  |  |
-| related_resource_name | [uint32](#uint32) |  |  |
+| related_resource_name | [string](#string) |  |  |
 | related_resource_type | [string](#string) |  |  |
 
 

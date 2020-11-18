@@ -33,6 +33,6 @@ message InvokeScanRequest {
 // Entity
 message OsintRelatedResource {
   uint32 osint_resource_id = 1;
-  uint32 related_resource_name = 2;
+  string related_resource_name = 2;
   string related_resource_type = 3;
 }
