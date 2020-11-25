@@ -16,7 +16,7 @@ type sqsConfig struct {
 	Endpoint  string `envconfig:"sqs_endpoint" default:"http://localhost:9324"`
 
 	PrivateExposeQueueURL string `split_words:"true" required:"true"`
-	TakeoverQueueURL      string `split_words:"true" required:"true"`
+	SubdomainQueueURL     string `split_words:"true" required:"true"`
 }
 
 type sqsAPI interface {
@@ -44,7 +44,7 @@ func newSQSClient() *sqsClient {
 		queueURLMap: map[string]string{
 			// queueURLMap:
 			"osint:private-expose": conf.PrivateExposeQueueURL,
-			"osint:takeover":       conf.TakeoverQueueURL,
+			"osint:subdomain":      conf.SubdomainQueueURL,
 		},
 	}
 }

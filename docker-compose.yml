@@ -29,7 +29,7 @@ services:
       - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
       - SQS_ENDPOINT=${SQS_ENDPOINT}
       - PRIVATE_EXPOSE_QUEUE_URL=${PRIVATE_EXPOSE_QUEUE_URL}
-      - TAKEOVER_QUEUE_URL=${TAKEOVER_QUEUE_URL}
+      - SUBDOMAIN_QUEUE_URL=${SUBDOMAIN_QUEUE_URL}
   private-expose:
     networks:
       - local-shared
@@ -49,7 +49,34 @@ services:
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
       - SQS_ENDPOINT=${SQS_ENDPOINT}
+      - PRIVATE_EXPOSE_QUEUE_NAME=${PRIVATE_EXPOSE_QUEUE_NAME}
       - PRIVATE_EXPOSE_QUEUE_URL=${PRIVATE_EXPOSE_QUEUE_URL}
+      - FINDING_SVC_ADDR=${FINDING_SVC_ADDR}
+      - ALERT_SVC_ADDR=${ALERT_SVC_ADDR}
+      - OSINT_SVC_ADDR=${OSINT_SVC_ADDR}
+      - RESULT_PATH=/results
+      - HARVESTER_PATH=/theHarvester
+  subdomain:
+    networks:
+      - local-shared
+      - osint
+    build:
+      context: ./src/subdomain
+      args:
+        - GITHUB_USER=${GITHUB_USER}
+        - GITHUB_TOKEN=${GITHUB_TOKEN}
+    tty: true
+    ports:
+      - 18083:18083
+    environment:
+      - PORT=18083
+      - AWS_REGION=${AWS_REGION}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
+      - SQS_ENDPOINT=${SQS_ENDPOINT}
+      - SUBDOMAIN_QUEUE_NAME=${SUBDOMAIN_QUEUE_NAME}
+      - SUBDOMAIN_QUEUE_URL=${SUBDOMAIN_QUEUE_URL}
       - FINDING_SVC_ADDR=${FINDING_SVC_ADDR}
       - ALERT_SVC_ADDR=${ALERT_SVC_ADDR}
       - OSINT_SVC_ADDR=${OSINT_SVC_ADDR}

@@ -1,5 +1,5 @@
 FROM golang:1.15 AS builder
-WORKDIR /go/src/github.com/CyberAgent/mimosa-osint/src/private-expose/
+WORKDIR /go/src/github.com/CyberAgent/mimosa-osint/src/subdomain/
 ADD *.go go.* ./
 ENV CGO_ENABLED=0 GO111MODULE=on GOPRIVATE="github.com/CyberAgent/*"
 ARG GITHUB_USER
@@ -9,17 +9,15 @@ RUN echo "login $GITHUB_USER" >> ~/.netrc
 RUN echo "password $GITHUB_TOKEN" >> ~/.netrc
 RUN go install -v
 
-FROM alpine
-
-COPY theHarvester /theHarvester
-RUN apk add --no-cache ca-certificates tzdata build-base python3 py-pip python3-dev libffi-dev gcc libc-dev libxml2-dev libxslt-dev \
-  && pip install wheel \
+FROM python:3.8-alpine
+RUN apk add --no-cache git ca-certificates tzdata build-base  libffi-dev gcc libc-dev libxml2-dev libxslt-dev \
+  && git clone https://github.com/laramies/theHarvester.git \
   && pip install -r /theHarvester/requirements/base.txt \
   && cd /tmp/ && wget -q https://github.com/okzk/env-injector/releases/download/v0.0.5/env-injector_0.0.5_linux_amd64.tar.gz \
   && tar xvfz env-injector_0.0.5_linux_amd64.tar.gz && mv env-injector /usr/local/bin/ && rm /tmp/* \
   && mkdir /results
-COPY --from=builder /go/bin/private-expose /usr/local/private-expose/bin/
-ENV PORT=19002 \
+COPY --from=builder /go/bin/subdomain /usr/local/subdomain/bin/
+ENV PORT=19003 \
     AWS_REGION= \
     AWS_ACCESS_KEY_ID= \
     AWS_SECRET_ACCESS_KEY= \
@@ -36,6 +34,6 @@ ENV PORT=19002 \
     HARVESTER_PATH=/theHarvester \
     TZ=Asia/Tokyo
 
-WORKDIR /usr/local/private-expose
+WORKDIR /usr/local/subdomain
 ENTRYPOINT ["/usr/local/bin/env-injector"]
-CMD ["bin/private-expose"]
+CMD ["bin/subdomain"]

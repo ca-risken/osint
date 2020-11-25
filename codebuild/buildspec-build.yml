@@ -4,7 +4,8 @@ env:
   variables:
     IMAGE_OSINT: "osint/osint"
     IMAGE_PRIVATE_EXPOSE: "osint/privateexpose"
-  parameter-store:
+    IMAGE_SUBDOMAIN: "osint/subdomain"
+    parameter-store:
     GITHUB_USER: "/build/GITHUB_USER"
     GITHUB_TOKEN: "/build/GITHUB_TOKEN"
 
@@ -37,3 +38,4 @@ phases:
       - echo Pushing the Docker images...
       - cd ${SRC}/osint        && docker build ${BUILD_OPT} --build-arg GITHUB_USER=${GITHUB_USER} --build-arg GITHUB_TOKEN=${GITHUB_TOKEN} -t ${IMAGE_OSINT}:${TAG} .
       - cd ${SRC}/private-expose && docker build ${BUILD_OPT} --build-arg GITHUB_USER=${GITHUB_USER} --build-arg GITHUB_TOKEN=${GITHUB_TOKEN} -t ${IMAGE_PRIVATE_EXPOSE}:${TAG} .
+      - cd ${SRC}/subdomain && docker build ${BUILD_OPT} --build-arg GITHUB_USER=${GITHUB_USER} --build-arg GITHUB_TOKEN=${GITHUB_TOKEN} -t ${IMAGE_SUBDOMAIN}:${TAG} .
