@@ -21,8 +21,8 @@ export AWS_SECRET_ACCESS_KEY="hugahuga"
 export AWS_SESSION_TOKEN="piyopiyo"
 export PRIVATE_EXPOSE_QUEUE_NAME="osint-privateexpose"
 export PRIVATE_EXPOSE_QUEUE_URL="http://sqs:9324/queue/osint-privateexpose"
-export TAKEOVER_QUEUE_NAME="osint-takeover"
-export TAKEOVER_QUEUE_URL="http://sqs:9324/queue/osint-takeover"
+export SUBDOMAIN_QUEUE_NAME="osint-subdomain"
+export SUBDOMAIN_QUEUE_URL="http://sqs:9324/queue/osint-subdomain"
 export SQS_ENDPOINT="http://sqs:9324"
 
 # mimosa

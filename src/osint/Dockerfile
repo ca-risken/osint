@@ -36,8 +36,8 @@ ENV PORT=18081 \
     SQS_ENDPOINT= \
     PRIVATE_EXPOSE_QUEUE_NAME= \
     PRIVATE_EXPOSE_QUEUE_URL= \
-    TAKEOVER_QUEUE_NAME= \
-    TAKEOVER_QUEUE_URL= \
+    SUBDOMAIN_QUEUE_NAME= \
+    SUBDOMAIN_QUEUE_URL= \
     TZ=Asia/Tokyo
 WORKDIR /usr/local/osint
 ENTRYPOINT ["/usr/local/bin/env-injector"]
