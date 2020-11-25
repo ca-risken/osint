@@ -5,7 +5,7 @@ env:
     IMAGE_OSINT: "osint/osint"
     IMAGE_PRIVATE_EXPOSE: "osint/privateexpose"
     IMAGE_SUBDOMAIN: "osint/subdomain"
-    parameter-store:
+  parameter-store:
     GITHUB_USER: "/build/GITHUB_USER"
     GITHUB_TOKEN: "/build/GITHUB_TOKEN"
 
