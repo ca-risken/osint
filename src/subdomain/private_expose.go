@@ -49,7 +49,7 @@ func isDetected(host string, detectList *[]string) bool {
 	return false
 }
 
-func (p *privateExpose) makeFinding(domain string, projectID uint32, dataSource, resourceType, resourceName string) (*finding.FindingForUpsert, error) {
+func (p *privateExpose) makeFinding(domain string, projectID uint32, dataSource, resourceName string) (*finding.FindingForUpsert, error) {
 	if zero.IsZeroVal(*p) {
 		return nil, nil
 	}
@@ -63,7 +63,7 @@ func (p *privateExpose) makeFinding(domain string, projectID uint32, dataSource,
 		Description:      description,
 		DataSource:       dataSource,
 		DataSourceId:     domain,
-		ResourceName:     fmt.Sprintf("%v:%v", resourceType, resourceName),
+		ResourceName:     resourceName,
 		ProjectId:        projectID,
 		OriginalScore:    score,
 		OriginalMaxScore: 10.0,

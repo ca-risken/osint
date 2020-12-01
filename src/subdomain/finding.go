@@ -52,7 +52,7 @@ func makeFindings(osintResults *[]osintResult, message *message.OsintQueueMessag
 	findingsPrivateExpose := []*finding.FindingForUpsert{}
 	for _, osintResult := range *osintResults {
 		isDown := osintResult.Host.isDown()
-		findingTakeover, err := osintResult.Takeover.makeFinding(isDown, message.ProjectID, message.DataSource, message.ResourceType, message.ResourceName)
+		findingTakeover, err := osintResult.Takeover.makeFinding(isDown, message.ProjectID, message.DataSource, message.ResourceName)
 		if err != nil {
 			appLogger.Errorf("Error occured when make Takeover finding. error: %v", err)
 			// その他のfindingを登録するため、ログだけ吐いて続行する
@@ -60,7 +60,7 @@ func makeFindings(osintResults *[]osintResult, message *message.OsintQueueMessag
 		if findingTakeover != nil {
 			findingsTakeover = append(findingsTakeover, findingTakeover)
 		}
-		findingPrivateExpose, err := osintResult.PrivateExpose.makeFinding(osintResult.Host.HostName, message.ProjectID, message.DataSource, message.ResourceType, message.ResourceName)
+		findingPrivateExpose, err := osintResult.PrivateExpose.makeFinding(osintResult.Host.HostName, message.ProjectID, message.DataSource, message.ResourceName)
 		if err != nil {
 			appLogger.Errorf("Error occured when make PrivateExpose finding. error: %v", err)
 			// その他のfindingを登録するため、ログだけ吐いて続行する
