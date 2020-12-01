@@ -38,7 +38,7 @@ func resolveCName(domain string) (string, error) {
 	//	return r.Answer[0].(*dns.CNAME).Target, nil
 }
 
-func (c *takeover) makeFinding(isDown bool, projectID uint32, dataSource, resourceType, resourceName string) (*finding.FindingForUpsert, error) {
+func (c *takeover) makeFinding(isDown bool, projectID uint32, dataSource, resourceName string) (*finding.FindingForUpsert, error) {
 	if zero.IsZeroVal(*c) {
 		return nil, nil
 	}
@@ -52,7 +52,7 @@ func (c *takeover) makeFinding(isDown bool, projectID uint32, dataSource, resour
 		Description:      description,
 		DataSource:       dataSource,
 		DataSourceId:     c.Domain,
-		ResourceName:     fmt.Sprintf("%v:%v", resourceType, resourceName),
+		ResourceName:     resourceName,
 		ProjectId:        projectID,
 		OriginalScore:    score,
 		OriginalMaxScore: 10.0,
