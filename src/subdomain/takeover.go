@@ -51,7 +51,7 @@ func (c *takeover) makeFinding(isDown bool, projectID uint32, dataSource, resour
 	finding := &finding.FindingForUpsert{
 		Description:      description,
 		DataSource:       dataSource,
-		DataSourceId:     c.Domain,
+		DataSourceId:     generateDataSourceID(fmt.Sprintf("%v_%v", c.Domain, c.CName)),
 		ResourceName:     resourceName,
 		ProjectId:        projectID,
 		OriginalScore:    score,

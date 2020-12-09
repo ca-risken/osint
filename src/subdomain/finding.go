@@ -2,6 +2,9 @@ package main
 
 import (
 	"context"
+	"encoding/hex"
+
+	"crypto/sha256"
 
 	"github.com/CyberAgent/mimosa-core/proto/finding"
 	"github.com/CyberAgent/mimosa-osint/pkg/common"
@@ -24,7 +27,7 @@ func (s *sqsHandler) putFindings(ctx context.Context, findingMap map[string][]*f
 				s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagPrivateExpose)
 			}
 
-			appLogger.Infof("Success to PutFinding. finding: %v", f)
+			appLogger.Infof("Success to PutFinding. finding: %v", res)
 		}
 	}
 	return nil
@@ -72,4 +75,9 @@ func makeFindings(osintResults *[]osintResult, message *message.OsintQueueMessag
 	findings["Takeover"] = findingsTakeover
 	findings["PrivateExpose"] = findingsPrivateExpose
 	return findings, nil
+}
+
+func generateDataSourceID(input string) string {
+	hash := sha256.Sum256([]byte(input))
+	return hex.EncodeToString(hash[:])
 }

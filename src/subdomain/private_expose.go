@@ -62,7 +62,7 @@ func (p *privateExpose) makeFinding(domain string, projectID uint32, dataSource,
 	finding := &finding.FindingForUpsert{
 		Description:      description,
 		DataSource:       dataSource,
-		DataSourceId:     domain,
+		DataSourceId:     generateDataSourceID(fmt.Sprintf("private_expose_%v", p.HostName)),
 		ResourceName:     resourceName,
 		ProjectId:        projectID,
 		OriginalScore:    score,
