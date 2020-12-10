@@ -87,7 +87,7 @@ func (c *takeover) getDescription(isDown bool) string {
 func (c *takeover) matchTakeoverList() bool {
 	takeoverList := common.GetTakeOverList()
 	for _, takeoverDomain := range takeoverList {
-		if strings.HasSuffix(takeoverDomain, c.CName) {
+		if strings.Index(c.CName, takeoverDomain) > -1 {
 			return true
 		}
 	}
