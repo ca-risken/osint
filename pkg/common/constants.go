@@ -16,7 +16,6 @@ var TakeOverList = []string{
 	".trafficmanager.net",
 	".azureedge.net",
 	".cloudapp.azure.com",
-	".cloudfront.net",
 	".s3.amazonaws.com",
 	".awsptr.com",
 	".elasticbeanstalk.com",
