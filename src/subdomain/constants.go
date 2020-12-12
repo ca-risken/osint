@@ -1,4 +1,4 @@
-package common
+package main
 
 // GetTakeOverList return TakeOverList
 func GetTakeOverList() []string {
