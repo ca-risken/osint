@@ -7,7 +7,6 @@ func GetTakeOverList() []string {
 
 // TakeOverList :takeoverされる危険の高いドメインを列挙
 var TakeOverList = []string{
-	".herokudns.com",
 	".herokuapp.com",
 	".herokussl.com",
 	".azurewebsites.net",
