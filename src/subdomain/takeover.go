@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/CyberAgent/mimosa-core/proto/finding"
-	"github.com/CyberAgent/mimosa-osint/pkg/common"
 	"github.com/miekg/dns"
 	"github.com/vikyd/zero"
 )
@@ -85,7 +84,7 @@ func (c *takeover) getDescription(isDown bool) string {
 }
 
 func (c *takeover) matchTakeoverList() bool {
-	takeoverList := common.GetTakeOverList()
+	takeoverList := GetTakeOverList()
 	for _, takeoverDomain := range takeoverList {
 		if strings.Index(c.CName, takeoverDomain) > -1 {
 			return true
