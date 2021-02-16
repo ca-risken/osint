@@ -34,7 +34,13 @@ func newSQSClient() *sqsClient {
 	if err != nil {
 		panic(err)
 	}
-	session := sqs.New(session.New(), &aws.Config{
+	sess, err := session.NewSessionWithOptions(session.Options{
+		SharedConfigState: session.SharedConfigEnable,
+	})
+	if err != nil {
+		panic(err)
+	}
+	session := sqs.New(sess, &aws.Config{
 		Region:   &conf.AWSRegion,
 		Endpoint: &conf.Endpoint,
 	})
