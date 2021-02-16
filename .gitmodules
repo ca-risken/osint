@@ -1,3 +1,0 @@
-[submodule "src/private-expose/theHarvester"]
-	path = src/private-expose/theHarvester
-	url = https://github.com/laramies/theHarvester.git
