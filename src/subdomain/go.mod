@@ -9,7 +9,8 @@ require (
 	github.com/CyberAgent/mimosa-osint/pkg/message v0.0.0-20201211055630-9e7fa6b8b56a
 	github.com/CyberAgent/mimosa-osint/pkg/model v0.0.0-20201211055630-9e7fa6b8b56a
 	github.com/CyberAgent/mimosa-osint/proto/osint v0.0.0-20201211055630-9e7fa6b8b56a
-	github.com/aws/aws-sdk-go v1.36.6
+	github.com/aws/aws-sdk-go v1.37.10
+	github.com/gassara-kys/go-sqs-poller/worker/v4 v4.0.0-20210215110542-0be358599a2f
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/h2ik/go-sqs-poller/v3 v3.1.1
 	github.com/kelseyhightower/envconfig v1.4.0
