@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"strings"
 	"time"
 
@@ -138,6 +139,18 @@ func (s *osintService) InvokeScan(ctx context.Context, req *osint.InvokeScanRequ
 		appLogger.Errorf("Invoked scan. Error: %v", err)
 		return nil, err
 	}
+	if _, err = s.repository.UpsertRelOsintDataSource(&model.RelOsintDataSource{
+		RelOsintDataSourceID: relOsintDataSourceData.RelOsintDataSourceID,
+		OsintID:              relOsintDataSourceData.OsintID,
+		OsintDataSourceID:    relOsintDataSourceData.OsintDataSourceID,
+		ProjectID:            relOsintDataSourceData.ProjectID,
+		Status:               osint.Status_IN_PROGRESS.String(),
+		StatusDetail:         fmt.Sprintf("Start scan at %+v", time.Now().Format(time.RFC3339)),
+		ScanAt:               relOsintDataSourceData.ScanAt,
+	}); err != nil {
+		appLogger.Errorf("Failed to update scan status: %+v", err)
+		return nil, err
+	}
 	appLogger.Infof("Invoked scan. MessageId: %v", *resp.MessageId)
 	return &osint.InvokeScanResponse{Message: "Invoke Scan."}, nil
 }
@@ -176,8 +189,8 @@ func getStatus(s string) osint.Status {
 		return osint.Status_OK
 	case osint.Status_CONFIGURED.String():
 		return osint.Status_CONFIGURED
-	case osint.Status_NOT_CONFIGURED.String():
-		return osint.Status_NOT_CONFIGURED
+	case osint.Status_IN_PROGRESS.String():
+		return osint.Status_IN_PROGRESS
 	case osint.Status_ERROR.String():
 		return osint.Status_ERROR
 	default:
