@@ -30,6 +30,8 @@ ENV PORT=19003 \
     OSINT_SVC_ADDR= \
     RESULT_PATH=/results \
     HARVESTER_PATH=/theHarvester \
+    SUBDOMAIN_QUEUE_NAME= \
+    SUBDOMAIN_QUEUE_URL= \
     TZ=Asia/Tokyo
 
 WORKDIR /usr/local/subdomain
