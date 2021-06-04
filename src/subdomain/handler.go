@@ -53,10 +53,15 @@ func (s *sqsHandler) HandleMessage(msg *sqs.Message) error {
 	// Run Harvester
 	hosts, err := s.harvesterConfig.run(message.ResourceName, message.RelOsintDataSourceID)
 	if err != nil {
-		appLogger.Errorf("Failed exec Harvester, error: %v", err)
-		_ = s.putRelOsintDataSource(message, false, "An error occured while executing osint tool. Ask the system administrator.")
+		appLogger.Errorf("Failed exec theHarvester, error: %v", err)
+		strError := "An error occured while executing osint tool. Ask the system administrator."
+		if err.Error() == "signal: killed" {
+			strError = "An error occured while executing osint tool. Scan will restart in a little while."
+		}
+		_ = s.putRelOsintDataSource(message, false, strError)
 		return err
 	}
+
 	//hosts, err := tmpRun()
 	osintResults, err := inspectDomain(hosts, detectList)
 	if err != nil {
@@ -97,7 +102,8 @@ func inspectDomain(hosts *[]host, detectList *[]string) (*osintResults, error) {
 	for _, h := range *hosts {
 		privateExpose := searchPrivateExpose(h, detectList)
 		takeover := searchTakeover(h.HostName)
-		osintResult := osintResult{Host: h, PrivateExpose: privateExpose, Takeover: takeover}
+		certificateExpiration := privateExpose.checkCertificateExpiration()
+		osintResult := osintResult{Host: h, PrivateExpose: privateExpose, Takeover: takeover, CertificateExpiration: certificateExpiration}
 		arr = append(arr, osintResult)
 	}
 	return &osintResults{OsintResults: &arr}, nil

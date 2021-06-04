@@ -12,11 +12,12 @@ import (
 )
 
 func searchPrivateExpose(host host, detectList *[]string) privateExpose {
-	if !zero.IsZeroVal(host.IP) && !zero.IsZeroVal(host.HostName) && isDetected(host.HostName, detectList) {
+	if !zero.IsZeroVal(host.IP) && !zero.IsZeroVal(host.HostName) {
 		http, urlHTTP, _ := getHTTPStatus(host.HostName, "http")
 		https, urlHTTPS, _ := getHTTPStatus(host.HostName, "https")
+		isDetect := isDetected(host.HostName, detectList)
 		if !zero.IsZeroVal(http) && !zero.IsZeroVal(https) {
-			return privateExpose{HostName: host.HostName, HTTP: http, URLHTTP: urlHTTP, HTTPS: https, URLHTTPS: urlHTTPS}
+			return privateExpose{HostName: host.HostName, HTTP: http, URLHTTP: urlHTTP, HTTPS: https, URLHTTPS: urlHTTPS, IsDetected: isDetect}
 		}
 	}
 	return privateExpose{}
@@ -50,7 +51,7 @@ func isDetected(host string, detectList *[]string) bool {
 }
 
 func (p *privateExpose) makeFinding(domain string, projectID uint32, dataSource, resourceName string) (*finding.FindingForUpsert, error) {
-	if zero.IsZeroVal(*p) {
+	if zero.IsZeroVal(*p) || !p.IsDetected {
 		return nil, nil
 	}
 	score := p.getScore()
@@ -93,9 +94,10 @@ func (p *privateExpose) getDescription() string {
 }
 
 type privateExpose struct {
-	HostName string `json:"hostname"`
-	HTTP     int    `json:"http"`
-	URLHTTP  string `json:"url_http"`
-	HTTPS    int    `json:"https"`
-	URLHTTPS string `json:"url_https"`
+	HostName   string `json:"hostname"`
+	HTTP       int    `json:"http"`
+	URLHTTP    string `json:"url_http"`
+	HTTPS      int    `json:"https"`
+	URLHTTPS   string `json:"url_https"`
+	IsDetected bool   `json:"-"`
 }
