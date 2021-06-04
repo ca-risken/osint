@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
@@ -32,11 +33,12 @@ func (h *harvesterConfig) run(domain string, relAlertFindingID uint32) (*[]host,
 	now := time.Now().Unix()
 	filePath := fmt.Sprintf("%s/%v_%v.xml", h.ResultPath, relAlertFindingID, now)
 	harvesterPath := fmt.Sprintf("%s/theHarvester.py", h.HarvesterPath)
-	cmd := exec.Command("python3", harvesterPath, "-d", domain, "-b", "all", "-f", filePath)
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Minute)
+	defer cancel()
+	cmd := exec.CommandContext(ctx, "python3", harvesterPath, "-d", domain, "-b", "all", "-f", filePath)
 	cmd.Dir = h.HarvesterPath
 	err := cmd.Run()
 	if err != nil {
-		appLogger.Errorf("Failed exec theHarvester. error: %v", err)
 		return nil, err
 	}
 
@@ -77,6 +79,8 @@ func makeHosts(hostsWithIP *hostsWithIP, hostsWithoutIP *hostsWithoutIP, domain 
 			arrHost = append(arrHost, host{IP: getIPAddr(hostWithoutIP), HostName: hostWithoutIP})
 		}
 	}
+	// Add domain
+	arrHost = append(arrHost, host{IP: getIPAddr(domain), HostName: domain})
 	ret := sliceUnique(&arrHost)
 	return &ret
 }
@@ -128,9 +132,10 @@ type osintResults struct {
 	OsintResults *[]osintResult
 }
 type osintResult struct {
-	Host          host
-	PrivateExpose privateExpose
-	Takeover      takeover
+	Host                  host
+	PrivateExpose         privateExpose
+	Takeover              takeover
+	CertificateExpiration certificateExpiration
 }
 
 type hostsWithIP struct {

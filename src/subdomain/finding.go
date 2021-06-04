@@ -25,6 +25,8 @@ func (s *sqsHandler) putFindings(ctx context.Context, findingMap map[string][]*f
 				s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagTakeover)
 			case "PrivateExpose":
 				s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagPrivateExpose)
+			case "CertificateExpiration":
+				s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagCertificateExpiration)
 			}
 
 			appLogger.Infof("Success to PutFinding. finding: %v", res)
@@ -53,6 +55,7 @@ func makeFindings(osintResults *[]osintResult, message *message.OsintQueueMessag
 	findings := map[string][]*finding.FindingForUpsert{}
 	findingsTakeover := []*finding.FindingForUpsert{}
 	findingsPrivateExpose := []*finding.FindingForUpsert{}
+	findingsCertificateExpiration := []*finding.FindingForUpsert{}
 	for _, osintResult := range *osintResults {
 		isDown := osintResult.Host.isDown()
 		findingTakeover, err := osintResult.Takeover.makeFinding(isDown, message.ProjectID, message.DataSource, message.ResourceName)
@@ -71,9 +74,18 @@ func makeFindings(osintResults *[]osintResult, message *message.OsintQueueMessag
 		if findingPrivateExpose != nil {
 			findingsPrivateExpose = append(findingsPrivateExpose, findingPrivateExpose)
 		}
+		findingCertificateExpiration, err := osintResult.CertificateExpiration.makeFinding(message.ProjectID, message.DataSource, message.ResourceName)
+		if err != nil {
+			appLogger.Errorf("Error occured when make Certificate Expiration finding. error: %v", err)
+			// その他のfindingを登録するため、ログだけ吐いて続行する
+		}
+		if findingCertificateExpiration != nil {
+			findingsCertificateExpiration = append(findingsCertificateExpiration, findingCertificateExpiration)
+		}
 	}
 	findings["Takeover"] = findingsTakeover
 	findings["PrivateExpose"] = findingsPrivateExpose
+	findings["CertificateExpiration"] = findingsCertificateExpiration
 	return findings, nil
 }
 
