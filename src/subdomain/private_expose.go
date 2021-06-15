@@ -90,6 +90,9 @@ func (p *privateExpose) getDescription() string {
 	} else {
 		desc = desc + " (https)"
 	}
+	if len(desc) > 200 {
+		desc = desc[:196] + " ..." // cut long text
+	}
 	return desc
 }
 
