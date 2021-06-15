@@ -73,13 +73,17 @@ func (c *takeover) getScore(isDown bool) float32 {
 }
 
 func (c *takeover) getDescription(isDown bool) string {
+	var desc string
 	if isDown {
-		desc := fmt.Sprintf("%s seems to be down. It has subdomain takeover risk.", c.Domain)
+		desc = fmt.Sprintf("%s seems to be down. It has subdomain takeover risk.", c.Domain)
 		desc = desc + fmt.Sprintf("(CName: %s)", c.CName)
-		return desc
+	} else {
+		desc = fmt.Sprintf("%s has a CName record.", c.Domain)
+		desc = desc + fmt.Sprintf("(CName: %s)", c.CName)
 	}
-	desc := fmt.Sprintf("%s has a CName record.", c.Domain)
-	desc = desc + fmt.Sprintf("(CName: %s)", c.CName)
+	if len(desc) > 200 {
+		desc = desc[:196] + " ..." // cut long text
+	}
 	return desc
 }
 

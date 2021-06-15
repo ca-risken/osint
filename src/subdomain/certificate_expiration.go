@@ -70,8 +70,8 @@ func (c *certificateExpiration) makeFinding(projectID uint32, dataSource, resour
 
 func (c *certificateExpiration) getScore() float32 {
 	now := time.Now()
-	dateHighScore := now.AddDate(0, 0, 25)
-	dateMiddleScore := now.AddDate(0, 0, 50)
+	dateHighScore := now.AddDate(0, 0, 14)
+	dateMiddleScore := now.AddDate(0, 0, 30)
 	if c.ExpireDate.Unix() < dateHighScore.Unix() {
 		return 8.0
 	}
@@ -83,7 +83,11 @@ func (c *certificateExpiration) getScore() float32 {
 
 func (c *certificateExpiration) getDescription() string {
 	expireDate := c.ExpireDate.Format("2006-01-02")
-	return fmt.Sprintf("The security certificate expires on %v, url: %v", expireDate, c.URL)
+	description := fmt.Sprintf("The security certificate expires on %v, url: %v", expireDate, c.URL)
+	if len(description) > 200 {
+		description = description[:196] + " ..." // cut long text
+	}
+	return description
 }
 
 type certificateExpiration struct {
