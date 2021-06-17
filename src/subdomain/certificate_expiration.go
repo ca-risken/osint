@@ -41,8 +41,10 @@ func checkCertificateExpiration(url string) time.Time {
 	if err != nil {
 		return time.Time{}
 	}
-	expireUTCTime := resp.TLS.PeerCertificates[0].NotAfter
-	return expireUTCTime
+	if resp != nil && resp.TLS != nil && resp.TLS.PeerCertificates[0] != nil {
+		return resp.TLS.PeerCertificates[0].NotAfter
+	}
+	return time.Time{}
 }
 
 func (c *certificateExpiration) makeFinding(projectID uint32, dataSource, resourceName string) (*finding.FindingForUpsert, error) {
