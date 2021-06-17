@@ -27,7 +27,6 @@ func resolveCName(domain string) (string, error) {
 	m.RecursionDesired = true
 	r, _, err := c.Exchange(m, net.JoinHostPort("8.8.8.8", "53"))
 	if err != nil {
-		appLogger.Errorf("Error: %v", err)
 		return "", nil
 	}
 	if zero.IsZeroVal(r.Answer) {
