@@ -1,4 +1,4 @@
-.PHONY: all install clean network fmt build doc
+.PHONY: all install clean network fmt build doc proto
 all: run
 
 install:
@@ -26,7 +26,7 @@ doc: fmt
 		--doc_out=markdown,README.md:doc \
 		proto/**/*.proto;
 
-build: fmt
+proto: fmt
 	protoc \
 		--proto_path=proto \
 		--proto_path=${GOPATH}/src \
@@ -34,7 +34,7 @@ build: fmt
 		--go_out=plugins=grpc,paths=source_relative:proto proto/**/*.proto \
 		proto/**/*.proto;
 
-go-test: build
+go-test: proto
 	cd proto/osint   && go test ./...
 	cd pkg/message   && go test ./...
 	cd src/osint     && go test ./...
@@ -49,15 +49,18 @@ go-mod-update:
 			github.com/CyberAgent/mimosa-core/... \
 			github.com/CyberAgent/mimosa-osint/...
 
-go-mod-tidy: build
+go-mod-tidy: proto
 	cd pkg/common    && go mod tidy
 	cd pkg/model     && go mod tidy
 	cd pkg/message   && go mod tidy
 	cd src/osint     && go mod tidy
 	cd src/subdomain && go mod tidy
 
-run: go-test network
-	. env.sh && docker-compose up -d --build
+build: go-test
+	. env.sh && docker-compose build --pull --no-cache
+
+run: build network
+	. env.sh && docker-compose up -d
 
 log:
 	. env.sh && docker-compose logs -f

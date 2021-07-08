@@ -164,6 +164,7 @@ message DeleteOsintDetectWordRequest {
 message InvokeScanRequest {
   uint32 project_id = 1;
   uint32 rel_osint_data_source_id = 2;
+  bool scan_only = 3;
 }
 
 message InvokeScanResponse { string message = 1; }
