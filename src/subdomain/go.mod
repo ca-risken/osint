@@ -3,12 +3,12 @@ module github.com/CyberAgent/mimosa-osint-go/src/subdomain
 go 1.16
 
 require (
-	github.com/CyberAgent/mimosa-core/proto/alert v0.0.0-20210430051641-778e594322c3
-	github.com/CyberAgent/mimosa-core/proto/finding v0.0.0-20210430051641-778e594322c3
-	github.com/CyberAgent/mimosa-osint/pkg/common v0.0.0-20210601093258-07a4fe7e2111
-	github.com/CyberAgent/mimosa-osint/pkg/message v0.0.0-20210601093258-07a4fe7e2111
-	github.com/CyberAgent/mimosa-osint/pkg/model v0.0.0-20210601093258-07a4fe7e2111
-	github.com/CyberAgent/mimosa-osint/proto/osint v0.0.0-20210601093258-07a4fe7e2111
+	github.com/CyberAgent/mimosa-core/proto/alert v0.0.0-20210707124600-11b1f052c30a
+	github.com/CyberAgent/mimosa-core/proto/finding v0.0.0-20210707124600-11b1f052c30a
+	github.com/CyberAgent/mimosa-osint/pkg/common v0.0.0-20210617060449-6a4697712003
+	github.com/CyberAgent/mimosa-osint/pkg/message v0.0.0-20210617060449-6a4697712003
+	github.com/CyberAgent/mimosa-osint/pkg/model v0.0.0-20210617060449-6a4697712003
+	github.com/CyberAgent/mimosa-osint/proto/osint v0.0.0-20210617060449-6a4697712003
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
 	github.com/aws/aws-sdk-go v1.38.54
 	github.com/gassara-kys/go-sqs-poller/worker/v4 v4.0.0-20210215110542-0be358599a2f
@@ -18,8 +18,8 @@ require (
 	github.com/sirupsen/logrus v1.8.1
 	github.com/stretchr/objx v0.2.0 // indirect
 	github.com/vikyd/zero v0.0.0-20190921142904-0f738d0bc858
-	golang.org/x/net v0.0.0-20210525063256-abc453219eb5 // indirect
-	golang.org/x/sys v0.0.0-20210603125802-9665404d3644 // indirect
-	google.golang.org/genproto v0.0.0-20210603172842-58e84a565dcf // indirect
-	google.golang.org/grpc v1.38.0
+	golang.org/x/net v0.0.0-20210614182718-04defd469f4e // indirect
+	golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c // indirect
+	google.golang.org/genproto v0.0.0-20210707164411-8c882eb9abba // indirect
+	google.golang.org/grpc v1.39.0
 )
