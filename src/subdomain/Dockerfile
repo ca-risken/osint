@@ -9,30 +9,30 @@ RUN echo "login $GITHUB_USER" >> ~/.netrc
 RUN echo "password $GITHUB_TOKEN" >> ~/.netrc
 RUN go install -v
 
-FROM python:3.8-alpine
+FROM python:3.8-alpine3.12
 RUN apk add --no-cache git ca-certificates tzdata build-base  libffi-dev gcc libc-dev libxml2-dev libxslt-dev \
-  && git clone https://github.com/laramies/theHarvester.git \
-  && pip install -r /theHarvester/requirements/base.txt \
+  && git clone https://github.com/laramies/theHarvester.git -b 3.2.4 \
+  && pip install --no-cache-dir -r /theHarvester/requirements/base.txt \
   && cd /tmp/ && wget -q https://github.com/gassara-kys/env-injector/releases/download/v0.0.6/env-injector_0.0.6_Linux_x86_64.tar.gz \
   && tar xvfz env-injector_0.0.6_Linux_x86_64.tar.gz && mv env-injector /usr/local/bin/ && rm -rf /tmp/* \
   && mkdir /results
 COPY --from=builder /go/bin/subdomain /usr/local/subdomain/bin/
 ENV PORT=19003 \
-    AWS_REGION= \
-    AWS_ACCESS_KEY_ID= \
-    AWS_SECRET_ACCESS_KEY= \
-    AWS_SESSION_TOKEN= \
-    SQS_ENDPOINT= \
-    MAX_NUMBER_OF_MESSAGE=5 \
-    WAIT_TIME_SECOND=20 \
-    FINDING_SVC_ADDR= \
-    ALERT_SVC_ADDR= \
-    OSINT_SVC_ADDR= \
-    RESULT_PATH=/results \
-    HARVESTER_PATH=/theHarvester \
-    SUBDOMAIN_QUEUE_NAME= \
-    SUBDOMAIN_QUEUE_URL= \
-    TZ=Asia/Tokyo
+  AWS_REGION= \
+  AWS_ACCESS_KEY_ID= \
+  AWS_SECRET_ACCESS_KEY= \
+  AWS_SESSION_TOKEN= \
+  SQS_ENDPOINT= \
+  MAX_NUMBER_OF_MESSAGE=5 \
+  WAIT_TIME_SECOND=20 \
+  FINDING_SVC_ADDR= \
+  ALERT_SVC_ADDR= \
+  OSINT_SVC_ADDR= \
+  RESULT_PATH=/results \
+  HARVESTER_PATH=/theHarvester \
+  SUBDOMAIN_QUEUE_NAME= \
+  SUBDOMAIN_QUEUE_URL= \
+  TZ=Asia/Tokyo
 
 WORKDIR /usr/local/subdomain
 ENTRYPOINT ["/usr/local/bin/env-injector"]

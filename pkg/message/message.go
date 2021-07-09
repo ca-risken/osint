@@ -10,4 +10,5 @@ type OsintQueueMessage struct {
 	ResourceName         string `json:"resource_name"`
 	ResourceType         string `json:"resoorce_type"`
 	DetectWord           string `json:"detect_word"`
+	ScanOnly             bool   `json:"scan_only,string"`
 }
