@@ -34,31 +34,31 @@ func newHandler() *sqsHandler {
 	return h
 }
 
-func (s *sqsHandler) HandleMessage(msg *sqs.Message) error {
-	msgBody := aws.StringValue(msg.Body)
+func (s *sqsHandler) HandleMessage(sqsMsg *sqs.Message) error {
+	msgBody := aws.StringValue(sqsMsg.Body)
 	appLogger.Infof("got message. message: %v", msgBody)
 	// Parse message
-	message, err := parseMessage(msgBody)
+	msg, err := parseMessage(msgBody)
 	if err != nil {
-		appLogger.Errorf("Invalid message. message: %v, error: %v", message, err)
+		appLogger.Errorf("Invalid message. message: %v, error: %v", msgBody, err)
 		return err
 	}
 
-	detectList, err := getDetectList(message.DetectWord)
+	detectList, err := getDetectList(msg.DetectWord)
 	if err != nil {
 		appLogger.Errorf("Failed getting detect list, error: %v", err)
 		return err
 	}
 
 	// Run Harvester
-	hosts, err := s.harvesterConfig.run(message.ResourceName, message.RelOsintDataSourceID)
+	hosts, err := s.harvesterConfig.run(msg.ResourceName, msg.RelOsintDataSourceID)
 	if err != nil {
 		appLogger.Errorf("Failed exec theHarvester, error: %v", err)
 		strError := "An error occured while executing osint tool. Ask the system administrator."
 		if err.Error() == "signal: killed" {
 			strError = "An error occured while executing osint tool. Scan will restart in a little while."
 		}
-		_ = s.putRelOsintDataSource(message, false, strError)
+		_ = s.putRelOsintDataSource(msg, false, strError)
 		return err
 	}
 
@@ -66,10 +66,10 @@ func (s *sqsHandler) HandleMessage(msg *sqs.Message) error {
 	osintResults, err := inspectDomain(hosts, detectList)
 	if err != nil {
 		appLogger.Errorf("Failed get osintResults, error: %v", err)
-		_ = s.putRelOsintDataSource(message, false, "An error occured while investing resource. Ask the system administrator.")
+		_ = s.putRelOsintDataSource(msg, false, "An error occured while investing resource. Ask the system administrator.")
 		return err
 	}
-	findings, err := makeFindings(osintResults.OsintResults, message)
+	findings, err := makeFindings(osintResults.OsintResults, msg)
 	if err != nil {
 		appLogger.Errorf("Failed making Findings, error: %v", err)
 		return err
@@ -78,19 +78,21 @@ func (s *sqsHandler) HandleMessage(msg *sqs.Message) error {
 	// Put Finding and Tag Finding
 	ctx := context.Background()
 	if err := s.putFindings(ctx, findings); err != nil {
-		appLogger.Errorf("Faild to put findngs. relOsintDataSourceID: %v, error: %v", message.RelOsintDataSourceID, err)
+		appLogger.Errorf("Faild to put findngs. relOsintDataSourceID: %v, error: %v", msg.RelOsintDataSourceID, err)
 		return err
 	}
 
 	// Put RelOsintDataSource
-	if err := s.putRelOsintDataSource(message, true, ""); err != nil {
-		appLogger.Errorf("Faild to put rel_osint_data_source. relOsintDataSourceID: %v, error: %v", message.RelOsintDataSourceID, err)
+	if err := s.putRelOsintDataSource(msg, true, ""); err != nil {
+		appLogger.Errorf("Faild to put rel_osint_data_source. relOsintDataSourceID: %v, error: %v", msg.RelOsintDataSourceID, err)
 		return err
 	}
-
+	if msg.ScanOnly {
+		return nil
+	}
 	// Call AnalyzeAlert
-	if err := s.CallAnalyzeAlert(ctx, message.ProjectID); err != nil {
-		appLogger.Errorf("Faild to analyze alert. relOsintDataSourceID: %v, error: %v", message.RelOsintDataSourceID, err)
+	if err := s.CallAnalyzeAlert(ctx, msg.ProjectID); err != nil {
+		appLogger.Errorf("Faild to analyze alert. relOsintDataSourceID: %v, error: %v", msg.RelOsintDataSourceID, err)
 		return err
 	}
 	return nil

@@ -133,6 +133,7 @@ func (s *osintService) InvokeScan(ctx context.Context, req *osint.InvokeScanRequ
 		ResourceType:         osintData.ResourceType,
 		ResourceName:         osintData.ResourceName,
 		DetectWord:           string(jsonDetectWord),
+		ScanOnly:             req.ScanOnly,
 	}
 	resp, err := s.sqs.send(msg)
 	if err != nil {
@@ -170,6 +171,7 @@ func (s *osintService) InvokeScanAll(ctx context.Context, req *empty.Empty) (*em
 		if _, err := s.InvokeScan(ctx, &osint.InvokeScanRequest{
 			ProjectId:            relOsintDataSource.ProjectID,
 			RelOsintDataSourceId: relOsintDataSource.RelOsintDataSourceID,
+			// ScanOnly:             true, // TODO
 		}); err != nil {
 			// errorが出ても続行
 			appLogger.Errorf("InvokeScanAll error: err=%+v", err)
