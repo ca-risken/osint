@@ -3,6 +3,7 @@ module github.com/CyberAgent/mimosa-osint-go/src/subdomain
 go 1.16
 
 require (
+	github.com/CyberAgent/mimosa-common/pkg/logging v0.0.0-20210709072254-0b9fc118367f
 	github.com/CyberAgent/mimosa-core/proto/alert v0.0.0-20210707124600-11b1f052c30a
 	github.com/CyberAgent/mimosa-core/proto/finding v0.0.0-20210707124600-11b1f052c30a
 	github.com/CyberAgent/mimosa-osint/pkg/common v0.0.0-20210709011430-ef6f10e6a89a

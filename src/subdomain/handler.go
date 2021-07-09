@@ -3,8 +3,10 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"time"
 
+	"github.com/CyberAgent/mimosa-common/pkg/logging"
 	"github.com/CyberAgent/mimosa-core/proto/alert"
 	"github.com/CyberAgent/mimosa-core/proto/finding"
 	"github.com/CyberAgent/mimosa-osint/pkg/message"
@@ -44,6 +46,12 @@ func (s *sqsHandler) HandleMessage(sqsMsg *sqs.Message) error {
 		return err
 	}
 
+	requestID, err := logging.GenerateRequestID(fmt.Sprint(msg.ProjectID))
+	if err != nil {
+		appLogger.Warnf("Failed to generate requestID: err=%+v", err)
+		requestID = fmt.Sprint(msg.ProjectID)
+	}
+	appLogger.Infof("start Scan, RequestID=%s", requestID)
 	detectList, err := getDetectList(msg.DetectWord)
 	if err != nil {
 		appLogger.Errorf("Failed getting detect list, error: %v", err)
@@ -87,6 +95,8 @@ func (s *sqsHandler) HandleMessage(sqsMsg *sqs.Message) error {
 		appLogger.Errorf("Faild to put rel_osint_data_source. relOsintDataSourceID: %v, error: %v", msg.RelOsintDataSourceID, err)
 		return err
 	}
+	appLogger.Infof("end Scan, RequestID=%s", requestID)
+
 	if msg.ScanOnly {
 		return nil
 	}
