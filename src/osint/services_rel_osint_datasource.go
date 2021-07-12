@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -11,7 +12,7 @@ import (
 	"github.com/CyberAgent/mimosa-osint/pkg/model"
 	"github.com/CyberAgent/mimosa-osint/proto/osint"
 	"github.com/golang/protobuf/ptypes/empty"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 func (s *osintService) ListRelOsintDataSource(ctx context.Context, req *osint.ListRelOsintDataSourceRequest) (*osint.ListRelOsintDataSourceResponse, error) {
@@ -20,7 +21,7 @@ func (s *osintService) ListRelOsintDataSource(ctx context.Context, req *osint.Li
 	}
 	list, err := s.repository.ListRelOsintDataSource(req.ProjectId, req.OsintId, req.OsintDataSourceId)
 	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &osint.ListRelOsintDataSourceResponse{}, nil
 		}
 		appLogger.Errorf("Failed to List RelOsintDataSource. error: %v", err)
@@ -39,7 +40,7 @@ func (s *osintService) GetRelOsintDataSource(ctx context.Context, req *osint.Get
 	}
 	getData, err := s.repository.GetRelOsintDataSource(req.ProjectId, req.RelOsintDataSourceId)
 	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &osint.GetRelOsintDataSourceResponse{}, nil
 		}
 		appLogger.Errorf("Failed to Get RelOsintDataSource. error: %v", err)
@@ -160,7 +161,7 @@ func (s *osintService) InvokeScanAll(ctx context.Context, req *empty.Empty) (*em
 
 	list, err := s.repository.ListAllRelOsintDataSource()
 	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &empty.Empty{}, nil
 		}
 		appLogger.Errorf("Failed to List AllRelOsintDataSource. error: %v", err)
