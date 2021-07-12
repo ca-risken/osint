@@ -171,7 +171,7 @@ func (s *osintService) InvokeScanAll(ctx context.Context, req *empty.Empty) (*em
 		if _, err := s.InvokeScan(ctx, &osint.InvokeScanRequest{
 			ProjectId:            relOsintDataSource.ProjectID,
 			RelOsintDataSourceId: relOsintDataSource.RelOsintDataSourceID,
-			// ScanOnly:             true, // TODO
+			ScanOnly:             true,
 		}); err != nil {
 			// errorが出ても続行
 			appLogger.Errorf("InvokeScanAll error: err=%+v", err)
