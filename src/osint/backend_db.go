@@ -4,9 +4,11 @@ import (
 	"fmt"
 
 	"github.com/CyberAgent/mimosa-osint/pkg/model"
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/jinzhu/gorm"
 	"github.com/kelseyhightower/envconfig"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	glogger "gorm.io/gorm/logger"
+	"gorm.io/gorm/schema"
 )
 
 type osintRepoInterface interface {
@@ -72,14 +74,15 @@ func initDB(isMaster bool) *gorm.DB {
 		host = conf.SlaveHost
 	}
 
-	db, err := gorm.Open("mysql",
-		fmt.Sprintf("%s:%s@tcp([%s]:%d)/%s?charset=utf8mb4&interpolateParams=true&parseTime=true&loc=Local",
-			user, pass, host, conf.Port, conf.Schema))
+	dsn := fmt.Sprintf("%s:%s@tcp([%s]:%d)/%s?charset=utf8mb4&interpolateParams=true&parseTime=true&loc=Local",
+		user, pass, host, conf.Port, conf.Schema)
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{NamingStrategy: schema.NamingStrategy{SingularTable: true}})
 	if err != nil {
 		fmt.Printf("Failed to open DB. isMaster: %v", isMaster)
 		panic(err)
 	}
-	db.LogMode(conf.LogMode)
-	db.SingularTable(true) // if set this to true, `User`'s default table name will be `user`
+	if conf.LogMode {
+		db.Logger.LogMode(glogger.Info)
+	}
 	return db
 }

@@ -2,11 +2,12 @@ package main
 
 import (
 	"context"
+	"errors"
 
 	"github.com/CyberAgent/mimosa-osint/pkg/model"
 	"github.com/CyberAgent/mimosa-osint/proto/osint"
 	"github.com/golang/protobuf/ptypes/empty"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 func (s *osintService) ListOsintDetectWord(ctx context.Context, req *osint.ListOsintDetectWordRequest) (*osint.ListOsintDetectWordResponse, error) {
@@ -15,7 +16,7 @@ func (s *osintService) ListOsintDetectWord(ctx context.Context, req *osint.ListO
 	}
 	list, err := s.repository.ListOsintDetectWord(req.ProjectId, req.RelOsintDataSourceId)
 	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &osint.ListOsintDetectWordResponse{}, nil
 		}
 		appLogger.Errorf("Failed to List OsintDetectWord, error: %v", err)
@@ -34,7 +35,7 @@ func (s *osintService) GetOsintDetectWord(ctx context.Context, req *osint.GetOsi
 	}
 	getData, err := s.repository.GetOsintDetectWord(req.ProjectId, req.OsintDetectWordId)
 	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &osint.GetOsintDetectWordResponse{}, nil
 		}
 		appLogger.Errorf("Failed to Get OsintDetectWord, error: %v", err)

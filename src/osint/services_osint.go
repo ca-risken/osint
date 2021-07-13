@@ -2,11 +2,12 @@ package main
 
 import (
 	"context"
+	"errors"
 
 	"github.com/CyberAgent/mimosa-osint/pkg/model"
 	"github.com/CyberAgent/mimosa-osint/proto/osint"
 	"github.com/golang/protobuf/ptypes/empty"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 func (s *osintService) ListOsint(ctx context.Context, req *osint.ListOsintRequest) (*osint.ListOsintResponse, error) {
@@ -15,7 +16,7 @@ func (s *osintService) ListOsint(ctx context.Context, req *osint.ListOsintReques
 	}
 	list, err := s.repository.ListOsint(req.ProjectId)
 	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &osint.ListOsintResponse{}, nil
 		}
 		appLogger.Errorf("Failed to List Osint. error: %v", err)
@@ -34,7 +35,7 @@ func (s *osintService) GetOsint(ctx context.Context, req *osint.GetOsintRequest)
 	}
 	getData, err := s.repository.GetOsint(req.ProjectId, req.OsintId)
 	if err != nil {
-		if gorm.IsRecordNotFoundError(err) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &osint.GetOsintResponse{}, nil
 		}
 		appLogger.Errorf("Failed to Get Osint. error: %v", err)

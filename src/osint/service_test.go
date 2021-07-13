@@ -9,8 +9,8 @@ import (
 
 	"github.com/CyberAgent/mimosa-osint/pkg/model"
 	"github.com/CyberAgent/mimosa-osint/proto/osint"
-	"github.com/jinzhu/gorm"
 	"github.com/stretchr/testify/mock"
+	"gorm.io/gorm"
 )
 
 func TestListOsint(t *testing.T) {
@@ -353,10 +353,10 @@ func TestDeleteOsintDataSource(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:     "NG DB error",
+			name:     "Invalid DB error",
 			input:    &osint.DeleteOsintDataSourceRequest{ProjectId: 1001, OsintDataSourceId: 1001},
 			wantErr:  true,
-			mockResp: gorm.ErrInvalidSQL,
+			mockResp: gorm.ErrInvalidDB,
 		},
 	}
 	for _, c := range cases {
@@ -530,10 +530,10 @@ func TestDeleteRelOsintDataSource(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:     "NG DB error",
+			name:     "Invalid DB error",
 			input:    &osint.DeleteRelOsintDataSourceRequest{ProjectId: 1001, RelOsintDataSourceId: 1001},
 			wantErr:  true,
-			mockResp: gorm.ErrInvalidSQL,
+			mockResp: gorm.ErrInvalidDB,
 		},
 	}
 	for _, c := range cases {
@@ -707,10 +707,10 @@ func TestDeleteOsintDetectWord(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:     "NG DB error",
+			name:     "Invalid DB error",
 			input:    &osint.DeleteOsintDetectWordRequest{ProjectId: 1001, OsintDetectWordId: 1001},
 			wantErr:  true,
-			mockResp: gorm.ErrInvalidSQL,
+			mockResp: gorm.ErrInvalidDB,
 		},
 	}
 	for _, c := range cases {

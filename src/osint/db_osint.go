@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/CyberAgent/mimosa-osint/pkg/model"
-	_ "github.com/go-sql-driver/mysql"
 )
 
 func (r *osintRepository) ListOsint(projectID uint32) (*[]model.Osint, error) {

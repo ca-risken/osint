@@ -2,3 +2,5 @@
 env.sh
 env_local.sh
 .perman-aws-vault
+
+.idea/
