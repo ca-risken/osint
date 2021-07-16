@@ -37,7 +37,12 @@ func (p *privateExpose) checkCertificateExpiration() certificateExpiration {
 }
 
 func checkCertificateExpiration(url string) time.Time {
-	resp, err := http.Get(url)
+	client := &http.Client{}
+	req, _ := http.NewRequest("GET", url, nil)
+	client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
+		return http.ErrUseLastResponse
+	}
+	resp, err := client.Do(req)
 	if err != nil {
 		return time.Time{}
 	}
