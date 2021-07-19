@@ -31,7 +31,7 @@ func newHarvesterConfig() harvesterConfig {
 
 func (h *harvesterConfig) run(domain string, relAlertFindingID uint32) (*[]host, error) {
 	now := time.Now().Unix()
-	filePath := fmt.Sprintf("%s/%v_%v.xml", h.ResultPath, relAlertFindingID, now)
+	filePath := fmt.Sprintf("%s/%v_%v", h.ResultPath, relAlertFindingID, now)
 	harvesterPath := fmt.Sprintf("%s/theHarvester.py", h.HarvesterPath)
 	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Minute)
 	defer cancel()
@@ -94,14 +94,16 @@ func getIPAddr(domain string) string {
 }
 
 func readAndDeleteFile(fileName string) ([]byte, error) {
-	bytes, err := ioutil.ReadFile(fileName)
+	xmlFileName := fileName + ".xml"
+	jsonFileName := fileName + ".json"
+	bytes, err := ioutil.ReadFile(xmlFileName)
 	if err != nil {
 		return nil, err
 	}
-	if err := os.Remove(fileName); err != nil {
+	if err := os.Remove(xmlFileName); err != nil {
 		return nil, err
 	}
-	if err := os.Remove(fileName + ".html"); err != nil {
+	if err := os.Remove(jsonFileName); err != nil {
 		return nil, err
 	}
 	return bytes, nil
