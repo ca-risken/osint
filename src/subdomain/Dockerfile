@@ -9,7 +9,7 @@ RUN echo "login $GITHUB_USER" >> ~/.netrc
 RUN echo "password $GITHUB_TOKEN" >> ~/.netrc
 RUN go install -v
 
-FROM ubuntu:hirsute-20210711
+FROM ubuntu:hirsute
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update && apt install -qy python3 python3-pip libffi-dev libxml2-dev libxslt1-dev git wget  \ 
   && /usr/bin/python3 -m pip install --upgrade pip && apt clean && apt autoremove -qy
