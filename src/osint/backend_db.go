@@ -1,35 +1,34 @@
 package main
 
 import (
+	"context"
 	"fmt"
 
+	mimosasql "github.com/CyberAgent/mimosa-common/pkg/database/sql"
 	"github.com/CyberAgent/mimosa-osint/pkg/model"
 	"github.com/kelseyhightower/envconfig"
-	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	glogger "gorm.io/gorm/logger"
-	"gorm.io/gorm/schema"
 )
 
 type osintRepoInterface interface {
-	ListOsint(uint32) (*[]model.Osint, error)
-	GetOsint(uint32, uint32) (*model.Osint, error)
-	UpsertOsint(*model.Osint) (*model.Osint, error)
-	DeleteOsint(uint32, uint32) error
-	ListOsintDataSource(uint32, string) (*[]model.OsintDataSource, error)
-	GetOsintDataSource(uint32, uint32) (*model.OsintDataSource, error)
-	UpsertOsintDataSource(*model.OsintDataSource) (*model.OsintDataSource, error)
-	DeleteOsintDataSource(uint32, uint32) error
-	ListRelOsintDataSource(uint32, uint32, uint32) (*[]model.RelOsintDataSource, error)
-	GetRelOsintDataSource(uint32, uint32) (*model.RelOsintDataSource, error)
-	UpsertRelOsintDataSource(*model.RelOsintDataSource) (*model.RelOsintDataSource, error)
-	DeleteRelOsintDataSource(uint32, uint32) error
-	ListOsintDetectWord(uint32, uint32) (*[]model.OsintDetectWord, error)
-	GetOsintDetectWord(uint32, uint32) (*model.OsintDetectWord, error)
-	UpsertOsintDetectWord(*model.OsintDetectWord) (*model.OsintDetectWord, error)
-	DeleteOsintDetectWord(uint32, uint32) error
+	ListOsint(context.Context, uint32) (*[]model.Osint, error)
+	GetOsint(context.Context, uint32, uint32) (*model.Osint, error)
+	UpsertOsint(context.Context, *model.Osint) (*model.Osint, error)
+	DeleteOsint(context.Context, uint32, uint32) error
+	ListOsintDataSource(context.Context, uint32, string) (*[]model.OsintDataSource, error)
+	GetOsintDataSource(context.Context, uint32, uint32) (*model.OsintDataSource, error)
+	UpsertOsintDataSource(context.Context, *model.OsintDataSource) (*model.OsintDataSource, error)
+	DeleteOsintDataSource(context.Context, uint32, uint32) error
+	ListRelOsintDataSource(context.Context, uint32, uint32, uint32) (*[]model.RelOsintDataSource, error)
+	GetRelOsintDataSource(context.Context, uint32, uint32) (*model.RelOsintDataSource, error)
+	UpsertRelOsintDataSource(context.Context, *model.RelOsintDataSource) (*model.RelOsintDataSource, error)
+	DeleteRelOsintDataSource(context.Context, uint32, uint32) error
+	ListOsintDetectWord(context.Context, uint32, uint32) (*[]model.OsintDetectWord, error)
+	GetOsintDetectWord(context.Context, uint32, uint32) (*model.OsintDetectWord, error)
+	UpsertOsintDetectWord(context.Context, *model.OsintDetectWord) (*model.OsintDetectWord, error)
+	DeleteOsintDetectWord(context.Context, uint32, uint32) error
 	// For Invoke
-	ListAllRelOsintDataSource() (*[]model.RelOsintDataSource, error)
+	ListAllRelOsintDataSource(context.Context) (*[]model.RelOsintDataSource, error)
 }
 
 type osintRepository struct {
@@ -76,13 +75,10 @@ func initDB(isMaster bool) *gorm.DB {
 
 	dsn := fmt.Sprintf("%s:%s@tcp([%s]:%d)/%s?charset=utf8mb4&interpolateParams=true&parseTime=true&loc=Local",
 		user, pass, host, conf.Port, conf.Schema)
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{NamingStrategy: schema.NamingStrategy{SingularTable: true}})
+	db, err := mimosasql.Open(dsn, conf.LogMode)
 	if err != nil {
 		fmt.Printf("Failed to open DB. isMaster: %v", isMaster)
 		panic(err)
-	}
-	if conf.LogMode {
-		db.Logger.LogMode(glogger.Info)
 	}
 	return db
 }

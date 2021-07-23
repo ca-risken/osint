@@ -19,7 +19,7 @@ func (s *osintService) ListRelOsintDataSource(ctx context.Context, req *osint.Li
 	if err := req.Validate(); err != nil {
 		return nil, err
 	}
-	list, err := s.repository.ListRelOsintDataSource(req.ProjectId, req.OsintId, req.OsintDataSourceId)
+	list, err := s.repository.ListRelOsintDataSource(ctx, req.ProjectId, req.OsintId, req.OsintDataSourceId)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &osint.ListRelOsintDataSourceResponse{}, nil
@@ -38,7 +38,7 @@ func (s *osintService) GetRelOsintDataSource(ctx context.Context, req *osint.Get
 	if err := req.Validate(); err != nil {
 		return nil, err
 	}
-	getData, err := s.repository.GetRelOsintDataSource(req.ProjectId, req.RelOsintDataSourceId)
+	getData, err := s.repository.GetRelOsintDataSource(ctx, req.ProjectId, req.RelOsintDataSourceId)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &osint.GetRelOsintDataSourceResponse{}, nil
@@ -65,7 +65,7 @@ func (s *osintService) PutRelOsintDataSource(ctx context.Context, req *osint.Put
 		ScanAt:               time.Unix(req.RelOsintDataSource.ScanAt, 0),
 	}
 
-	registerdData, err := s.repository.UpsertRelOsintDataSource(data)
+	registerdData, err := s.repository.UpsertRelOsintDataSource(ctx, data)
 	if err != nil {
 		appLogger.Errorf("Failed to Put RelOsintDataSource. error: %v", err)
 		return nil, err
@@ -77,7 +77,7 @@ func (s *osintService) DeleteRelOsintDataSource(ctx context.Context, req *osint.
 	if err := req.Validate(); err != nil {
 		return nil, err
 	}
-	if err := s.repository.DeleteRelOsintDataSource(req.ProjectId, req.RelOsintDataSourceId); err != nil {
+	if err := s.repository.DeleteRelOsintDataSource(ctx, req.ProjectId, req.RelOsintDataSourceId); err != nil {
 		appLogger.Errorf("Failed to Delete RelOsintDataSource. error: %v", err)
 		return nil, err
 	}
@@ -105,19 +105,19 @@ func (s *osintService) InvokeScan(ctx context.Context, req *osint.InvokeScanRequ
 	if err := req.Validate(); err != nil {
 		return nil, err
 	}
-	relOsintDataSourceData, err := s.repository.GetRelOsintDataSource(req.ProjectId, req.RelOsintDataSourceId)
+	relOsintDataSourceData, err := s.repository.GetRelOsintDataSource(ctx, req.ProjectId, req.RelOsintDataSourceId)
 	if err != nil {
 		return nil, err
 	}
-	osintDataSourceData, err := s.repository.GetOsintDataSource(relOsintDataSourceData.ProjectID, relOsintDataSourceData.OsintDataSourceID)
+	osintDataSourceData, err := s.repository.GetOsintDataSource(ctx, relOsintDataSourceData.ProjectID, relOsintDataSourceData.OsintDataSourceID)
 	if err != nil {
 		return nil, err
 	}
-	osintData, err := s.repository.GetOsint(relOsintDataSourceData.ProjectID, relOsintDataSourceData.OsintID)
+	osintData, err := s.repository.GetOsint(ctx, relOsintDataSourceData.ProjectID, relOsintDataSourceData.OsintID)
 	if err != nil {
 		return nil, err
 	}
-	detectWord, err := s.repository.ListOsintDetectWord(relOsintDataSourceData.ProjectID, relOsintDataSourceData.RelOsintDataSourceID)
+	detectWord, err := s.repository.ListOsintDetectWord(ctx, relOsintDataSourceData.ProjectID, relOsintDataSourceData.RelOsintDataSourceID)
 	if err != nil {
 		return nil, err
 	}
@@ -136,12 +136,12 @@ func (s *osintService) InvokeScan(ctx context.Context, req *osint.InvokeScanRequ
 		DetectWord:           string(jsonDetectWord),
 		ScanOnly:             req.ScanOnly,
 	}
-	resp, err := s.sqs.send(msg)
+	resp, err := s.sqs.send(ctx, msg)
 	if err != nil {
 		appLogger.Errorf("Invoked scan. Error: %v", err)
 		return nil, err
 	}
-	if _, err = s.repository.UpsertRelOsintDataSource(&model.RelOsintDataSource{
+	if _, err = s.repository.UpsertRelOsintDataSource(ctx, &model.RelOsintDataSource{
 		RelOsintDataSourceID: relOsintDataSourceData.RelOsintDataSourceID,
 		OsintID:              relOsintDataSourceData.OsintID,
 		OsintDataSourceID:    relOsintDataSourceData.OsintDataSourceID,
@@ -159,7 +159,7 @@ func (s *osintService) InvokeScan(ctx context.Context, req *osint.InvokeScanRequ
 
 func (s *osintService) InvokeScanAll(ctx context.Context, req *empty.Empty) (*empty.Empty, error) {
 
-	list, err := s.repository.ListAllRelOsintDataSource()
+	list, err := s.repository.ListAllRelOsintDataSource(ctx)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &empty.Empty{}, nil

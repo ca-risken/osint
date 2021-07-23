@@ -7,6 +7,7 @@ import (
 type osintConfig struct {
 	Port     string `default:"18081"`
 	LogLevel string `split_words:"true" default:"debug"`
+	EnvName  string `default:"default" split_words:"true"`
 
 	DB  osintRepoInterface
 	SQS *sqsClient
