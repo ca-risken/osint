@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/CyberAgent/mimosa-common/pkg/logging v0.0.0-20210709072254-0b9fc118367f
+	github.com/CyberAgent/mimosa-common/pkg/xray v0.0.0-20210721063343-44cefe7f590e
 	github.com/CyberAgent/mimosa-core/proto/alert v0.0.0-20210707124600-11b1f052c30a
 	github.com/CyberAgent/mimosa-core/proto/finding v0.0.0-20210707124600-11b1f052c30a
 	github.com/CyberAgent/mimosa-osint/pkg/common v0.0.0-20210709011430-ef6f10e6a89a
@@ -12,6 +13,7 @@ require (
 	github.com/CyberAgent/mimosa-osint/proto/osint v0.0.0-20210709011430-ef6f10e6a89a
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
 	github.com/aws/aws-sdk-go v1.38.54
+	github.com/aws/aws-xray-sdk-go v1.6.0
 	github.com/gassara-kys/go-sqs-poller/worker/v4 v4.0.0-20210215110542-0be358599a2f
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/miekg/dns v1.1.42
