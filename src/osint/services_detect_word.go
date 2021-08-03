@@ -14,7 +14,7 @@ func (s *osintService) ListOsintDetectWord(ctx context.Context, req *osint.ListO
 	if err := req.Validate(); err != nil {
 		return nil, err
 	}
-	list, err := s.repository.ListOsintDetectWord(req.ProjectId, req.RelOsintDataSourceId)
+	list, err := s.repository.ListOsintDetectWord(ctx, req.ProjectId, req.RelOsintDataSourceId)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &osint.ListOsintDetectWordResponse{}, nil
@@ -33,7 +33,7 @@ func (s *osintService) GetOsintDetectWord(ctx context.Context, req *osint.GetOsi
 	if err := req.Validate(); err != nil {
 		return nil, err
 	}
-	getData, err := s.repository.GetOsintDetectWord(req.ProjectId, req.OsintDetectWordId)
+	getData, err := s.repository.GetOsintDetectWord(ctx, req.ProjectId, req.OsintDetectWordId)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &osint.GetOsintDetectWordResponse{}, nil
@@ -57,7 +57,7 @@ func (s *osintService) PutOsintDetectWord(ctx context.Context, req *osint.PutOsi
 		ProjectID:            req.OsintDetectWord.ProjectId,
 	}
 
-	registerdData, err := s.repository.UpsertOsintDetectWord(data)
+	registerdData, err := s.repository.UpsertOsintDetectWord(ctx, data)
 	if err != nil {
 		appLogger.Errorf("Failed to Put OsintDetectWord, error: %v", err)
 		return nil, err
@@ -69,7 +69,7 @@ func (s *osintService) DeleteOsintDetectWord(ctx context.Context, req *osint.Del
 	if err := req.Validate(); err != nil {
 		return nil, err
 	}
-	if err := s.repository.DeleteOsintDetectWord(req.ProjectId, req.OsintDetectWordId); err != nil {
+	if err := s.repository.DeleteOsintDetectWord(ctx, req.ProjectId, req.OsintDetectWordId); err != nil {
 		appLogger.Errorf("Failed to Delete OsintDetectWord, error: %v", err)
 		return nil, err
 	}

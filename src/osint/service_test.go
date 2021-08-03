@@ -731,71 +731,71 @@ type mockOsintRepository struct {
 	mock.Mock
 }
 
-func (m *mockOsintRepository) ListOsint(uint32) (*[]model.Osint, error) {
+func (m *mockOsintRepository) ListOsint(context.Context, uint32) (*[]model.Osint, error) {
 	args := m.Called()
 	return args.Get(0).(*[]model.Osint), args.Error(1)
 }
-func (m *mockOsintRepository) GetOsint(uint32, uint32) (*model.Osint, error) {
+func (m *mockOsintRepository) GetOsint(context.Context, uint32, uint32) (*model.Osint, error) {
 	args := m.Called()
 	return args.Get(0).(*model.Osint), args.Error(1)
 }
-func (m *mockOsintRepository) UpsertOsint(*model.Osint) (*model.Osint, error) {
+func (m *mockOsintRepository) UpsertOsint(context.Context, *model.Osint) (*model.Osint, error) {
 	args := m.Called()
 	return args.Get(0).(*model.Osint), args.Error(1)
 }
-func (m *mockOsintRepository) DeleteOsint(uint32, uint32) error {
+func (m *mockOsintRepository) DeleteOsint(context.Context, uint32, uint32) error {
 	args := m.Called()
 	return args.Error(0)
 }
-func (m *mockOsintRepository) ListOsintDataSource(uint32, string) (*[]model.OsintDataSource, error) {
+func (m *mockOsintRepository) ListOsintDataSource(context.Context, uint32, string) (*[]model.OsintDataSource, error) {
 	args := m.Called()
 	return args.Get(0).(*[]model.OsintDataSource), args.Error(1)
 }
-func (m *mockOsintRepository) GetOsintDataSource(uint32, uint32) (*model.OsintDataSource, error) {
+func (m *mockOsintRepository) GetOsintDataSource(context.Context, uint32, uint32) (*model.OsintDataSource, error) {
 	args := m.Called()
 	return args.Get(0).(*model.OsintDataSource), args.Error(1)
 }
-func (m *mockOsintRepository) UpsertOsintDataSource(*model.OsintDataSource) (*model.OsintDataSource, error) {
+func (m *mockOsintRepository) UpsertOsintDataSource(context.Context, *model.OsintDataSource) (*model.OsintDataSource, error) {
 	args := m.Called()
 	return args.Get(0).(*model.OsintDataSource), args.Error(1)
 }
-func (m *mockOsintRepository) DeleteOsintDataSource(uint32, uint32) error {
+func (m *mockOsintRepository) DeleteOsintDataSource(context.Context, uint32, uint32) error {
 	args := m.Called()
 	return args.Error(0)
 }
-func (m *mockOsintRepository) ListRelOsintDataSource(uint32, uint32, uint32) (*[]model.RelOsintDataSource, error) {
+func (m *mockOsintRepository) ListRelOsintDataSource(context.Context, uint32, uint32, uint32) (*[]model.RelOsintDataSource, error) {
 	args := m.Called()
 	return args.Get(0).(*[]model.RelOsintDataSource), args.Error(1)
 }
-func (m *mockOsintRepository) GetRelOsintDataSource(uint32, uint32) (*model.RelOsintDataSource, error) {
+func (m *mockOsintRepository) GetRelOsintDataSource(context.Context, uint32, uint32) (*model.RelOsintDataSource, error) {
 	args := m.Called()
 	return args.Get(0).(*model.RelOsintDataSource), args.Error(1)
 }
-func (m *mockOsintRepository) UpsertRelOsintDataSource(*model.RelOsintDataSource) (*model.RelOsintDataSource, error) {
+func (m *mockOsintRepository) UpsertRelOsintDataSource(context.Context, *model.RelOsintDataSource) (*model.RelOsintDataSource, error) {
 	args := m.Called()
 	return args.Get(0).(*model.RelOsintDataSource), args.Error(1)
 }
-func (m *mockOsintRepository) DeleteRelOsintDataSource(uint32, uint32) error {
+func (m *mockOsintRepository) DeleteRelOsintDataSource(context.Context, uint32, uint32) error {
 	args := m.Called()
 	return args.Error(0)
 }
-func (m *mockOsintRepository) ListOsintDetectWord(uint32, uint32) (*[]model.OsintDetectWord, error) {
+func (m *mockOsintRepository) ListOsintDetectWord(context.Context, uint32, uint32) (*[]model.OsintDetectWord, error) {
 	args := m.Called()
 	return args.Get(0).(*[]model.OsintDetectWord), args.Error(1)
 }
-func (m *mockOsintRepository) GetOsintDetectWord(uint32, uint32) (*model.OsintDetectWord, error) {
+func (m *mockOsintRepository) GetOsintDetectWord(context.Context, uint32, uint32) (*model.OsintDetectWord, error) {
 	args := m.Called()
 	return args.Get(0).(*model.OsintDetectWord), args.Error(1)
 }
-func (m *mockOsintRepository) UpsertOsintDetectWord(*model.OsintDetectWord) (*model.OsintDetectWord, error) {
+func (m *mockOsintRepository) UpsertOsintDetectWord(context.Context, *model.OsintDetectWord) (*model.OsintDetectWord, error) {
 	args := m.Called()
 	return args.Get(0).(*model.OsintDetectWord), args.Error(1)
 }
-func (m *mockOsintRepository) DeleteOsintDetectWord(uint32, uint32) error {
+func (m *mockOsintRepository) DeleteOsintDetectWord(context.Context, uint32, uint32) error {
 	args := m.Called()
 	return args.Error(0)
 }
-func (m *mockOsintRepository) ListAllRelOsintDataSource() (*[]model.RelOsintDataSource, error) {
+func (m *mockOsintRepository) ListAllRelOsintDataSource(context.Context) (*[]model.RelOsintDataSource, error) {
 	args := m.Called()
 	return args.Get(0).(*[]model.RelOsintDataSource), args.Error(1)
 }

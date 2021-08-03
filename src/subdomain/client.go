@@ -69,6 +69,9 @@ func newOsintClient() osint.OsintServiceClient {
 }
 
 func getGRPCConn(ctx context.Context, addr string) (*grpc.ClientConn, error) {
+	// gRPCクライアントの呼び出し回数が非常に多くトレーシング情報の送信がエラーになるため、トレースは無効にしておく
+	//conn, err := grpc.DialContext(ctx, addr,
+	//	grpc.WithUnaryInterceptor(xray.UnaryClientInterceptor()), grpc.WithInsecure(), grpc.WithTimeout(time.Second*3))
 	conn, err := grpc.DialContext(ctx, addr, grpc.WithInsecure(), grpc.WithTimeout(time.Second*3))
 	if err != nil {
 		return nil, err

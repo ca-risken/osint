@@ -14,7 +14,7 @@ func (s *osintService) ListOsint(ctx context.Context, req *osint.ListOsintReques
 	if err := req.Validate(); err != nil {
 		return nil, err
 	}
-	list, err := s.repository.ListOsint(req.ProjectId)
+	list, err := s.repository.ListOsint(ctx, req.ProjectId)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &osint.ListOsintResponse{}, nil
@@ -33,7 +33,7 @@ func (s *osintService) GetOsint(ctx context.Context, req *osint.GetOsintRequest)
 	if err := req.Validate(); err != nil {
 		return nil, err
 	}
-	getData, err := s.repository.GetOsint(req.ProjectId, req.OsintId)
+	getData, err := s.repository.GetOsint(ctx, req.ProjectId, req.OsintId)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &osint.GetOsintResponse{}, nil
@@ -57,7 +57,7 @@ func (s *osintService) PutOsint(ctx context.Context, req *osint.PutOsintRequest)
 		ProjectID:    req.Osint.ProjectId,
 	}
 
-	registerdData, err := s.repository.UpsertOsint(data)
+	registerdData, err := s.repository.UpsertOsint(ctx, data)
 	if err != nil {
 		appLogger.Errorf("Failed to Put Osint. error: %v", err)
 		return nil, err
@@ -69,7 +69,7 @@ func (s *osintService) DeleteOsint(ctx context.Context, req *osint.DeleteOsintRe
 	if err := req.Validate(); err != nil {
 		return nil, err
 	}
-	if err := s.repository.DeleteOsint(req.ProjectId, req.OsintId); err != nil {
+	if err := s.repository.DeleteOsint(ctx, req.ProjectId, req.OsintId); err != nil {
 		appLogger.Errorf("Failed to Delete Osint. error: %v", err)
 		return nil, err
 	}

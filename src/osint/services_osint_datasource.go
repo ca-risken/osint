@@ -14,7 +14,7 @@ func (s *osintService) ListOsintDataSource(ctx context.Context, req *osint.ListO
 	if err := req.Validate(); err != nil {
 		return nil, err
 	}
-	list, err := s.repository.ListOsintDataSource(req.ProjectId, req.Name)
+	list, err := s.repository.ListOsintDataSource(ctx, req.ProjectId, req.Name)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &osint.ListOsintDataSourceResponse{}, nil
@@ -33,7 +33,7 @@ func (s *osintService) GetOsintDataSource(ctx context.Context, req *osint.GetOsi
 	if err := req.Validate(); err != nil {
 		return nil, err
 	}
-	getData, err := s.repository.GetOsintDataSource(req.ProjectId, req.OsintDataSourceId)
+	getData, err := s.repository.GetOsintDataSource(ctx, req.ProjectId, req.OsintDataSourceId)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &osint.GetOsintDataSourceResponse{}, nil
@@ -57,7 +57,7 @@ func (s *osintService) PutOsintDataSource(ctx context.Context, req *osint.PutOsi
 		MaxScore:          req.OsintDataSource.MaxScore,
 	}
 
-	registerdData, err := s.repository.UpsertOsintDataSource(data)
+	registerdData, err := s.repository.UpsertOsintDataSource(ctx, data)
 	if err != nil {
 		appLogger.Errorf("Failed to Put OsintDataSource, error: %v", err)
 		return nil, err
@@ -69,7 +69,7 @@ func (s *osintService) DeleteOsintDataSource(ctx context.Context, req *osint.Del
 	if err := req.Validate(); err != nil {
 		return nil, err
 	}
-	if err := s.repository.DeleteOsintDataSource(req.ProjectId, req.OsintDataSourceId); err != nil {
+	if err := s.repository.DeleteOsintDataSource(ctx, req.ProjectId, req.OsintDataSourceId); err != nil {
 		appLogger.Errorf("Failed to Delete OsintDataSource, error: %v", err)
 		return nil, err
 	}

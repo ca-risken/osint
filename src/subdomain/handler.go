@@ -14,6 +14,7 @@ import (
 	"github.com/CyberAgent/mimosa-osint/proto/osint"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/sqs"
+	"github.com/aws/aws-xray-sdk-go/xray"
 )
 
 type sqsHandler struct {
@@ -36,7 +37,7 @@ func newHandler() *sqsHandler {
 	return h
 }
 
-func (s *sqsHandler) HandleMessage(sqsMsg *sqs.Message) error {
+func (s *sqsHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) error {
 	msgBody := aws.StringValue(sqsMsg.Body)
 	appLogger.Infof("got message. message: %v", msgBody)
 	// Parse message
@@ -59,14 +60,16 @@ func (s *sqsHandler) HandleMessage(sqsMsg *sqs.Message) error {
 	}
 
 	// Run Harvester
+	_, segment := xray.BeginSubsegment(ctx, "runHarvester")
 	hosts, err := s.harvesterConfig.run(msg.ResourceName, msg.RelOsintDataSourceID)
+	segment.Close(err)
 	if err != nil {
 		appLogger.Errorf("Failed exec theHarvester, error: %v", err)
 		strError := "An error occured while executing osint tool. Ask the system administrator."
 		if err.Error() == "signal: killed" {
 			strError = "An error occured while executing osint tool. Scan will restart in a little while."
 		}
-		_ = s.putRelOsintDataSource(msg, false, strError)
+		_ = s.putRelOsintDataSource(ctx, msg, false, strError)
 		return err
 	}
 
@@ -74,7 +77,7 @@ func (s *sqsHandler) HandleMessage(sqsMsg *sqs.Message) error {
 	osintResults, err := inspectDomain(hosts, detectList)
 	if err != nil {
 		appLogger.Errorf("Failed get osintResults, error: %v", err)
-		_ = s.putRelOsintDataSource(msg, false, "An error occured while investing resource. Ask the system administrator.")
+		_ = s.putRelOsintDataSource(ctx, msg, false, "An error occured while investing resource. Ask the system administrator.")
 		return err
 	}
 	findings, err := makeFindings(osintResults.OsintResults, msg)
@@ -84,14 +87,13 @@ func (s *sqsHandler) HandleMessage(sqsMsg *sqs.Message) error {
 	}
 
 	// Put Finding and Tag Finding
-	ctx := context.Background()
 	if err := s.putFindings(ctx, findings); err != nil {
 		appLogger.Errorf("Faild to put findngs. relOsintDataSourceID: %v, error: %v", msg.RelOsintDataSourceID, err)
 		return err
 	}
 
 	// Put RelOsintDataSource
-	if err := s.putRelOsintDataSource(msg, true, ""); err != nil {
+	if err := s.putRelOsintDataSource(ctx, msg, true, ""); err != nil {
 		appLogger.Errorf("Faild to put rel_osint_data_source. relOsintDataSourceID: %v, error: %v", msg.RelOsintDataSourceID, err)
 		return err
 	}
@@ -130,8 +132,7 @@ func (s *sqsHandler) CallAnalyzeAlert(ctx context.Context, projectID uint32) err
 	return nil
 }
 
-func (s *sqsHandler) putRelOsintDataSource(message *message.OsintQueueMessage, isSuccess bool, errStr string) error {
-	ctx := context.Background()
+func (s *sqsHandler) putRelOsintDataSource(ctx context.Context, message *message.OsintQueueMessage, isSuccess bool, errStr string) error {
 
 	relOsintDataSource := &osint.RelOsintDataSourceForUpsert{
 		RelOsintDataSourceId: message.RelOsintDataSourceID,
