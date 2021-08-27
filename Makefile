@@ -79,9 +79,9 @@ push-manifest: $(MANIFEST_PUSH_TARGETS)
 
 PHONY: go-test $(TEST_TARGETS) proto-test
 go-test: $(TEST_TARGETS) proto-test
-%.go-test: proto
+%.go-test:
 	cd src/$(*) && go test ./...
-proto-test: proto
+proto-test:
 	cd proto/osint && go test ./...
 
 PHONY: go-mod-update
