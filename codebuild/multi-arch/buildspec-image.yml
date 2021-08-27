@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   variables:
-    IMAGE_PREFIX: "multi-arch-test-osint"
+    IMAGE_PREFIX: "risken-osint"
   parameter-store:
     GITHUB_USER: "/build/GITHUB_USER"
     GITHUB_TOKEN: "/build/GITHUB_TOKEN"
