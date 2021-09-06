@@ -6,7 +6,7 @@ import (
 	"net"
 	"strings"
 
-	"github.com/CyberAgent/mimosa-core/proto/finding"
+	"github.com/ca-risken/core/proto/finding"
 	"github.com/miekg/dns"
 	"github.com/vikyd/zero"
 )
