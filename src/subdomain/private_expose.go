@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/CyberAgent/mimosa-core/proto/finding"
+	"github.com/ca-risken/core/proto/finding"
 	"github.com/vikyd/zero"
 )
 

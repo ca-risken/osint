@@ -3,10 +3,6 @@ cloud.google.com/go v0.34.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMT
 dmitri.shuralyov.com/gpu/mtl v0.0.0-20190408044501-666a987793e9/go.mod h1:H6x//7gZCb22OMCxBHrMx7a5I7Hp++hsVxbQ4BYO7hU=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
-github.com/CyberAgent/mimosa-common/pkg/database v0.0.0-20210721063343-44cefe7f590e h1:KRE+HJAQELjA8xOGBfILLNeLEVIJd5iHqFar7FfGPlI=
-github.com/CyberAgent/mimosa-common/pkg/database v0.0.0-20210721063343-44cefe7f590e/go.mod h1:6qBgvUU682xnwELGQFmMwjP4qGyf3TAimeokQFty3xU=
-github.com/CyberAgent/mimosa-common/pkg/xray v0.0.0-20210803120909-2cc57e3c75d2 h1:kR25hdxiwJZKpHO5fQBuso+8ob5ukisUXfauAKV/BQM=
-github.com/CyberAgent/mimosa-common/pkg/xray v0.0.0-20210803120909-2cc57e3c75d2/go.mod h1:5oT6h4M/jXOoae5d3i7STExxv/eV68F6yuc0Isbvli0=
 github.com/CyberAgent/mimosa-osint/pkg/message v0.0.0-20210709011430-ef6f10e6a89a h1:Trzn0VaDcuWYK8ja/zurRwOKj9oznSKlDvbIpV3FAu0=
 github.com/CyberAgent/mimosa-osint/pkg/message v0.0.0-20210709011430-ef6f10e6a89a/go.mod h1:T9NmovTu+H9EPDus21Yj9J9ZaIskXn/cJb6VriflAIw=
 github.com/CyberAgent/mimosa-osint/pkg/model v0.0.0-20210709011430-ef6f10e6a89a h1:tQ1p6EJSLoxdfvBea9ZQOeu0Zx374svewy9X8I1t3Kw=
@@ -29,6 +25,10 @@ github.com/aws/aws-sdk-go-v2/service/route53 v1.6.2/go.mod h1:ZnAMilx42P7DgIrdjl
 github.com/aws/aws-xray-sdk-go v1.6.0 h1:w4dPTvHZtbQg3dQFTRTu4TIunlfJCRGKdmGYZkcEJwI=
 github.com/aws/aws-xray-sdk-go v1.6.0/go.mod h1:k+NuTgdU+z07L3l8lnGHK+/luqe8TKmZJNpQAoVfLeY=
 github.com/aws/smithy-go v1.4.0/go.mod h1:SObp3lf9smib00L/v3U2eAKG8FyQ7iLrJnQiAmR5n+E=
+github.com/ca-risken/common/pkg/database v0.0.0-20210906122657-d2be54cc7181 h1:x6wXZqqlRA3R4927UY+BGCe6yOFN4OoZlvVQ+0beqPQ=
+github.com/ca-risken/common/pkg/database v0.0.0-20210906122657-d2be54cc7181/go.mod h1:9JacDXQAdUUqCyV3Z0iVBcS2SCh/ZMDnIzBzgbFRRbc=
+github.com/ca-risken/common/pkg/xray v0.0.0-20210906122657-d2be54cc7181 h1:1KzpbfBRcaaomzljIeL7Gr7G+pRj3A+KFzD3MlewhGY=
+github.com/ca-risken/common/pkg/xray v0.0.0-20210906122657-d2be54cc7181/go.mod h1:n654ONolaDXo0FYBd5sPDdaj/P5FL/G3PhhJVYT9WpY=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/cncf/udpa/go v0.0.0-20191209042840-269d4d468f6f/go.mod h1:M8M6+tZqaGXZJjfX53e64911xZQV5JYwmTeXPW+k8Sc=

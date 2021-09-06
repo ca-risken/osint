@@ -91,7 +91,7 @@ go-mod-update:
 			github.com/CyberAgent/mimosa-osint/...
 	cd src/subdomain \
 		&& go get -u \
-			github.com/CyberAgent/mimosa-core/... \
+			github.com/ca-risken/core/... \
 			github.com/CyberAgent/mimosa-osint/...
 
 PHONY: go-mod-tidy
