@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package osint.osint;
-option go_package = "github.com/CyberAgent/mimosa-osint/proto/osint";
+option go_package = "github.com/ca-risken/osint/proto/osint";
 
 import "osint/entities.proto";
 import "google/protobuf/empty.proto";

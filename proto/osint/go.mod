@@ -1,4 +1,4 @@
-module github.com/CyberAgent/mimosa-osint/proto/osint
+module github.com/ca-risken/osint/proto/osint
 
 go 1.16
 
