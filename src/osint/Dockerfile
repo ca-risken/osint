@@ -1,5 +1,5 @@
 FROM golang:1.16 as builder
-WORKDIR /go/src/github.com/CyberAgent/mimosa-osint/osint
+WORKDIR /go/src/github.com/ca-risken/osint/osint
 ADD *.go go.* ./
 ENV CGO_ENABLED=0 GOPRIVATE="github.com/CyberAgent/*,github.com/ca-risken/*"
 ARG ENV_INJECTOR_VERSION=v0.0.6

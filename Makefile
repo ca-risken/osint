@@ -88,11 +88,11 @@ PHONY: go-mod-update
 go-mod-update:
 	cd src/osint \
 		&& go get -u \
-			github.com/CyberAgent/mimosa-osint/...
+			github.com/ca-risken/osint/...
 	cd src/subdomain \
 		&& go get -u \
 			github.com/ca-risken/core/... \
-			github.com/CyberAgent/mimosa-osint/...
+			github.com/ca-risken/osint/...
 
 PHONY: go-mod-tidy
 go-mod-tidy: proto

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/CyberAgent/mimosa-osint/proto/osint"
 	"github.com/aws/aws-xray-sdk-go/xray"
 	mimosaxray "github.com/ca-risken/common/pkg/xray"
+	"github.com/ca-risken/osint/proto/osint"
 	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"

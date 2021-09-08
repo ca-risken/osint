@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 
-	"github.com/CyberAgent/mimosa-osint/pkg/model"
+	"github.com/ca-risken/osint/pkg/model"
 	"github.com/vikyd/zero"
 )
 
