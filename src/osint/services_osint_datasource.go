@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 
-	"github.com/CyberAgent/mimosa-osint/pkg/model"
-	"github.com/CyberAgent/mimosa-osint/proto/osint"
+	"github.com/ca-risken/osint/pkg/model"
+	"github.com/ca-risken/osint/proto/osint"
 	"github.com/golang/protobuf/ptypes/empty"
 	"gorm.io/gorm"
 )

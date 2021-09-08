@@ -1,15 +1,15 @@
-module github.com/CyberAgent/mimosa-osint-go/src/osint
+module github.com/ca-risken/osint/src/osint
 
 go 1.16
 
 require (
-	github.com/CyberAgent/mimosa-osint/pkg/message v0.0.0-20210709011430-ef6f10e6a89a
-	github.com/CyberAgent/mimosa-osint/pkg/model v0.0.0-20210709011430-ef6f10e6a89a
-	github.com/CyberAgent/mimosa-osint/proto/osint v0.0.0-20210709011430-ef6f10e6a89a
 	github.com/aws/aws-sdk-go v1.39.3
 	github.com/aws/aws-xray-sdk-go v1.6.0
 	github.com/ca-risken/common/pkg/database v0.0.0-20210906122657-d2be54cc7181
 	github.com/ca-risken/common/pkg/xray v0.0.0-20210906122657-d2be54cc7181
+	github.com/ca-risken/osint/pkg/message v0.0.0-20210908024505-bad8297bda4e
+	github.com/ca-risken/osint/pkg/model v0.0.0-20210908024505-bad8297bda4e
+	github.com/ca-risken/osint/proto/osint v0.0.0-20210908024505-bad8297bda4e
 	github.com/golang/protobuf v1.5.2
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.2
 	github.com/kelseyhightower/envconfig v1.4.0

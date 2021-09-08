@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/CyberAgent/mimosa-osint/pkg/model"
-	"github.com/CyberAgent/mimosa-osint/proto/osint"
+	"github.com/ca-risken/osint/pkg/model"
+	"github.com/ca-risken/osint/proto/osint"
 	"github.com/stretchr/testify/mock"
 	"gorm.io/gorm"
 )

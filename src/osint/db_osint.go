@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 
-	"github.com/CyberAgent/mimosa-osint/pkg/model"
+	"github.com/ca-risken/osint/pkg/model"
 )
 
 func (r *osintRepository) ListOsint(ctx context.Context, projectID uint32) (*[]model.Osint, error) {

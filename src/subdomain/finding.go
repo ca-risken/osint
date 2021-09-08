@@ -6,9 +6,9 @@ import (
 
 	"crypto/sha256"
 
-	"github.com/CyberAgent/mimosa-osint/pkg/common"
-	"github.com/CyberAgent/mimosa-osint/pkg/message"
 	"github.com/ca-risken/core/proto/finding"
+	"github.com/ca-risken/osint/pkg/common"
+	"github.com/ca-risken/osint/pkg/message"
 )
 
 func (s *sqsHandler) putFindings(ctx context.Context, findingMap map[string][]*finding.FindingForUpsert) error {

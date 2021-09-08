@@ -3,12 +3,6 @@ cloud.google.com/go v0.34.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMT
 dmitri.shuralyov.com/gpu/mtl v0.0.0-20190408044501-666a987793e9/go.mod h1:H6x//7gZCb22OMCxBHrMx7a5I7Hp++hsVxbQ4BYO7hU=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
-github.com/CyberAgent/mimosa-osint/pkg/message v0.0.0-20210709011430-ef6f10e6a89a h1:Trzn0VaDcuWYK8ja/zurRwOKj9oznSKlDvbIpV3FAu0=
-github.com/CyberAgent/mimosa-osint/pkg/message v0.0.0-20210709011430-ef6f10e6a89a/go.mod h1:T9NmovTu+H9EPDus21Yj9J9ZaIskXn/cJb6VriflAIw=
-github.com/CyberAgent/mimosa-osint/pkg/model v0.0.0-20210709011430-ef6f10e6a89a h1:tQ1p6EJSLoxdfvBea9ZQOeu0Zx374svewy9X8I1t3Kw=
-github.com/CyberAgent/mimosa-osint/pkg/model v0.0.0-20210709011430-ef6f10e6a89a/go.mod h1:NqweVw7y9Sk5/YiYxia/bSkzLQPnkr2T9YchvrWXnnY=
-github.com/CyberAgent/mimosa-osint/proto/osint v0.0.0-20210709011430-ef6f10e6a89a h1:Oj5Tq3B7GbZgP5c7TOC0JF56jQ0ehint8KhZ/LsV9UQ=
-github.com/CyberAgent/mimosa-osint/proto/osint v0.0.0-20210709011430-ef6f10e6a89a/go.mod h1:e5rQcqRAjicYsxBQCUUJLJaiRT9Cx/QCB7pgngOGyWo=
 github.com/DATA-DOG/go-sqlmock v1.4.1 h1:ThlnYciV1iM/V0OSF/dtkqWb6xo5qITT1TJBG1MRDJM=
 github.com/DATA-DOG/go-sqlmock v1.4.1/go.mod h1:f/Ixk793poVmq4qj/V1dPUg2JEAKC73Q5eFN3EC/SaM=
 github.com/andybalholm/brotli v1.0.1 h1:KqhlKozYbRtJvsPrrEeXcO+N2l6NYT5A2QAFmSULpEc=
@@ -29,6 +23,12 @@ github.com/ca-risken/common/pkg/database v0.0.0-20210906122657-d2be54cc7181 h1:x
 github.com/ca-risken/common/pkg/database v0.0.0-20210906122657-d2be54cc7181/go.mod h1:9JacDXQAdUUqCyV3Z0iVBcS2SCh/ZMDnIzBzgbFRRbc=
 github.com/ca-risken/common/pkg/xray v0.0.0-20210906122657-d2be54cc7181 h1:1KzpbfBRcaaomzljIeL7Gr7G+pRj3A+KFzD3MlewhGY=
 github.com/ca-risken/common/pkg/xray v0.0.0-20210906122657-d2be54cc7181/go.mod h1:n654ONolaDXo0FYBd5sPDdaj/P5FL/G3PhhJVYT9WpY=
+github.com/ca-risken/osint/pkg/message v0.0.0-20210908024505-bad8297bda4e h1:K0iqJK/q4EcRRcBtusa+F0+3xFS+J5GUA9oDQjkwfKk=
+github.com/ca-risken/osint/pkg/message v0.0.0-20210908024505-bad8297bda4e/go.mod h1:Ry6TO9dxctgkF0kmMjZkl5kuBTMTgCGZXtiPGTZEuho=
+github.com/ca-risken/osint/pkg/model v0.0.0-20210908024505-bad8297bda4e h1:R9h8vSz36xsmuNPNb0PHHW+ByMFE29bFjRmSnRqpNhs=
+github.com/ca-risken/osint/pkg/model v0.0.0-20210908024505-bad8297bda4e/go.mod h1:ZYCm+DqX3UmJLlvKa7dbdz87fhMDVpWP4Ba70ZSSMTc=
+github.com/ca-risken/osint/proto/osint v0.0.0-20210908024505-bad8297bda4e h1:F6nbEb6pMJM/l0fGWBftidT1whpypGy4znMDiAYHJoE=
+github.com/ca-risken/osint/proto/osint v0.0.0-20210908024505-bad8297bda4e/go.mod h1:Y/gVnmtfHzDvh36Ifpkzq41PWCN9Z8UPklZS2hQ5hQc=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/cncf/udpa/go v0.0.0-20191209042840-269d4d468f6f/go.mod h1:M8M6+tZqaGXZJjfX53e64911xZQV5JYwmTeXPW+k8Sc=
