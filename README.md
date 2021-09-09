@@ -1,0 +1,3 @@
+# osint
+
+![Build Status](https://codebuild.ap-northeast-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiNlFlQkVnOU94ek9aWlMxamhYc0dkcGk5aExqVWtoOVV3eWJhbWQ5YWVhNkljSk5RR0h1SFpSd2VTUzdSMk8yU1czNUVPTVh3M01CdSt5bzZ0RXNrNlc4PSIsIml2UGFyYW1ldGVyU3BlYyI6InA3QzlhcWRlUENkM3hRV1oiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
