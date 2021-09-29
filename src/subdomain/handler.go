@@ -10,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/sqs"
 	"github.com/aws/aws-xray-sdk-go/xray"
 	"github.com/ca-risken/common/pkg/logging"
+	mimosasqs "github.com/ca-risken/common/pkg/sqs"
 	"github.com/ca-risken/core/proto/alert"
 	"github.com/ca-risken/core/proto/finding"
 	"github.com/ca-risken/osint/pkg/message"
@@ -44,7 +45,7 @@ func (s *sqsHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 	msg, err := parseMessage(msgBody)
 	if err != nil {
 		appLogger.Errorf("Invalid message. message: %v, error: %v", msgBody, err)
-		return err
+		return mimosasqs.WrapNonRetryable(err)
 	}
 
 	requestID, err := logging.GenerateRequestID(fmt.Sprint(msg.ProjectID))
