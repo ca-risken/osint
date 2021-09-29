@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/aws/aws-xray-sdk-go/xray"
+	mimosasqs "github.com/ca-risken/common/pkg/sqs"
 	mimosaxray "github.com/ca-risken/common/pkg/xray"
 	"github.com/kelseyhightower/envconfig"
 )
@@ -21,7 +22,10 @@ func main() {
 	mimosaxray.InitXRay(xray.Config{})
 	ctx := context.Background()
 	consumer := newSQSConsumer()
-	appLogger.Info("Start the intrigue SQS consumer server...")
+	appLogger.Info("Start the subdomain SQS consumer server...")
 	consumer.Start(ctx,
-		mimosaxray.MessageTracingHandler(conf.EnvName, "osint.subDomain", newHandler()))
+		mimosasqs.InitializeHandler(
+			mimosasqs.RetryableErrorHandler(
+				mimosasqs.StatusLoggingHandler(appLogger,
+					mimosaxray.MessageTracingHandler(conf.EnvName, "osint.subDomain", newHandler())))))
 }
