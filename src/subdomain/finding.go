@@ -11,7 +11,7 @@ import (
 	"github.com/ca-risken/osint/pkg/message"
 )
 
-func (s *sqsHandler) putFindings(ctx context.Context, findingMap map[string][]*finding.FindingForUpsert) error {
+func (s *sqsHandler) putFindings(ctx context.Context, findingMap map[string][]*finding.FindingForUpsert, resourceName string) error {
 	for key, findings := range findingMap {
 		for _, f := range findings {
 			res, err := s.findingClient.PutFinding(ctx, &finding.PutFindingRequest{Finding: f})
@@ -28,7 +28,7 @@ func (s *sqsHandler) putFindings(ctx context.Context, findingMap map[string][]*f
 			case "CertificateExpiration":
 				s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagCertificateExpiration)
 			}
-
+			s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, resourceName)
 			appLogger.Infof("Success to PutFinding. finding: %v", res)
 		}
 	}

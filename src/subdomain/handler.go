@@ -87,8 +87,19 @@ func (s *sqsHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 		return err
 	}
 
+	// Clear finding score
+	if _, err := s.findingClient.ClearScore(ctx, &finding.ClearScoreRequest{
+		DataSource: msg.DataSource,
+		ProjectId:  msg.ProjectID,
+		Tag:        []string{msg.ResourceName},
+	}); err != nil {
+		appLogger.Errorf("Failed to clear finding score. ResourceName: %v, error: %v", msg.ResourceName, err)
+		_ = s.putRelOsintDataSource(ctx, msg, false, err.Error())
+		return err
+	}
+
 	// Put Finding and Tag Finding
-	if err := s.putFindings(ctx, findings); err != nil {
+	if err := s.putFindings(ctx, findings, msg.ResourceName); err != nil {
 		appLogger.Errorf("Faild to put findngs. relOsintDataSourceID: %v, error: %v", msg.RelOsintDataSourceID, err)
 		return err
 	}
