@@ -7,12 +7,12 @@ import (
 	"github.com/ca-risken/core/proto/alert"
 	"github.com/ca-risken/core/proto/finding"
 	"github.com/ca-risken/osint/proto/osint"
-	"github.com/kelseyhightower/envconfig"
+	"github.com/gassara-kys/envconfig"
 	"google.golang.org/grpc"
 )
 
 type findingConfig struct {
-	FindingSvcAddr string `required:"true" split_words:"true"`
+	FindingSvcAddr string `required:"true" split_words:"true" default:"finding.core.svc.cluster.local:8001"`
 }
 
 func newFindingClient() finding.FindingServiceClient {
@@ -31,7 +31,7 @@ func newFindingClient() finding.FindingServiceClient {
 }
 
 type alertConfig struct {
-	AlertSvcAddr string `required:"true" split_words:"true"`
+	AlertSvcAddr string `required:"true" split_words:"true" default:"alert.core.svc.cluster.local:8004"`
 }
 
 func newAlertClient() alert.AlertServiceClient {
@@ -50,7 +50,7 @@ func newAlertClient() alert.AlertServiceClient {
 }
 
 type osintConfig struct {
-	OsintSvcAddr string `required:"true" split_words:"true"`
+	OsintSvcAddr string `required:"true" split_words:"true" default:"osint.osint.svc.cluster.local:18081"`
 }
 
 func newOsintClient() osint.OsintServiceClient {
