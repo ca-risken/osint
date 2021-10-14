@@ -10,9 +10,9 @@ require (
 	github.com/ca-risken/osint/pkg/message v0.0.0-20210908024505-bad8297bda4e
 	github.com/ca-risken/osint/pkg/model v0.0.0-20210908024505-bad8297bda4e
 	github.com/ca-risken/osint/proto/osint v0.0.0-20210908024505-bad8297bda4e
+	github.com/gassara-kys/envconfig v1.4.4
 	github.com/golang/protobuf v1.5.2
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.2
-	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/sirupsen/logrus v1.7.0
 	github.com/stretchr/testify v1.7.0

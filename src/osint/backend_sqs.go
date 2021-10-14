@@ -10,13 +10,14 @@ import (
 	"github.com/aws/aws-sdk-go/service/sqs"
 	"github.com/aws/aws-xray-sdk-go/xray"
 	"github.com/ca-risken/osint/pkg/message"
-	"github.com/kelseyhightower/envconfig"
+	"github.com/gassara-kys/envconfig"
 )
 
 type sqsConfig struct {
-	AWSRegion         string `envconfig:"aws_region" default:"ap-northeast-1"`
-	Endpoint          string `envconfig:"sqs_endpoint" default:"http://localhost:9324"`
-	SubdomainQueueURL string `split_words:"true" required:"true"`
+	AWSRegion string `envconfig:"aws_region"   default:"ap-northeast-1"`
+	Endpoint  string `envconfig:"sqs_endpoint" default:"http://queue.middleware.svc.cluster.local:9324"`
+
+	SubdomainQueueURL string `split_words:"true" required:"true" default:"http://queue.middleware.svc.cluster.local:9324/queue/osint-subdomain"`
 }
 
 type sqsAPI interface {

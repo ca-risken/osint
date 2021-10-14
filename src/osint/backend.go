@@ -1,13 +1,13 @@
 package main
 
 import (
-	"github.com/kelseyhightower/envconfig"
+	"github.com/gassara-kys/envconfig"
 )
 
 type osintConfig struct {
 	Port     string `default:"18081"`
-	LogLevel string `split_words:"true" default:"debug"`
-	EnvName  string `default:"default" split_words:"true"`
+	LogLevel string `default:"debug" split_words:"true"`
+	EnvName  string `default:"local" split_words:"true"`
 
 	DB  osintRepoInterface
 	SQS *sqsClient

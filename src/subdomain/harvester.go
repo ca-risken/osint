@@ -11,13 +11,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kelseyhightower/envconfig"
+	"github.com/gassara-kys/envconfig"
 	"github.com/vikyd/zero"
 )
 
 type harvesterConfig struct {
-	ResultPath    string `required:"true" split_words:"true"`
-	HarvesterPath string `required:"true" split_words:"true"`
+	ResultPath    string `required:"true" split_words:"true" default:"/results"`
+	HarvesterPath string `required:"true" split_words:"true" default:"/theHarvester"`
 }
 
 func newHarvesterConfig() harvesterConfig {
