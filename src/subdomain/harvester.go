@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/xml"
 	"fmt"
@@ -37,8 +38,11 @@ func (h *harvesterConfig) run(domain string, relAlertFindingID uint32) (*[]host,
 	defer cancel()
 	cmd := exec.CommandContext(ctx, "python3", harvesterPath, "-d", domain, "-b", "all", "-f", filePath)
 	cmd.Dir = h.HarvesterPath
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
 	err := cmd.Run()
 	if err != nil {
+		appLogger.Errorf("Failed to execute theHarvester. error: %v", stderr.String())
 		return nil, err
 	}
 
