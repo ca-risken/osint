@@ -15,7 +15,7 @@ type sqsConfig struct {
 
 	SubdomainQueueName string `split_words:"true" default:"osint-subdomain"`
 	SubdomainQueueURL  string `split_words:"true" default:"http://queue.middleware.svc.cluster.local:9324/queue/osint-subdomain"`
-	MaxNumberOfMessage int64  `split_words:"true" default:"10"`
+	MaxNumberOfMessage int64  `split_words:"true" default:"3"`
 	WaitTimeSecond     int64  `split_words:"true" default:"20"`
 }
 
