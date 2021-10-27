@@ -55,6 +55,30 @@ services:
       - OSINT_SVC_ADDR=${OSINT_SVC_ADDR}
       - RESULT_PATH=/results
       - HARVESTER_PATH=/theHarvester
+  website:
+    networks:
+      - local-shared
+      - osint
+    build:
+      context: ./src/website
+      args:
+        - GITHUB_USER=${GITHUB_USER}
+        - GITHUB_TOKEN=${GITHUB_TOKEN}
+    tty: true
+    ports:
+      - 18084:18084
+    environment:
+      - PORT=18083
+      - AWS_REGION=${AWS_REGION}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
+      - SQS_ENDPOINT=${SQS_ENDPOINT}
+      - WEBSITE_QUEUE_NAME=${WEBSITE_QUEUE_NAME}
+      - WEBSITE_QUEUE_URL=${WEBSITE_QUEUE_URL}
+      - FINDING_SVC_ADDR=${FINDING_SVC_ADDR}
+      - ALERT_SVC_ADDR=${ALERT_SVC_ADDR}
+      - OSINT_SVC_ADDR=${OSINT_SVC_ADDR}
 networks:
   osint:
     driver: bridge
