@@ -22,6 +22,8 @@ export AWS_SECRET_ACCESS_KEY="hugahuga"
 export AWS_SESSION_TOKEN="piyopiyo"
 export SUBDOMAIN_QUEUE_NAME="osint-subdomain"
 export SUBDOMAIN_QUEUE_URL="http://sqs:9324/queue/osint-subdomain"
+export WAPPALYZER_QUEUE_NAME="osint-wappalyzer"
+export WAPPALYZER_QUEUE_URL="http://sqs:9324/queue/osint-wappalyzer"
 export SQS_ENDPOINT="http://sqs:9324"
 
 # mimosa
