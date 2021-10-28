@@ -157,13 +157,6 @@ func (s *sqsHandler) CallAnalyzeAlert(ctx context.Context, projectID uint32) err
 	return nil
 }
 
-func getStatus(isSuccess bool) osint.Status {
-	if isSuccess {
-		return osint.Status_OK
-	}
-	return osint.Status_ERROR
-}
-
 func parseMessage(msg string) (*message.OsintQueueMessage, error) {
 	message := &message.OsintQueueMessage{}
 	if err := json.Unmarshal([]byte(msg), message); err != nil {
