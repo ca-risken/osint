@@ -41,12 +41,10 @@ func (c *wappalyzerClient) run(target string) (*wappalyzerResult, error) {
 	err := cmd.Run()
 
 	if err != nil {
-		appLogger.Errorf("Failed to execute theHarvester. stderr: %v", stderr.String())
-		appLogger.Errorf("Failed exec wappalyzer. error: %v", err)
-		return nil, fmt.Errorf("Failed exec wappalyzer. error: %v", err)
+		appLogger.Errorf("Failed to execute wappalyzer.error: %v, stderr: %v", err, stderr.String())
+		return nil, fmt.Errorf("Failed to execute wappalyzer. error: %v", err)
 	}
 
-	appLogger.Infof("res: %v", stdout.String())
 	var result wappalyzerResult
 	if err := json.Unmarshal(stdout.Bytes(), &result); err != nil {
 		appLogger.Errorf("Failed to parse scan result. error: %v", err)

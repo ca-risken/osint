@@ -24,13 +24,13 @@ func (s *sqsHandler) putFindings(ctx context.Context, result *wappalyzerResult, 
 			Description:      getDescription(message.ResourceName, technology.Name, technology.Version),
 			DataSource:       message.DataSource,
 			DataSourceId:     generateDataSourceID(fmt.Sprintf("description_%v_%v", message.ResourceName, technology.Name)),
-			ResourceName:     "msg.Target",
+			ResourceName:     message.ResourceName,
 			ProjectId:        message.ProjectID,
 			OriginalScore:    getScore(),
 			OriginalMaxScore: 1.0,
 			Data:             string(data),
 		}
-		err = s.putFinding(ctx, finding, message)
+		err = s.putFinding(ctx, finding, message, technology.Categories)
 		if err != nil {
 			return err
 		}
@@ -38,26 +38,15 @@ func (s *sqsHandler) putFindings(ctx context.Context, result *wappalyzerResult, 
 	return nil
 }
 
-func (s *sqsHandler) putFinding(ctx context.Context, wappalyzerFinding *finding.FindingForUpsert, msg *message.OsintQueueMessage) error {
-	if wappalyzerFinding.OriginalScore == 0.0 {
-		_, err := s.findingClient.PutResource(ctx, &finding.PutResourceRequest{
-			Resource: &finding.ResourceForUpsert{
-				ResourceName: wappalyzerFinding.ResourceName,
-				ProjectId:    wappalyzerFinding.ProjectId,
-			},
-		})
-		if err != nil {
-			appLogger.Errorf("Failed to put finding project_id=%d, resource=%s, err=%+v", wappalyzerFinding.ProjectId, wappalyzerFinding.ResourceName, err)
-			return err
-		}
-	} else {
-		res, err := s.findingClient.PutFinding(ctx, &finding.PutFindingRequest{Finding: wappalyzerFinding})
-		if err != nil {
-			return err
-		}
-		s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagOsint)
-		//		s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagWappalyzer)
-		//		s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, msg.AccountID)
+func (s *sqsHandler) putFinding(ctx context.Context, wappalyzerFinding *finding.FindingForUpsert, msg *message.OsintQueueMessage, categories []wappalyzerCategory) error {
+	res, err := s.findingClient.PutFinding(ctx, &finding.PutFindingRequest{Finding: wappalyzerFinding})
+	if err != nil {
+		return err
+	}
+	_ = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagOsint)
+	_ = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, msg.ResourceName)
+	for _, category := range categories {
+		_ = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, category.Name)
 	}
 	return nil
 }
@@ -83,17 +72,13 @@ func generateDataSourceID(input string) string {
 	return hex.EncodeToString(hash[:])
 }
 
-func getDescription(target, resourceName, version string) string {
+func getDescription(resourceName, technologyName, version string) string {
 	if !zero.IsZeroVal(version) {
-		return fmt.Sprintf("%v is using %v. version: %v", target, resourceName, version)
+		return fmt.Sprintf("%v is using %v. version: %v", resourceName, technologyName, version)
 	}
-	return fmt.Sprintf("%v is using %v.", target, resourceName)
+	return fmt.Sprintf("%v is using %v.", resourceName, technologyName)
 }
 
 func getScore() float32 {
 	return 0.1
-}
-
-func getCategoryTags(category string) string {
-	return category
 }
