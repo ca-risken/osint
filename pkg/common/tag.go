@@ -9,10 +9,14 @@ const (
 	TagTakeover = "takeover"
 	// TagCertificateExpiration certificate-expiration tag
 	TagCertificateExpiration = "certificate-expiration"
-	// Osint Resource Type
+	// Tag certificate-expiration tag
+	TagWebTechnology = "web-technology"
 
+	// Osint Resource Type
 	// TagUnknown unknown service tag
 	TagUnknown = "unknown-resource-type"
 	// TagDomain domain tag
 	TagDomain = "domain"
+	// TagWebsite website tag
+	TagWebsite = "website"
 )
