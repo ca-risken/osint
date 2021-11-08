@@ -78,12 +78,14 @@ push-manifest: $(MANIFEST_PUSH_TARGETS)
 	docker manifest push $(IMAGE_REGISTRY)/$(IMAGE_PREFIX)/$(*):$(MANIFEST_TAG)
 	docker manifest inspect $(IMAGE_REGISTRY)/$(IMAGE_PREFIX)/$(*):$(MANIFEST_TAG)
 
-PHONY: go-test $(TEST_TARGETS) proto-test
-go-test: $(TEST_TARGETS) proto-test
+PHONY: go-test $(TEST_TARGETS) proto-test pkg-test
+go-test: $(TEST_TARGETS) proto-test pkg-test
 %.go-test:
 	cd src/$(*) && go test ./...
 proto-test:
 	cd proto/osint && go test ./...
+pkg-test:
+	cd pkg/message         && go test ./...
 
 PHONY: go-mod-update
 go-mod-update:
