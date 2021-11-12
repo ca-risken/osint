@@ -43,14 +43,14 @@ func getHTTPStatus(host, protocol string) (int, string, error) {
 
 func isDetected(host string, detectList *[]string) bool {
 	for _, detectWord := range *detectList {
-		if strings.Index(host, detectWord) > -1 {
+		if strings.Contains(host, detectWord) {
 			return true
 		}
 	}
 	return false
 }
 
-func (p *privateExpose) makeFinding(domain string, projectID uint32, dataSource, resourceName string) (*finding.FindingForUpsert, error) {
+func (p *privateExpose) makeFinding(projectID uint32, dataSource string) (*finding.FindingForUpsert, error) {
 	if zero.IsZeroVal(*p) || !p.IsDetected {
 		return nil, nil
 	}
@@ -64,7 +64,7 @@ func (p *privateExpose) makeFinding(domain string, projectID uint32, dataSource,
 		Description:      description,
 		DataSource:       dataSource,
 		DataSourceId:     generateDataSourceID(fmt.Sprintf("private_expose_%v", p.HostName)),
-		ResourceName:     resourceName,
+		ResourceName:     p.HostName,
 		ProjectId:        projectID,
 		OriginalScore:    score,
 		OriginalMaxScore: 10.0,

@@ -52,34 +52,27 @@ func (h *harvesterConfig) run(domain string, relAlertFindingID uint32) (*[]host,
 	}
 	hostsWithIP := hostsWithIP{}
 	hostsWithoutIP := hostsWithoutIP{}
-	xml.Unmarshal(bytes, &hostsWithIP)
-	xml.Unmarshal(bytes, &hostsWithoutIP)
-
-	return makeHosts(&hostsWithIP, &hostsWithoutIP, domain), nil
-}
-
-func tmpRun() (*[]host, error) {
-	hostsWithIP := hostsWithIP{}
-	hostsWithoutIP := hostsWithoutIP{}
-	bytes, err := tmpReadFile("/tmp/bbb.xml")
-	if err != nil {
+	if err = xml.Unmarshal(bytes, &hostsWithIP); err != nil {
+		appLogger.Errorf("Failed to unmarshal result. error: %v", err)
 		return nil, err
 	}
-	xml.Unmarshal(bytes, &hostsWithIP)
-	xml.Unmarshal(bytes, &hostsWithoutIP)
+	if err = xml.Unmarshal(bytes, &hostsWithoutIP); err != nil {
+		appLogger.Errorf("Failed to unmarshal result. error: %v", err)
+		return nil, err
+	}
 
-	return makeHosts(&hostsWithIP, &hostsWithoutIP, ""), nil
+	return makeHosts(&hostsWithIP, &hostsWithoutIP, domain), nil
 }
 
 func makeHosts(hostsWithIP *hostsWithIP, hostsWithoutIP *hostsWithoutIP, domain string) *[]host {
 	arrHost := []host{}
 	for _, hostWithIP := range hostsWithIP.Hosts {
-		if strings.Index(hostWithIP.HostName, "."+domain) > -1 {
+		if strings.HasSuffix(hostWithIP.HostName, "."+domain) {
 			arrHost = append(arrHost, hostWithIP)
 		}
 	}
 	for _, hostWithoutIP := range hostsWithoutIP.Hosts {
-		if strings.Index(hostWithoutIP, "."+domain) > -1 {
+		if strings.HasSuffix(hostWithoutIP, "."+domain) {
 			arrHost = append(arrHost, host{IP: getIPAddr(hostWithoutIP), HostName: hostWithoutIP})
 		}
 	}
@@ -110,15 +103,6 @@ func readAndDeleteFile(fileName string) ([]byte, error) {
 	if err := os.Remove(jsonFileName); err != nil {
 		return nil, err
 	}
-	return bytes, nil
-}
-
-func tmpReadFile(fileName string) ([]byte, error) {
-	bytes, err := ioutil.ReadFile(fileName)
-	if err != nil {
-		return nil, err
-	}
-
 	return bytes, nil
 }
 
@@ -158,8 +142,5 @@ type host struct {
 }
 
 func (h *host) isDown() bool {
-	if zero.IsZeroVal(h.IP) {
-		return true
-	}
-	return false
+	return zero.IsZeroVal(h.IP)
 }
