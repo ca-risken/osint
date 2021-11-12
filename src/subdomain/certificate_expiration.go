@@ -10,18 +10,6 @@ import (
 	"github.com/vikyd/zero"
 )
 
-func checkCertificateExpirationFromDomain(domain string) certificateExpiration {
-	url := fmt.Sprintf("https://%v/", domain)
-	certificateExpired := checkCertificateExpiration(url)
-	if (certificateExpired == time.Time{}) {
-		return certificateExpiration{}
-	}
-	return certificateExpiration{
-		URL:        url,
-		ExpireDate: certificateExpired,
-	}
-}
-
 func (p *privateExpose) checkCertificateExpiration() certificateExpiration {
 	if p.HTTPS == 0 || p.URLHTTPS == "" {
 		return certificateExpiration{}
@@ -52,7 +40,7 @@ func checkCertificateExpiration(url string) time.Time {
 	return time.Time{}
 }
 
-func (c *certificateExpiration) makeFinding(projectID uint32, dataSource, resourceName string) (*finding.FindingForUpsert, error) {
+func (c *certificateExpiration) makeFinding(projectID uint32, dataSource string) (*finding.FindingForUpsert, error) {
 	if zero.IsZeroVal(*c) {
 		return nil, nil
 	}
@@ -66,7 +54,7 @@ func (c *certificateExpiration) makeFinding(projectID uint32, dataSource, resour
 		Description:      description,
 		DataSource:       dataSource,
 		DataSourceId:     generateDataSourceID(fmt.Sprintf("%v_%v", c.URL, "certificate")),
-		ResourceName:     resourceName,
+		ResourceName:     c.URL,
 		ProjectId:        projectID,
 		OriginalScore:    score,
 		OriginalMaxScore: 10.0,

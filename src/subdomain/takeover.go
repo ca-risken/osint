@@ -36,7 +36,7 @@ func resolveCName(domain string) (string, error) {
 	//	return r.Answer[0].(*dns.CNAME).Target, nil
 }
 
-func (c *takeover) makeFinding(isDown bool, projectID uint32, dataSource, resourceName string) (*finding.FindingForUpsert, error) {
+func (c *takeover) makeFinding(isDown bool, projectID uint32, dataSource string) (*finding.FindingForUpsert, error) {
 	if zero.IsZeroVal(*c) {
 		return nil, nil
 	}
@@ -50,7 +50,7 @@ func (c *takeover) makeFinding(isDown bool, projectID uint32, dataSource, resour
 		Description:      description,
 		DataSource:       dataSource,
 		DataSourceId:     generateDataSourceID(fmt.Sprintf("%v_%v", c.Domain, c.CName)),
-		ResourceName:     resourceName,
+		ResourceName:     c.Domain,
 		ProjectId:        projectID,
 		OriginalScore:    score,
 		OriginalMaxScore: 10.0,
@@ -89,7 +89,7 @@ func (c *takeover) getDescription(isDown bool) string {
 func (c *takeover) matchTakeoverList() bool {
 	takeoverList := GetTakeOverList()
 	for _, takeoverDomain := range takeoverList {
-		if strings.Index(c.CName, takeoverDomain) > -1 {
+		if strings.Contains(c.CName, takeoverDomain) {
 			return true
 		}
 	}

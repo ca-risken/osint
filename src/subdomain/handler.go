@@ -42,7 +42,7 @@ func (s *sqsHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 	msgBody := aws.StringValue(sqsMsg.Body)
 	appLogger.Infof("got message. message: %v", msgBody)
 	// Parse message
-	msg, err := parseMessage(msgBody)
+	msg, err := message.ParseMessage(msgBody)
 	if err != nil {
 		appLogger.Errorf("Invalid message. message: %v, error: %v", msgBody, err)
 		return mimosasqs.WrapNonRetryable(err)
@@ -167,17 +167,6 @@ func (s *sqsHandler) putRelOsintDataSource(ctx context.Context, message *message
 	}
 
 	return nil
-}
-
-func parseMessage(msg string) (*message.OsintQueueMessage, error) {
-	message := &message.OsintQueueMessage{}
-	if err := json.Unmarshal([]byte(msg), message); err != nil {
-		return nil, err
-	}
-	//	if err := message.Validate(); err != nil {
-	//		return nil, err
-	//	}
-	return message, nil
 }
 
 func getDetectList(detectWord string) (*[]string, error) {

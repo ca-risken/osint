@@ -9,6 +9,7 @@ import (
 	"github.com/ca-risken/core/proto/finding"
 	"github.com/ca-risken/osint/pkg/common"
 	"github.com/ca-risken/osint/pkg/message"
+	"github.com/vikyd/zero"
 )
 
 func (s *sqsHandler) putFindings(ctx context.Context, findingMap map[string][]*finding.FindingForUpsert, resourceName string) error {
@@ -18,18 +19,29 @@ func (s *sqsHandler) putFindings(ctx context.Context, findingMap map[string][]*f
 			if err != nil {
 				return err
 			}
-			s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagOsint)
-			s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagDomain)
+			if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagOsint); err != nil {
+				appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", common.TagOsint, err)
+			}
+			if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagDomain); err != nil {
+				appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", common.TagDomain, err)
+			}
+			var tagFindingType string
 			switch key {
 			case "Takeover":
-				s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagTakeover)
+				tagFindingType = common.TagTakeover
 			case "PrivateExpose":
-				s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagPrivateExpose)
+				tagFindingType = common.TagPrivateExpose
 			case "CertificateExpiration":
-				s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagCertificateExpiration)
+				tagFindingType = common.TagCertificateExpiration
 			}
-			s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, resourceName)
-			appLogger.Infof("Success to PutFinding. finding: %v", res)
+			if !zero.IsZeroVal(tagFindingType) {
+				if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, tagFindingType); err != nil {
+					appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", tagFindingType, err)
+				}
+			}
+			if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, resourceName); err != nil {
+				appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", resourceName, err)
+			}
 		}
 	}
 	return nil
@@ -58,7 +70,7 @@ func makeFindings(osintResults *[]osintResult, message *message.OsintQueueMessag
 	findingsCertificateExpiration := []*finding.FindingForUpsert{}
 	for _, osintResult := range *osintResults {
 		isDown := osintResult.Host.isDown()
-		findingTakeover, err := osintResult.Takeover.makeFinding(isDown, message.ProjectID, message.DataSource, message.ResourceName)
+		findingTakeover, err := osintResult.Takeover.makeFinding(isDown, message.ProjectID, message.DataSource)
 		if err != nil {
 			appLogger.Errorf("Error occured when make Takeover finding. error: %v", err)
 			// その他のfindingを登録するため、ログだけ吐いて続行する
@@ -66,7 +78,7 @@ func makeFindings(osintResults *[]osintResult, message *message.OsintQueueMessag
 		if findingTakeover != nil {
 			findingsTakeover = append(findingsTakeover, findingTakeover)
 		}
-		findingPrivateExpose, err := osintResult.PrivateExpose.makeFinding(osintResult.Host.HostName, message.ProjectID, message.DataSource, message.ResourceName)
+		findingPrivateExpose, err := osintResult.PrivateExpose.makeFinding(message.ProjectID, message.DataSource)
 		if err != nil {
 			appLogger.Errorf("Error occured when make PrivateExpose finding. error: %v", err)
 			// その他のfindingを登録するため、ログだけ吐いて続行する
@@ -74,7 +86,7 @@ func makeFindings(osintResults *[]osintResult, message *message.OsintQueueMessag
 		if findingPrivateExpose != nil {
 			findingsPrivateExpose = append(findingsPrivateExpose, findingPrivateExpose)
 		}
-		findingCertificateExpiration, err := osintResult.CertificateExpiration.makeFinding(message.ProjectID, message.DataSource, message.ResourceName)
+		findingCertificateExpiration, err := osintResult.CertificateExpiration.makeFinding(message.ProjectID, message.DataSource)
 		if err != nil {
 			appLogger.Errorf("Error occured when make Certificate Expiration finding. error: %v", err)
 			// その他のfindingを登録するため、ログだけ吐いて続行する
