@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"time"
 
@@ -36,7 +35,7 @@ func (s *sqsHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 	msgBody := aws.StringValue(sqsMsg.Body)
 	appLogger.Infof("got message. message: %v", msgBody)
 	// Parse message
-	msg, err := parseMessage(msgBody)
+	msg, err := message.ParseMessage(msgBody)
 	if err != nil {
 		appLogger.Errorf("Invalid message. message: %v, error: %v", msg, err)
 		return mimosasqs.WrapNonRetryable(err)
@@ -48,16 +47,16 @@ func (s *sqsHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 	}
 	appLogger.Infof("start Scan, RequestID=%s", requestID)
 
-	wappalyzerClient, err := newWappalyzerClient()
+	websiteClient, err := newWappalyzerClient()
 	if err != nil {
 		appLogger.Errorf("Error occured when configure: %v, error: %v", msg, err)
 		return mimosasqs.WrapNonRetryable(err)
 	}
-	appLogger.Info("Start wappalyzer Client")
+	appLogger.Info("Start website Client")
 
-	// Run wappalyzer
-	_, segment := xray.BeginSubsegment(ctx, "runwappalyzer")
-	wappalyzerResult, err := wappalyzerClient.run(msg.ResourceName)
+	// Run website
+	_, segment := xray.BeginSubsegment(ctx, "runwebsite")
+	wappalyzerResult, err := websiteClient.run(msg.ResourceName)
 	segment.Close(err)
 	if err != nil {
 		appLogger.Errorf("Failed exec wappalyzer, error: %v", err)
@@ -155,15 +154,4 @@ func (s *sqsHandler) CallAnalyzeAlert(ctx context.Context, projectID uint32) err
 	}
 	appLogger.Info("Success to analyze alert.")
 	return nil
-}
-
-func parseMessage(msg string) (*message.OsintQueueMessage, error) {
-	message := &message.OsintQueueMessage{}
-	if err := json.Unmarshal([]byte(msg), message); err != nil {
-		return nil, err
-	}
-	//	if err := message.Validate(); err != nil {
-	//		return nil, err
-	//	}
-	return message, nil
 }

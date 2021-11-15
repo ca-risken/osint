@@ -24,7 +24,7 @@ func (s *sqsHandler) putFindings(ctx context.Context, result *wappalyzerResult, 
 			Description:      getDescription(message.ResourceName, technology.Name, technology.Version),
 			DataSource:       message.DataSource,
 			DataSourceId:     generateDataSourceID(fmt.Sprintf("description_%v_%v", message.ResourceName, technology.Name)),
-			ResourceName:     message.ResourceName,
+			ResourceName:     technology.Name,
 			ProjectId:        message.ProjectID,
 			OriginalScore:    getScore(),
 			OriginalMaxScore: 1.0,
@@ -38,15 +38,22 @@ func (s *sqsHandler) putFindings(ctx context.Context, result *wappalyzerResult, 
 	return nil
 }
 
-func (s *sqsHandler) putFinding(ctx context.Context, wappalyzerFinding *finding.FindingForUpsert, msg *message.OsintQueueMessage, categories []wappalyzerCategory) error {
-	res, err := s.findingClient.PutFinding(ctx, &finding.PutFindingRequest{Finding: wappalyzerFinding})
+func (s *sqsHandler) putFinding(ctx context.Context, websiteFinding *finding.FindingForUpsert, msg *message.OsintQueueMessage, categories []wappalyzerCategory) error {
+	res, err := s.findingClient.PutFinding(ctx, &finding.PutFindingRequest{Finding: websiteFinding})
 	if err != nil {
 		return err
 	}
-	_ = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagOsint)
-	_ = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, msg.ResourceName)
+	if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagOsint); err != nil {
+		appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", common.TagOsint, err)
+	}
+	if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, msg.ResourceName); err != nil {
+		appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", msg.ResourceName, err)
+	}
+
 	for _, category := range categories {
-		_ = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, category.Name)
+		if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, category.Name); err != nil {
+			appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", category.Name, err)
+		}
 	}
 	return nil
 }

@@ -18,6 +18,7 @@ type sqsConfig struct {
 	Endpoint  string `envconfig:"sqs_endpoint" default:"http://queue.middleware.svc.cluster.local:9324"`
 
 	SubdomainQueueURL string `split_words:"true" required:"true" default:"http://queue.middleware.svc.cluster.local:9324/queue/osint-subdomain"`
+	WebsiteQueueURL   string `split_words:"true" required:"true" default:"http://queue.middleware.svc.cluster.local:9324/queue/osint-website"`
 }
 
 type sqsAPI interface {
@@ -52,6 +53,7 @@ func newSQSClient() *sqsClient {
 		queueURLMap: map[string]string{
 			// queueURLMap:
 			"osint:subdomain": conf.SubdomainQueueURL,
+			"osint:website":   conf.WebsiteQueueURL,
 		},
 	}
 }

@@ -22,10 +22,10 @@ func main() {
 	ctx := context.Background()
 	mimosaxray.InitXRay(xray.Config{})
 	consumer := newSQSConsumer()
-	appLogger.Info("Start the wappalyzer SQS consumer server...")
+	appLogger.Info("Start the website SQS consumer server...")
 	consumer.Start(ctx,
 		mimosasqs.InitializeHandler(
 			mimosasqs.RetryableErrorHandler(
 				mimosasqs.StatusLoggingHandler(appLogger,
-					mimosaxray.MessageTracingHandler(conf.EnvName, "osint.wappalyzer", newHandler())))))
+					mimosaxray.MessageTracingHandler(conf.EnvName, "osint.website", newHandler())))))
 }
