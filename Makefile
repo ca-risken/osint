@@ -1,4 +1,4 @@
-TARGETS = osint subdomain
+TARGETS = osint subdomain website
 BUILD_TARGETS = $(TARGETS:=.build)
 BUILD_CI_TARGETS = $(TARGETS:=.build-ci)
 IMAGE_PUSH_TARGETS = $(TARGETS:=.push-image)

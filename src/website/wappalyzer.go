@@ -9,31 +9,29 @@ import (
 	"github.com/gassara-kys/envconfig"
 )
 
-type wappalyzerClient struct {
-	config wappalyzerConfig
+type websiteClient struct {
+	config websiteConfig
 }
 
-type wappalyzerConfig struct {
+type websiteConfig struct {
 	ResultDir      string `required:"true" split_words:"true" default:"/tmp"`
-	WappalyzerPath string `required:"true" split_words:"true" default:"/opt/wappalyzer/cli.js"`
-	AWSRegion      string `envconfig:"aws_region"             default:"ap-northeast-1"`
+	WappalyzerPath string `required:"true" split_words:"true" default:"/opt/wappalyzer/src/drivers/npm/cli.js"`
 }
 
-func newWappalyzerClient() (wappalyzerClient, error) {
-	var conf wappalyzerConfig
+func newWappalyzerClient() (websiteClient, error) {
+	var conf websiteConfig
 	err := envconfig.Process("", &conf)
 	if err != nil {
-		return wappalyzerClient{}, err
+		return websiteClient{}, err
 	}
-	cli := wappalyzerClient{
+	cli := websiteClient{
 		config: conf,
 	}
 	return cli, nil
 }
 
-func (c *wappalyzerClient) run(target string) (*wappalyzerResult, error) {
-	appLogger.Infof("config: %v", c.config)
-	cmd := exec.Command(c.config.WappalyzerPath, target)
+func (c *websiteClient) run(target string) (*wappalyzerResult, error) {
+	cmd := exec.Command("node", c.config.WappalyzerPath, target, "-r")
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
 	cmd.Stdout = &stdout
@@ -41,7 +39,7 @@ func (c *wappalyzerClient) run(target string) (*wappalyzerResult, error) {
 	err := cmd.Run()
 
 	if err != nil {
-		appLogger.Errorf("Failed to execute wappalyzer.error: %v, stderr: %v", err, stderr.String())
+		appLogger.Errorf("Failed to execute wappalyzer. error: %v, stderr: %v", err, stderr.String())
 		return nil, fmt.Errorf("Failed to execute wappalyzer. error: %v", err)
 	}
 
