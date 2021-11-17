@@ -17,6 +17,7 @@ func (s *sqsHandler) putFindings(ctx context.Context, findingMap map[string][]*f
 		for _, f := range findings {
 			res, err := s.findingClient.PutFinding(ctx, &finding.PutFindingRequest{Finding: f})
 			if err != nil {
+				appLogger.Errorf("Failed to put finding. finding: %v, error: %v", f, err)
 				return err
 			}
 			if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagOsint); err != nil {
