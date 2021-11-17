@@ -14,12 +14,13 @@ func (p *privateExpose) checkCertificateExpiration() certificateExpiration {
 	if p.HTTPS == 0 || p.URLHTTPS == "" {
 		return certificateExpiration{}
 	}
-	certificateExpired := checkCertificateExpiration(p.URLHTTPS)
+	target := fmt.Sprintf("https://%v", p.HostName)
+	certificateExpired := checkCertificateExpiration(target)
 	if (certificateExpired == time.Time{}) {
 		return certificateExpiration{}
 	}
 	return certificateExpiration{
-		URL:        p.URLHTTPS,
+		URL:        target,
 		ExpireDate: certificateExpired,
 	}
 }
@@ -50,11 +51,15 @@ func (c *certificateExpiration) makeFinding(projectID uint32, dataSource string)
 	if err != nil {
 		return nil, err
 	}
+	resourceName := c.URL
+	if len(c.URL) > 255 {
+		resourceName = resourceName[:255]
+	}
 	finding := &finding.FindingForUpsert{
 		Description:      description,
 		DataSource:       dataSource,
 		DataSourceId:     generateDataSourceID(fmt.Sprintf("%v_%v", c.URL, "certificate")),
-		ResourceName:     c.URL,
+		ResourceName:     resourceName,
 		ProjectId:        projectID,
 		OriginalScore:    score,
 		OriginalMaxScore: 10.0,

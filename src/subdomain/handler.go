@@ -100,13 +100,13 @@ func (s *sqsHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 
 	// Put Finding and Tag Finding
 	if err := s.putFindings(ctx, findings, msg.ResourceName); err != nil {
-		appLogger.Errorf("Faild to put findngs. relOsintDataSourceID: %v, error: %v", msg.RelOsintDataSourceID, err)
+		appLogger.Errorf("Failed to put findings. relOsintDataSourceID: %v, error: %v", msg.RelOsintDataSourceID, err)
 		return err
 	}
 
 	// Put RelOsintDataSource
 	if err := s.putRelOsintDataSource(ctx, msg, true, ""); err != nil {
-		appLogger.Errorf("Faild to put rel_osint_data_source. relOsintDataSourceID: %v, error: %v", msg.RelOsintDataSourceID, err)
+		appLogger.Errorf("Failed to put rel_osint_data_source. relOsintDataSourceID: %v, error: %v", msg.RelOsintDataSourceID, err)
 		return err
 	}
 	appLogger.Infof("end Scan, RequestID=%s", requestID)
@@ -116,7 +116,7 @@ func (s *sqsHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 	}
 	// Call AnalyzeAlert
 	if err := s.CallAnalyzeAlert(ctx, msg.ProjectID); err != nil {
-		appLogger.Errorf("Faild to analyze alert. relOsintDataSourceID: %v, error: %v", msg.RelOsintDataSourceID, err)
+		appLogger.Errorf("Failed to analyze alert. relOsintDataSourceID: %v, error: %v", msg.RelOsintDataSourceID, err)
 		return err
 	}
 	return nil
