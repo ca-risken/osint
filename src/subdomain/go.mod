@@ -7,9 +7,9 @@ require (
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
 	github.com/aws/aws-sdk-go v1.40.50
 	github.com/aws/aws-xray-sdk-go v1.6.0
-	github.com/ca-risken/common/pkg/logging v0.0.0-20210927112235-42730386bf2a
-	github.com/ca-risken/common/pkg/sqs v0.0.0-20210927112235-42730386bf2a
-	github.com/ca-risken/common/pkg/xray v0.0.0-20210927112235-42730386bf2a
+	github.com/ca-risken/common/pkg/logging v0.0.0-20211118071101-9855266b50a1
+	github.com/ca-risken/common/pkg/sqs v0.0.0-20211118071101-9855266b50a1
+	github.com/ca-risken/common/pkg/xray v0.0.0-20211118071101-9855266b50a1
 	github.com/ca-risken/core/proto/alert v0.0.0-20210924100500-e1499111345b
 	github.com/ca-risken/core/proto/finding v0.0.0-20210924100500-e1499111345b
 	github.com/ca-risken/osint/pkg/common v0.0.0-20210915063551-7002685890c3
