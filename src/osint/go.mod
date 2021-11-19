@@ -3,11 +3,11 @@ module github.com/ca-risken/osint/src/osint
 go 1.16
 
 require (
-	github.com/aws/aws-sdk-go v1.39.3
+	github.com/aws/aws-sdk-go v1.40.48
 	github.com/aws/aws-xray-sdk-go v1.6.0
-	github.com/ca-risken/common/pkg/database v0.0.0-20210906122657-d2be54cc7181
-	github.com/ca-risken/common/pkg/rpc v0.0.0-20211112102518-e808bff9e30e
-	github.com/ca-risken/common/pkg/xray v0.0.0-20210906122657-d2be54cc7181
+	github.com/ca-risken/common/pkg/database v0.0.0-20211118071101-9855266b50a1
+	github.com/ca-risken/common/pkg/rpc v0.0.0-20211118071101-9855266b50a1
+	github.com/ca-risken/common/pkg/xray v0.0.0-20211118071101-9855266b50a1
 	github.com/ca-risken/osint/pkg/message v0.0.0-20211112065816-37550cc4192d
 	github.com/ca-risken/osint/pkg/model v0.0.0-20210908024505-bad8297bda4e
 	github.com/ca-risken/osint/proto/osint v0.0.0-20210908024505-bad8297bda4e
