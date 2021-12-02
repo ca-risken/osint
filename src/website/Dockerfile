@@ -28,7 +28,7 @@ RUN  apk update && apk add -u --no-cache \
   ttf-freefont \
   yarn \
   && cd /opt \
-  && git clone https://github.com/AliasIO/wappalyzer.git -b v6.9.0 && cd wappalyzer \
+  && git clone https://github.com/AliasIO/wappalyzer.git -b v6.8.21 && cd wappalyzer \
   && yarn install \
   && yarn add puppeteer-core \
   && yarn run link
