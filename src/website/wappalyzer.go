@@ -14,7 +14,6 @@ type websiteClient struct {
 }
 
 type websiteConfig struct {
-	ResultDir      string `required:"true" split_words:"true" default:"/tmp"`
 	WappalyzerPath string `required:"true" split_words:"true" default:"/opt/wappalyzer/src/drivers/npm/cli.js"`
 }
 

@@ -34,3 +34,6 @@ export OSINT_SVC_ADDR="osint:18081"
 # theHarvester
 export RESULT_PATH="/tmp"
 export HARVESTER_PATH="/opt/git/mimosa-osint/src/private-expose/theHarvester"
+
+# Website
+export MAX_NUMBER_OF_MESSAGE="5"

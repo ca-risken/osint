@@ -79,6 +79,7 @@ services:
       - FINDING_SVC_ADDR=${FINDING_SVC_ADDR}
       - ALERT_SVC_ADDR=${ALERT_SVC_ADDR}
       - OSINT_SVC_ADDR=${OSINT_SVC_ADDR}
+      - MAX_NUMBER_OF_MESSAGE=${MAX_NUMBER_OF_MESSAGE}
 networks:
   osint:
     driver: bridge
