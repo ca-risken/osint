@@ -17,7 +17,7 @@ type sqsConfig struct {
 	SQSEndpoint string `envconfig:"sqs_endpoint" default:"http://queue.middleware.svc.cluster.local:9324"`
 
 	WebsiteQueueName   string `split_words:"true" default:"osint-website"`
-	WebsiteQueueURL    string `split_words:"true" default:"http://queue.middleware.svc.cluster.local:9324/queue/otint-website"`
+	WebsiteQueueURL    string `split_words:"true" default:"http://queue.middleware.svc.cluster.local:9324/queue/osint-website"`
 	MaxNumberOfMessage int64  `split_words:"true" default:"5"`
 	WaitTimeSecond     int64  `split_words:"true" default:"20"`
 }
