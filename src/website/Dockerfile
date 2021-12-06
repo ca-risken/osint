@@ -27,10 +27,10 @@ RUN  apk update && apk add -u --no-cache \
   chromium \
   ttf-freefont \
   yarn \
+  tini \
   && cd /opt \
-  && git clone https://github.com/AliasIO/wappalyzer.git -b v6.8.21 && cd wappalyzer \
+  && git clone https://github.com/AliasIO/wappalyzer.git -b v6.9.7 && cd wappalyzer \
   && yarn install \
-  && yarn add puppeteer-core \
   && yarn run link
 COPY --from=builder /go/bin/env-injector /usr/local/bin/
 COPY --from=builder /go/bin/website /usr/local/website/bin/
@@ -52,6 +52,6 @@ ENV DEBUG= \
   RESULT_DIR=/tmp \
   TZ=Asia/Tokyo
 WORKDIR /usr/local/website
-ENTRYPOINT ["/usr/local/bin/env-injector"]
+ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/env-injector"]
 CMD ["bin/website"]
 
