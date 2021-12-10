@@ -44,7 +44,7 @@ service OsintService {
       returns (google.protobuf.Empty) {}
   // Invoke
   rpc InvokeScan(InvokeScanRequest) returns (InvokeScanResponse) {}
-  rpc InvokeScanAll(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+  rpc InvokeScanAll(InvokeScanAllRequest) returns (google.protobuf.Empty) {}
 }
 
 // Osint Service
@@ -168,3 +168,6 @@ message InvokeScanRequest {
 }
 
 message InvokeScanResponse { string message = 1; }
+
+// Invoke Scan All
+message InvokeScanAllRequest { uint32 osint_data_source_id = 1; }
