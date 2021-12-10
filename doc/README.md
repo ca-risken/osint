@@ -3,14 +3,6 @@
 
 ## Table of Contents
 
-- [harvester/services.proto](#harvester/services.proto)
-    - [InvokeScanRequest](#osint.harvester.InvokeScanRequest)
-    - [ListOsintRelatedResourceRequest](#osint.harvester.ListOsintRelatedResourceRequest)
-    - [ListOsintRelatedResourceResponse](#osint.harvester.ListOsintRelatedResourceResponse)
-    - [OsintRelatedResource](#osint.harvester.OsintRelatedResource)
-  
-    - [ResourceService](#osint.harvester.ResourceService)
-  
 - [osint/entities.proto](#osint/entities.proto)
     - [Osint](#osint.osint.Osint)
     - [OsintDataSource](#osint.osint.OsintDataSource)
@@ -36,6 +28,7 @@
     - [GetOsintResponse](#osint.osint.GetOsintResponse)
     - [GetRelOsintDataSourceRequest](#osint.osint.GetRelOsintDataSourceRequest)
     - [GetRelOsintDataSourceResponse](#osint.osint.GetRelOsintDataSourceResponse)
+    - [InvokeScanAllRequest](#osint.osint.InvokeScanAllRequest)
     - [InvokeScanRequest](#osint.osint.InvokeScanRequest)
     - [InvokeScanResponse](#osint.osint.InvokeScanResponse)
     - [ListOsintDataSourceRequest](#osint.osint.ListOsintDataSourceRequest)
@@ -58,97 +51,6 @@
     - [OsintService](#osint.osint.OsintService)
   
 - [Scalar Value Types](#scalar-value-types)
-
-
-
-<a name="harvester/services.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## harvester/services.proto
-
-
-
-<a name="osint.harvester.InvokeScanRequest"></a>
-
-### InvokeScanRequest
-Invoke Scan
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| resource_name | [string](#string) |  |  |
-| resource_type | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="osint.harvester.ListOsintRelatedResourceRequest"></a>
-
-### ListOsintRelatedResourceRequest
-Resource
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| resource_name | [string](#string) |  |  |
-| resource_type | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="osint.harvester.ListOsintRelatedResourceResponse"></a>
-
-### ListOsintRelatedResourceResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| osint_related_resource | [OsintRelatedResource](#osint.harvester.OsintRelatedResource) | repeated |  |
-
-
-
-
-
-
-<a name="osint.harvester.OsintRelatedResource"></a>
-
-### OsintRelatedResource
-Entity
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| osint_resource_id | [uint32](#uint32) |  |  |
-| related_resource_name | [string](#string) |  |  |
-| related_resource_type | [string](#string) |  |  |
-
-
-
-
-
- 
-
- 
-
- 
-
-
-<a name="osint.harvester.ResourceService"></a>
-
-### ResourceService
-
-
-| Method Name | Request Type | Response Type | Description |
-| ----------- | ------------ | ------------- | ------------|
-| ListOsintRelatedResource | [ListOsintRelatedResourceRequest](#osint.harvester.ListOsintRelatedResourceRequest) | [ListOsintRelatedResourceResponse](#osint.harvester.ListOsintRelatedResourceResponse) | Resource |
-| InvokeScan | [InvokeScanRequest](#osint.harvester.InvokeScanRequest) | [.google.protobuf.Empty](#google.protobuf.Empty) | InvokeScan |
-
- 
 
 
 
@@ -536,6 +438,21 @@ Status
 
 
 
+<a name="osint.osint.InvokeScanAllRequest"></a>
+
+### InvokeScanAllRequest
+Invoke Scan All
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| osint_data_source_id | [uint32](#uint32) |  |  |
+
+
+
+
+
+
 <a name="osint.osint.InvokeScanRequest"></a>
 
 ### InvokeScanRequest
@@ -546,6 +463,7 @@ Invoke Scan
 | ----- | ---- | ----- | ----------- |
 | project_id | [uint32](#uint32) |  |  |
 | rel_osint_data_source_id | [uint32](#uint32) |  |  |
+| scan_only | [bool](#bool) |  |  |
 
 
 
@@ -845,7 +763,7 @@ Osint Service
 | PutOsintDetectWord | [PutOsintDetectWordRequest](#osint.osint.PutOsintDetectWordRequest) | [PutOsintDetectWordResponse](#osint.osint.PutOsintDetectWordResponse) |  |
 | DeleteOsintDetectWord | [DeleteOsintDetectWordRequest](#osint.osint.DeleteOsintDetectWordRequest) | [.google.protobuf.Empty](#google.protobuf.Empty) |  |
 | InvokeScan | [InvokeScanRequest](#osint.osint.InvokeScanRequest) | [InvokeScanResponse](#osint.osint.InvokeScanResponse) | Invoke |
-| InvokeScanAll | [.google.protobuf.Empty](#google.protobuf.Empty) | [.google.protobuf.Empty](#google.protobuf.Empty) |  |
+| InvokeScanAll | [InvokeScanAllRequest](#osint.osint.InvokeScanAllRequest) | [.google.protobuf.Empty](#google.protobuf.Empty) |  |
 
  
 
