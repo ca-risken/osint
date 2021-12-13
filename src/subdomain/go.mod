@@ -11,7 +11,7 @@ require (
 	github.com/ca-risken/common/pkg/sqs v0.0.0-20211118071101-9855266b50a1
 	github.com/ca-risken/common/pkg/xray v0.0.0-20211118071101-9855266b50a1
 	github.com/ca-risken/core/proto/alert v0.0.0-20210924100500-e1499111345b
-	github.com/ca-risken/core/proto/finding v0.0.0-20210924100500-e1499111345b
+	github.com/ca-risken/core/proto/finding v0.0.0-20211208021136-f6b597adc160
 	github.com/ca-risken/osint/pkg/common v0.0.0-20210915063551-7002685890c3
 	github.com/ca-risken/osint/pkg/message v0.0.0-20211112065816-37550cc4192d
 	github.com/ca-risken/osint/pkg/model v0.0.0-20210915063551-7002685890c3
@@ -25,9 +25,9 @@ require (
 	github.com/stretchr/objx v0.2.0 // indirect
 	github.com/valyala/fasthttp v1.30.0 // indirect
 	github.com/vikyd/zero v0.0.0-20190921142904-0f738d0bc858
-	golang.org/x/net v0.0.0-20210928044308-7d9f5e0b762b // indirect
-	golang.org/x/sys v0.0.0-20210927094055-39ccf1dd6fa6 // indirect
+	golang.org/x/net v0.0.0-20211209124913-491a49abca63 // indirect
+	golang.org/x/sys v0.0.0-20211210111614-af8b64212486 // indirect
 	golang.org/x/text v0.3.7 // indirect
-	google.golang.org/genproto v0.0.0-20210927142257-433400c27d05 // indirect
-	google.golang.org/grpc v1.41.0
+	google.golang.org/genproto v0.0.0-20211208223120-3a66f561d7aa // indirect
+	google.golang.org/grpc v1.42.0
 )

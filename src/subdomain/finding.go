@@ -43,6 +43,12 @@ func (s *sqsHandler) putFindings(ctx context.Context, findingMap map[string][]*f
 			if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, resourceName); err != nil {
 				appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", resourceName, err)
 			}
+
+			if err = s.putRecommend(ctx, res.Finding.ProjectId, res.Finding.FindingId, key); err != nil {
+				appLogger.Errorf("Failed to put recommend. key: %v, error: %v", key, err)
+				return err
+			}
+
 		}
 	}
 	return nil
@@ -59,6 +65,25 @@ func (s *sqsHandler) tagFinding(ctx context.Context, projectID uint32, findingID
 		}})
 	if err != nil {
 		appLogger.Errorf("Failed to TagFinding. error: %v", err)
+		return err
+	}
+	return nil
+}
+
+func (s *sqsHandler) putRecommend(ctx context.Context, projectID uint32, findingID uint64, category string) error {
+	r := getRecommend(category)
+	if r.Type == "" || (r.Risk == "" && r.Recommendation == "") {
+		appLogger.Warnf("Failed to get recommendation, Unknown category=%s", category)
+		return nil
+	}
+	if _, err := s.findingClient.PutRecommend(ctx, &finding.PutRecommendRequest{
+		ProjectId:      projectID,
+		FindingId:      findingID,
+		DataSource:     message.SubdomainDataSource,
+		Type:           r.Type,
+		Risk:           r.Risk,
+		Recommendation: r.Recommendation,
+	}); err != nil {
 		return err
 	}
 	return nil
