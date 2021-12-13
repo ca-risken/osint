@@ -3,10 +3,10 @@ module github.com/ca-risken/osint/src/website
 go 1.16
 
 require (
-	github.com/aws/aws-sdk-go v1.42.3
+	github.com/aws/aws-sdk-go v1.42.22
 	github.com/aws/aws-xray-sdk-go v1.6.0
 	github.com/ca-risken/common/pkg/logging v0.0.0-20211118071101-9855266b50a1
-	github.com/ca-risken/common/pkg/sqs v0.0.0-20211118071101-9855266b50a1
+	github.com/ca-risken/common/pkg/sqs v0.0.0-20211210074045-79fdb4c61950
 	github.com/ca-risken/common/pkg/xray v0.0.0-20211118071101-9855266b50a1
 	github.com/ca-risken/core/proto/alert v0.0.0-20211028073607-f05af5412a86
 	github.com/ca-risken/core/proto/finding v0.0.0-20211028073607-f05af5412a86
@@ -17,5 +17,6 @@ require (
 	github.com/gassara-kys/go-sqs-poller/worker/v4 v4.0.0-20210215110542-0be358599a2f
 	github.com/sirupsen/logrus v1.8.1
 	github.com/vikyd/zero v0.0.0-20190921142904-0f738d0bc858
+	golang.org/x/sys v0.0.0-20211210111614-af8b64212486 // indirect
 	google.golang.org/grpc v1.42.0
 )
