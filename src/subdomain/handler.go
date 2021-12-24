@@ -48,7 +48,7 @@ func (s *sqsHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 		return mimosasqs.WrapNonRetryable(err)
 	}
 
-	requestID, err := logging.GenerateRequestID(fmt.Sprint(msg.ProjectID))
+	requestID, err := logging.GenerateRequestID(fmt.Sprintf("%v-%v", msg.ProjectID, msg.RelOsintDataSourceID))
 	if err != nil {
 		appLogger.Warnf("Failed to generate requestID: err=%+v", err)
 		requestID = fmt.Sprint(msg.ProjectID)

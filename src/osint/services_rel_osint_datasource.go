@@ -157,9 +157,9 @@ func (s *osintService) InvokeScan(ctx context.Context, req *osint.InvokeScanRequ
 	return &osint.InvokeScanResponse{Message: "Invoke Scan."}, nil
 }
 
-func (s *osintService) InvokeScanAll(ctx context.Context, req *empty.Empty) (*empty.Empty, error) {
+func (s *osintService) InvokeScanAll(ctx context.Context, req *osint.InvokeScanAllRequest) (*empty.Empty, error) {
 
-	list, err := s.repository.ListAllRelOsintDataSource(ctx)
+	list, err := s.repository.ListAllRelOsintDataSource(ctx, req.OsintDataSourceId)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &empty.Empty{}, nil

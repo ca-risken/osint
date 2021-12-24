@@ -795,7 +795,7 @@ func (m *mockOsintRepository) DeleteOsintDetectWord(context.Context, uint32, uin
 	args := m.Called()
 	return args.Error(0)
 }
-func (m *mockOsintRepository) ListAllRelOsintDataSource(context.Context) (*[]model.RelOsintDataSource, error) {
+func (m *mockOsintRepository) ListAllRelOsintDataSource(context.Context, uint32) (*[]model.RelOsintDataSource, error) {
 	args := m.Called()
 	return args.Get(0).(*[]model.RelOsintDataSource), args.Error(1)
 }
