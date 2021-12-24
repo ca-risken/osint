@@ -2,9 +2,11 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"os/exec"
+	"time"
 
 	"github.com/gassara-kys/envconfig"
 )
@@ -30,7 +32,9 @@ func newWappalyzerClient() (websiteClient, error) {
 }
 
 func (c *websiteClient) run(target string) (*wappalyzerResult, error) {
-	cmd := exec.Command("node", c.config.WappalyzerPath, target, "-r")
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Minute)
+	defer cancel()
+	cmd := exec.CommandContext(ctx, "node", c.config.WappalyzerPath, target, "-r")
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
 	cmd.Stdout = &stdout

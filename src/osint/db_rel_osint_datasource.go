@@ -50,9 +50,15 @@ func (r *osintRepository) DeleteRelOsintDataSource(ctx context.Context, projectI
 	return nil
 }
 
-func (r *osintRepository) ListAllRelOsintDataSource(ctx context.Context) (*[]model.RelOsintDataSource, error) {
+func (r *osintRepository) ListAllRelOsintDataSource(ctx context.Context, osintDataSourceID uint32) (*[]model.RelOsintDataSource, error) {
+	query := `select * from rel_osint_data_source`
+	var params []interface{}
+	if !zero.IsZeroVal(osintDataSourceID) {
+		query += " where osint_data_source_id = ?"
+		params = append(params, osintDataSourceID)
+	}
 	var data []model.RelOsintDataSource
-	if err := r.SlaveDB.WithContext(ctx).Find(&data).Error; err != nil {
+	if err := r.SlaveDB.WithContext(ctx).Raw(query, params...).Scan(&data).Error; err != nil {
 		return nil, err
 	}
 	return &data, nil

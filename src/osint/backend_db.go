@@ -28,7 +28,7 @@ type osintRepoInterface interface {
 	UpsertOsintDetectWord(context.Context, *model.OsintDetectWord) (*model.OsintDetectWord, error)
 	DeleteOsintDetectWord(context.Context, uint32, uint32) error
 	// For Invoke
-	ListAllRelOsintDataSource(context.Context) (*[]model.RelOsintDataSource, error)
+	ListAllRelOsintDataSource(context.Context, uint32) (*[]model.RelOsintDataSource, error)
 }
 
 type osintRepository struct {
