@@ -1,38 +1,15 @@
 FROM golang:1.16 as builder
 WORKDIR /go/src/github.com/ca-risken/osint/src/website/
 ADD *.go go.* ./
-ENV CGO_ENABLED=0 GOPRIVATE="github.com/CyberAgent/*,github.com/ca-risken/*"
-ARG ENV_INJECTOR_VERSION=v0.0.6
+ENV CGO_ENABLED=0 GOPRIVATE="github.com/ca-risken/*"
 ARG GITHUB_USER
 ARG GITHUB_TOKEN
 RUN echo "machine github.com" > ~/.netrc
 RUN echo "login $GITHUB_USER" >> ~/.netrc
 RUN echo "password $GITHUB_TOKEN" >> ~/.netrc
-RUN go install -v
 RUN go build && cp website /go/bin/
 
-WORKDIR /go/src/github.com/gassara-kys
-RUN git clone https://github.com/gassara-kys/env-injector.git -b ${ENV_INJECTOR_VERSION} \
-  && cd env-injector \
-  && go build \
-  && cp env-injector /go/bin/
-
-FROM node:14-alpine
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
-ENV CHROMIUM_BIN /usr/bin/chromium-browser
-RUN  apk update && apk add -u --no-cache \
-  git \
-	nodejs \
-  udev \
-  chromium \
-  ttf-freefont \
-  yarn \
-  tini \
-  && cd /opt \
-  && git clone https://github.com/AliasIO/wappalyzer.git -b v6.9.7 && cd wappalyzer \
-  && yarn install \
-  && yarn run link
-COPY --from=builder /go/bin/env-injector /usr/local/bin/
+FROM public.ecr.aws/risken/osint/website-base:v0.0.1
 COPY --from=builder /go/bin/website /usr/local/website/bin/
 ENV DEBUG= \
   AWS_REGION= \
