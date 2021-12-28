@@ -21,7 +21,7 @@ phases:
       - BUILD_OPT="--no-cache --pull"
 
       - echo Logging in to Amazon ECR...
-      - $(aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION})
+      - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin  ${REGISTRY}
   build:
     commands:
       - echo Build subdomain base image manifest started on `date`
