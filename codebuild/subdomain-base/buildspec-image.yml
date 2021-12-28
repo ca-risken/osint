@@ -31,7 +31,7 @@ phases:
 
       - echo Tagging the images...
       # tag the specific version
-      - docker tag ${IMAGE_SUBDOMAIN_BASE}:${TAG} ${REGISTORY}/${IMAGE_SUBDOMAIN_BASE}:${TAG}
+      - docker tag ${IMAGE_SUBDOMAIN_BASE}:${TAG} ${REGISTRY}/${IMAGE_SUBDOMAIN_BASE}:${TAG}
 
   post_build:
     commands:
@@ -39,4 +39,4 @@ phases:
       - echo Pushing the Docker image...
 
       # specific version
-      - docker push ${REGISTORY}/${IMAGE_SUBDOMAIN_BASE}:${TAG}
+      - docker push ${REGISTRY}/${IMAGE_SUBDOMAIN_BASE}:${TAG}
