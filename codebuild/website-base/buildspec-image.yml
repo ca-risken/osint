@@ -27,7 +27,7 @@ phases:
       - echo Build subdomain base image started on `date`
       - TAG=${WEBSITE_BASE_VERSION}_${OS}_${ARCH}
       - cd dockers/website-base
-      - docker build ${BUILD_OPT} -t ${IMAGE_WPSCAN_BASE}:${TAG} .
+      - docker build ${BUILD_OPT} -t ${IMAGE_WEBSITE_BASE}:${TAG} .
 
       - echo Tagging the images...
       # tag the specific version
