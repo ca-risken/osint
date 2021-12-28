@@ -21,7 +21,7 @@ phases:
 
       - echo Logging in to Amazon ECR...
       - codebuild-breakpoint
-      - $(aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION})
+      - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin  ${REGISTRY}
   build:
     commands:
       - echo Build subdomain base image started on `date`
