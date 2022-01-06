@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -60,6 +61,11 @@ func (s *sqsHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 	segment.Close(err)
 	if err != nil {
 		appLogger.Errorf("Failed exec wappalyzer, error: %v", err)
+		if err.Error() == "signal: killed" {
+			err = errors.New("An error occured while executing wappalyzer. Scan will restart in a little while.")
+			_ = s.handleErrorWithUpdateStatus(ctx, msg, err)
+			return err
+		}
 		return s.handleErrorWithUpdateStatus(ctx, msg, err)
 	}
 
@@ -143,7 +149,7 @@ func (s *sqsHandler) putRelOsintDataSource(ctx context.Context, status *osint.Pu
 	if err != nil {
 		return err
 	}
-	appLogger.Infof("Success to update AWS status, response=%+v", resp)
+	appLogger.Infof("Success to update osint status, response=%+v", resp)
 	return nil
 }
 

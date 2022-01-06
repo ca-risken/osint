@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"fmt"
 	"os/exec"
 	"time"
 
@@ -43,7 +42,7 @@ func (c *websiteClient) run(target string) (*wappalyzerResult, error) {
 
 	if err != nil {
 		appLogger.Errorf("Failed to execute wappalyzer. error: %v, stderr: %v", err, stderr.String())
-		return nil, fmt.Errorf("Failed to execute wappalyzer. error: %v", err)
+		return nil, err
 	}
 
 	var result wappalyzerResult

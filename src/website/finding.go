@@ -45,14 +45,17 @@ func (s *sqsHandler) putFinding(ctx context.Context, websiteFinding *finding.Fin
 	}
 	if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagOsint); err != nil {
 		appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", common.TagOsint, err)
+		return err
 	}
 	if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, msg.ResourceName); err != nil {
 		appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", msg.ResourceName, err)
+		return err
 	}
 
 	for _, category := range categories {
 		if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, category.Name); err != nil {
 			appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", category.Name, err)
+			return err
 		}
 	}
 	return nil
