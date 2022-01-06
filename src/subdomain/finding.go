@@ -22,9 +22,11 @@ func (s *sqsHandler) putFindings(ctx context.Context, findingMap map[string][]*f
 			}
 			if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagOsint); err != nil {
 				appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", common.TagOsint, err)
+				return err
 			}
 			if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagDomain); err != nil {
 				appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", common.TagDomain, err)
+				return err
 			}
 			var tagFindingType string
 			switch key {
@@ -38,10 +40,12 @@ func (s *sqsHandler) putFindings(ctx context.Context, findingMap map[string][]*f
 			if !zero.IsZeroVal(tagFindingType) {
 				if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, tagFindingType); err != nil {
 					appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", tagFindingType, err)
+					return err
 				}
 			}
 			if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, resourceName); err != nil {
 				appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", resourceName, err)
+				return err
 			}
 
 			if err = s.putRecommend(ctx, res.Finding.ProjectId, res.Finding.FindingId, key); err != nil {

@@ -84,7 +84,7 @@ func (s *sqsHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 	findings, err := makeFindings(osintResults.OsintResults, msg)
 	if err != nil {
 		appLogger.Errorf("Failed making Findings, error: %v", err)
-		return err
+		return mimosasqs.WrapNonRetryable(err)
 	}
 
 	// Clear finding score
@@ -95,19 +95,19 @@ func (s *sqsHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 	}); err != nil {
 		appLogger.Errorf("Failed to clear finding score. ResourceName: %v, error: %v", msg.ResourceName, err)
 		_ = s.putRelOsintDataSource(ctx, msg, false, err.Error())
-		return err
+		return mimosasqs.WrapNonRetryable(err)
 	}
 
 	// Put Finding and Tag Finding
 	if err := s.putFindings(ctx, findings, msg.ResourceName); err != nil {
 		appLogger.Errorf("Failed to put findings. relOsintDataSourceID: %v, error: %v", msg.RelOsintDataSourceID, err)
-		return err
+		return mimosasqs.WrapNonRetryable(err)
 	}
 
 	// Put RelOsintDataSource
 	if err := s.putRelOsintDataSource(ctx, msg, true, ""); err != nil {
 		appLogger.Errorf("Failed to put rel_osint_data_source. relOsintDataSourceID: %v, error: %v", msg.RelOsintDataSourceID, err)
-		return err
+		return mimosasqs.WrapNonRetryable(err)
 	}
 	appLogger.Infof("end Scan, RequestID=%s", requestID)
 
@@ -117,7 +117,7 @@ func (s *sqsHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 	// Call AnalyzeAlert
 	if err := s.CallAnalyzeAlert(ctx, msg.ProjectID); err != nil {
 		appLogger.Errorf("Failed to analyze alert. relOsintDataSourceID: %v, error: %v", msg.RelOsintDataSourceID, err)
-		return err
+		return mimosasqs.WrapNonRetryable(err)
 	}
 	return nil
 
