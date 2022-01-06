@@ -46,6 +46,9 @@ func (s *sqsHandler) putFinding(ctx context.Context, websiteFinding *finding.Fin
 	if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagOsint); err != nil {
 		appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", common.TagOsint, err)
 	}
+	if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagWebsite); err != nil {
+		appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", common.TagWebsite, err)
+	}
 	if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, msg.ResourceName); err != nil {
 		appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", msg.ResourceName, err)
 	}
