@@ -6,7 +6,9 @@ require (
 	github.com/aws/aws-sdk-go v1.40.48
 	github.com/aws/aws-xray-sdk-go v1.6.0
 	github.com/ca-risken/common/pkg/database v0.0.0-20211223025030-6bfdc45e906c
-	github.com/ca-risken/common/pkg/rpc v0.0.0-20211118071101-9855266b50a1
+	github.com/ca-risken/common/pkg/logging v0.0.0-20220113015330-0e8462d52b5b
+	github.com/ca-risken/common/pkg/rpc v0.0.0-20220113015330-0e8462d52b5b
+	github.com/ca-risken/common/pkg/sqs v0.0.0-20220113015330-0e8462d52b5b // indirect
 	github.com/ca-risken/common/pkg/xray v0.0.0-20211118071101-9855266b50a1
 	github.com/ca-risken/osint/pkg/message v0.0.0-20211112065816-37550cc4192d
 	github.com/ca-risken/osint/pkg/model v0.0.0-20210908024505-bad8297bda4e
@@ -15,10 +17,8 @@ require (
 	github.com/golang/protobuf v1.5.2
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.2
 	github.com/kr/pretty v0.1.0 // indirect
-	github.com/sirupsen/logrus v1.8.1
 	github.com/stretchr/testify v1.7.0
 	github.com/vikyd/zero v0.0.0-20190921142904-0f738d0bc858
-	golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c // indirect
 	google.golang.org/genproto v0.0.0-20210708141623-e76da96a951f // indirect
 	google.golang.org/grpc v1.42.0
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
