@@ -1,4 +1,4 @@
-FROM golang:1.16 AS builder
+FROM golang:1.17 AS builder
 WORKDIR /go/src/github.com/ca-risken/osint/src/subdomain/
 ADD *.go go.* ./
 ENV CGO_ENABLED=0 GOPRIVATE="github.com/ca-risken/*"
