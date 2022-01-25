@@ -58,7 +58,7 @@ func (c *certificateExpiration) makeFinding(projectID uint32, dataSource string)
 	finding := &finding.FindingForUpsert{
 		Description:      description,
 		DataSource:       dataSource,
-		DataSourceId:     generateDataSourceID(fmt.Sprintf("%v_%v", c.URL, "certificate")),
+		DataSourceId:     generateDataSourceID(fmt.Sprintf("%v_%v_%v", c.URL, "certificate", c.ExpireDate.Format("2006-01-02"))),
 		ResourceName:     resourceName,
 		ProjectId:        projectID,
 		OriginalScore:    score,
