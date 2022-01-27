@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ca-risken/core/proto/project"
 	"github.com/ca-risken/osint/pkg/message"
 	"github.com/ca-risken/osint/pkg/model"
 	"github.com/ca-risken/osint/proto/osint"
@@ -157,9 +158,9 @@ func (s *osintService) InvokeScan(ctx context.Context, req *osint.InvokeScanRequ
 	return &osint.InvokeScanResponse{Message: "Invoke Scan."}, nil
 }
 
-func (s *osintService) InvokeScanAll(ctx context.Context, req *osint.InvokeScanAllRequest) (*empty.Empty, error) {
+func (o *osintService) InvokeScanAll(ctx context.Context, req *osint.InvokeScanAllRequest) (*empty.Empty, error) {
 
-	list, err := s.repository.ListAllRelOsintDataSource(ctx, req.OsintDataSourceId)
+	list, err := o.repository.ListAllRelOsintDataSource(ctx, req.OsintDataSourceId)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &empty.Empty{}, nil
@@ -169,7 +170,15 @@ func (s *osintService) InvokeScanAll(ctx context.Context, req *osint.InvokeScanA
 	}
 
 	for _, relOsintDataSource := range *list {
-		if _, err := s.InvokeScan(ctx, &osint.InvokeScanRequest{
+		if resp, err := o.projectClient.IsActive(ctx, &project.IsActiveRequest{ProjectId: relOsintDataSource.ProjectID}); err != nil {
+			appLogger.Errorf("Failed to project.IsActive API, err=%+v", err)
+			continue
+		} else if !resp.Active {
+			appLogger.Infof("Skip deactive project, project_id=%d", relOsintDataSource.ProjectID)
+			continue
+		}
+
+		if _, err := o.InvokeScan(ctx, &osint.InvokeScanRequest{
 			ProjectId:            relOsintDataSource.ProjectID,
 			RelOsintDataSourceId: relOsintDataSource.RelOsintDataSourceID,
 			ScanOnly:             true,

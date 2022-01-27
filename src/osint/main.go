@@ -34,7 +34,7 @@ func main() {
 				mimosarpc.LoggingUnaryServerInterceptor(appLogger),
 				xray.UnaryServerInterceptor(),
 				mimosaxray.AnnotateEnvTracingUnaryServerInterceptor(conf.EnvName))))
-	osintServer := newOsintService(conf.DB, conf.SQS)
+	osintServer := newOsintService(conf)
 	osint.RegisterOsintServiceServer(server, osintServer)
 
 	reflection.Register(server) // enable reflection API
