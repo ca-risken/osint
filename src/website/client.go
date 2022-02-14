@@ -9,6 +9,7 @@ import (
 	"github.com/ca-risken/osint/proto/osint"
 	"github.com/gassara-kys/envconfig"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 type findingConfig struct {
@@ -76,7 +77,8 @@ func getGRPCConn(ctx context.Context, addr string) (*grpc.ClientConn, error) {
 	//	grpc.WithUnaryInterceptor(xray.UnaryClientInterceptor()), grpc.WithInsecure(), grpc.WithTimeout(time.Second*3))
 	ctx, cancel := context.WithTimeout(ctx, time.Second*3)
 	defer cancel()
-	conn, err := grpc.DialContext(ctx, addr, grpc.WithInsecure())
+	conn, err := grpc.DialContext(ctx, addr,
+		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, err
 	}
