@@ -8,20 +8,75 @@ import (
 	mimosarpc "github.com/ca-risken/common/pkg/rpc"
 	mimosaxray "github.com/ca-risken/common/pkg/xray"
 	"github.com/ca-risken/osint/proto/osint"
+	"github.com/gassara-kys/envconfig"
 	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
+type AppConfig struct {
+	// osintConfig
+	Port     string `default:"18081"`
+	LogLevel string `default:"debug" split_words:"true"`
+	EnvName  string `default:"local" split_words:"true"`
+
+	// db
+	DBMasterHost     string `split_words:"true" default:"db.middleware.svc.cluster.local"`
+	DBMasterUser     string `split_words:"true" default:"hoge"`
+	DBMasterPassword string `split_words:"true" default:"moge"`
+	DBSlaveHost      string `split_words:"true" default:"db.middleware.svc.cluster.local"`
+	DBSlaveUser      string `split_words:"true" default:"hoge"`
+	DBSlavePassword  string `split_words:"true" default:"moge"`
+
+	DBSchema        string `required:"true"    default:"mimosa"`
+	DBPort          int    `required:"true"    default:"3306"`
+	DBLogMode       bool   `split_words:"true" default:"false"`
+	DBMaxConnection int    `split_words:"true" default:"10"`
+
+	// sqs
+	AWSRegion string `envconfig:"aws_region"   default:"ap-northeast-1"`
+	Endpoint  string `envconfig:"sqs_endpoint" default:"http://queue.middleware.svc.cluster.local:9324"`
+
+	SubdomainQueueURL string `split_words:"true" required:"true" default:"http://queue.middleware.svc.cluster.local:9324/queue/osint-subdomain"`
+	WebsiteQueueURL   string `split_words:"true" required:"true" default:"http://queue.middleware.svc.cluster.local:9324/queue/osint-website"`
+
+	// grpc
+	ProjectSvcAddr string `required:"true" split_words:"true" default:"project.core.svc.cluster.local:8003"`
+}
+
 func main() {
-	conf, err := newOsintConfig()
+	var conf AppConfig
+	err := envconfig.Process("", &conf)
 	if err != nil {
-		panic(err)
+		appLogger.Fatal(err)
 	}
 	err = mimosaxray.InitXRay(xray.Config{})
 	if err != nil {
 		appLogger.Fatal(err.Error())
 	}
+
+	service := &osintService{}
+	dbConfig := &DBConfig{
+		MasterHost:     conf.DBMasterHost,
+		MasterUser:     conf.DBMasterUser,
+		MasterPassword: conf.DBMasterPassword,
+		SlaveHost:      conf.DBSlaveHost,
+		SlaveUser:      conf.DBSlaveUser,
+		SlavePassword:  conf.DBSlavePassword,
+		Schema:         conf.DBSchema,
+		Port:           conf.DBPort,
+		LogMode:        conf.DBLogMode,
+		MaxConnection:  conf.DBMaxConnection,
+	}
+	service.repository = newOsintRepository(dbConfig)
+	sqsConfig := &SQSConfig{
+		AWSRegion:         conf.AWSRegion,
+		Endpoint:          conf.Endpoint,
+		SubdomainQueueURL: conf.SubdomainQueueURL,
+		WebsiteQueueURL:   conf.WebsiteQueueURL,
+	}
+	service.sqs = newSQSClient(sqsConfig)
+	service.projectClient = newProjectClient(conf.ProjectSvcAddr)
 
 	l, err := net.Listen("tcp", fmt.Sprintf(":%s", conf.Port))
 	if err != nil {
@@ -34,8 +89,7 @@ func main() {
 				mimosarpc.LoggingUnaryServerInterceptor(appLogger),
 				xray.UnaryServerInterceptor(),
 				mimosaxray.AnnotateEnvTracingUnaryServerInterceptor(conf.EnvName))))
-	osintServer := newOsintService(conf)
-	osint.RegisterOsintServiceServer(server, osintServer)
+	osint.RegisterOsintServiceServer(server, service)
 
 	reflection.Register(server) // enable reflection API
 	appLogger.Infof("Starting gRPC server, port: %v", conf.Port)

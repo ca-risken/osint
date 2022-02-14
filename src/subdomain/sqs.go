@@ -4,27 +4,21 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sqs"
-	"github.com/gassara-kys/envconfig"
 	"github.com/gassara-kys/go-sqs-poller/worker/v4"
 	"github.com/vikyd/zero"
 )
 
-type sqsConfig struct {
-	AWSRegion string `envconfig:"aws_region"   default:"ap-northeast-1"`
-	Endpoint  string `envconfig:"sqs_endpoint" default:"http://queue.middleware.svc.cluster.local:9324"`
+type SQSConfig struct {
+	AWSRegion string
+	Endpoint  string
 
-	SubdomainQueueName string `split_words:"true" default:"osint-subdomain"`
-	SubdomainQueueURL  string `split_words:"true" default:"http://queue.middleware.svc.cluster.local:9324/queue/osint-subdomain"`
-	MaxNumberOfMessage int64  `split_words:"true" default:"3"`
-	WaitTimeSecond     int64  `split_words:"true" default:"20"`
+	SubdomainQueueName string
+	SubdomainQueueURL  string
+	MaxNumberOfMessage int64
+	WaitTimeSecond     int64
 }
 
-func newSQSConsumer() *worker.Worker {
-	var conf sqsConfig
-	err := envconfig.Process("", &conf)
-	if err != nil {
-		appLogger.Fatalf("Failed to start sqs consumer. error:%v ", err)
-	}
+func newSQSConsumer(conf *SQSConfig) *worker.Worker {
 	var sqsClient *sqs.SQS
 	sess, err := session.NewSessionWithOptions(session.Options{
 		SharedConfigState: session.SharedConfigEnable,

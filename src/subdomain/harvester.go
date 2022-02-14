@@ -12,25 +12,23 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gassara-kys/envconfig"
 	"github.com/vikyd/zero"
 )
 
-type harvesterConfig struct {
-	ResultPath    string `required:"true" split_words:"true" default:"/results"`
-	HarvesterPath string `required:"true" split_words:"true" default:"/theHarvester"`
+type HarvesterConfig struct {
+	ResultPath    string
+	HarvesterPath string
 }
 
-func newHarvesterConfig() harvesterConfig {
-	var conf harvesterConfig
-	err := envconfig.Process("", &conf)
-	if err != nil {
-		panic(err)
+func newHarvesterConfig(resultPath, harvesterPath string) HarvesterConfig {
+	conf := HarvesterConfig{
+		ResultPath:    resultPath,
+		HarvesterPath: harvesterPath,
 	}
 	return conf
 }
 
-func (h *harvesterConfig) run(domain string, relAlertFindingID uint32) (*[]host, error) {
+func (h *HarvesterConfig) run(domain string, relAlertFindingID uint32) (*[]host, error) {
 	now := time.Now().Unix()
 	filePath := fmt.Sprintf("%s/%v_%v", h.ResultPath, relAlertFindingID, now)
 	harvesterPath := fmt.Sprintf("%s/theHarvester.py", h.HarvesterPath)
