@@ -14,7 +14,7 @@ import (
 	"github.com/ca-risken/osint/pkg/message"
 )
 
-func (s *sqsHandler) putFindings(ctx context.Context, result *wappalyzerResult, message *message.OsintQueueMessage) error {
+func (s *SQSHandler) putFindings(ctx context.Context, result *wappalyzerResult, message *message.OsintQueueMessage) error {
 	for _, technology := range result.Technologies {
 		data, err := json.Marshal(technology)
 		if err != nil {
@@ -38,7 +38,7 @@ func (s *sqsHandler) putFindings(ctx context.Context, result *wappalyzerResult, 
 	return nil
 }
 
-func (s *sqsHandler) putFinding(ctx context.Context, websiteFinding *finding.FindingForUpsert, msg *message.OsintQueueMessage, categories []wappalyzerCategory) error {
+func (s *SQSHandler) putFinding(ctx context.Context, websiteFinding *finding.FindingForUpsert, msg *message.OsintQueueMessage, categories []wappalyzerCategory) error {
 	res, err := s.findingClient.PutFinding(ctx, &finding.PutFindingRequest{Finding: websiteFinding})
 	if err != nil {
 		return err
@@ -64,7 +64,7 @@ func (s *sqsHandler) putFinding(ctx context.Context, websiteFinding *finding.Fin
 	return nil
 }
 
-func (s *sqsHandler) tagFinding(ctx context.Context, projectID uint32, findingID uint64, tag string) error {
+func (s *SQSHandler) tagFinding(ctx context.Context, projectID uint32, findingID uint64, tag string) error {
 
 	_, err := s.findingClient.TagFinding(ctx, &finding.TagFindingRequest{
 		ProjectId: projectID,

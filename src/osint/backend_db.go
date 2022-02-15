@@ -6,7 +6,6 @@ import (
 
 	mimosasql "github.com/ca-risken/common/pkg/database/sql"
 	"github.com/ca-risken/osint/pkg/model"
-	"github.com/gassara-kys/envconfig"
 	"gorm.io/gorm"
 )
 
@@ -36,33 +35,28 @@ type osintRepository struct {
 	SlaveDB  *gorm.DB
 }
 
-func newOsintRepository() osintRepoInterface {
+func newOsintRepository(config *DBConfig) osintRepoInterface {
 	repo := osintRepository{}
-	repo.MasterDB = initDB(true)
-	repo.SlaveDB = initDB(false)
+	repo.MasterDB = initDB(config, true)
+	repo.SlaveDB = initDB(config, false)
 	return &repo
 }
 
-type dbConfig struct {
-	MasterHost     string `split_words:"true" default:"db.middleware.svc.cluster.local"`
-	MasterUser     string `split_words:"true" default:"hoge"`
-	MasterPassword string `split_words:"true" default:"moge"`
-	SlaveHost      string `split_words:"true" default:"db.middleware.svc.cluster.local"`
-	SlaveUser      string `split_words:"true" default:"hoge"`
-	SlavePassword  string `split_words:"true" default:"moge"`
+type DBConfig struct {
+	MasterHost     string
+	MasterUser     string
+	MasterPassword string
+	SlaveHost      string
+	SlaveUser      string
+	SlavePassword  string
 
-	Schema        string `required:"true"    default:"mimosa"`
-	Port          int    `required:"true"    default:"3306"`
-	LogMode       bool   `split_words:"true" default:"false"`
-	MaxConnection int    `split_words:"true" default:"10"`
+	Schema        string
+	Port          int
+	LogMode       bool
+	MaxConnection int
 }
 
-func initDB(isMaster bool) *gorm.DB {
-	conf := &dbConfig{}
-	if err := envconfig.Process("DB", conf); err != nil {
-		panic(err)
-	}
-
+func initDB(conf *DBConfig, isMaster bool) *gorm.DB {
 	var user, pass, host string
 	if isMaster {
 		user = conf.MasterUser

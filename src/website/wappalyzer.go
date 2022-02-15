@@ -6,26 +6,15 @@ import (
 	"encoding/json"
 	"os/exec"
 	"time"
-
-	"github.com/gassara-kys/envconfig"
 )
 
 type websiteClient struct {
-	config websiteConfig
+	WappalyzerPath string
 }
 
-type websiteConfig struct {
-	WappalyzerPath string `required:"true" split_words:"true" default:"/opt/wappalyzer/src/drivers/npm/cli.js"`
-}
-
-func newWappalyzerClient() (websiteClient, error) {
-	var conf websiteConfig
-	err := envconfig.Process("", &conf)
-	if err != nil {
-		return websiteClient{}, err
-	}
+func newWappalyzerClient(wappalyzerPath string) (websiteClient, error) {
 	cli := websiteClient{
-		config: conf,
+		WappalyzerPath: wappalyzerPath,
 	}
 	return cli, nil
 }
@@ -33,7 +22,7 @@ func newWappalyzerClient() (websiteClient, error) {
 func (c *websiteClient) run(target string) (*wappalyzerResult, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Minute)
 	defer cancel()
-	cmd := exec.CommandContext(ctx, "node", c.config.WappalyzerPath, target, "-r")
+	cmd := exec.CommandContext(ctx, "node", c.WappalyzerPath, target, "-r")
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
 	cmd.Stdout = &stdout

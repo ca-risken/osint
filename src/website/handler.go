@@ -18,21 +18,14 @@ import (
 	"github.com/ca-risken/osint/proto/osint"
 )
 
-type sqsHandler struct {
-	findingClient finding.FindingServiceClient
-	alertClient   alert.AlertServiceClient
-	osintClient   osint.OsintServiceClient
+type SQSHandler struct {
+	findingClient  finding.FindingServiceClient
+	alertClient    alert.AlertServiceClient
+	osintClient    osint.OsintServiceClient
+	wappalyzerPath string
 }
 
-func newHandler() *sqsHandler {
-	return &sqsHandler{
-		findingClient: newFindingClient(),
-		alertClient:   newAlertClient(),
-		osintClient:   newOsintClient(),
-	}
-}
-
-func (s *sqsHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) error {
+func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) error {
 	msgBody := aws.StringValue(sqsMsg.Body)
 	appLogger.Infof("got message. message: %v", msgBody)
 	// Parse message
@@ -48,7 +41,7 @@ func (s *sqsHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 	}
 	appLogger.Infof("start Scan, RequestID=%s", requestID)
 
-	websiteClient, err := newWappalyzerClient()
+	websiteClient, err := newWappalyzerClient(s.wappalyzerPath)
 	if err != nil {
 		appLogger.Errorf("Error occured when configure: %v, error: %v", msg, err)
 		return mimosasqs.WrapNonRetryable(err)
@@ -103,14 +96,14 @@ func (s *sqsHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 	return nil
 }
 
-func (s *sqsHandler) handleErrorWithUpdateStatus(ctx context.Context, msg *message.OsintQueueMessage, err error) error {
+func (s *SQSHandler) handleErrorWithUpdateStatus(ctx context.Context, msg *message.OsintQueueMessage, err error) error {
 	if updateErr := s.updateScanStatusError(ctx, msg, err.Error()); updateErr != nil {
 		appLogger.Warnf("Failed to update scan status error: err=%+v", updateErr)
 	}
 	return mimosasqs.WrapNonRetryable(err)
 }
 
-func (s *sqsHandler) updateScanStatusError(ctx context.Context, msg *message.OsintQueueMessage, statusDetail string) error {
+func (s *SQSHandler) updateScanStatusError(ctx context.Context, msg *message.OsintQueueMessage, statusDetail string) error {
 	if len(statusDetail) > 200 {
 		statusDetail = statusDetail[:200] + " ..." // cut long text
 	}
@@ -129,7 +122,7 @@ func (s *sqsHandler) updateScanStatusError(ctx context.Context, msg *message.Osi
 	return s.putRelOsintDataSource(ctx, req)
 }
 
-func (s *sqsHandler) updateScanStatusSuccess(ctx context.Context, msg *message.OsintQueueMessage) error {
+func (s *SQSHandler) updateScanStatusSuccess(ctx context.Context, msg *message.OsintQueueMessage) error {
 	req := &osint.PutRelOsintDataSourceRequest{
 		ProjectId: msg.ProjectID,
 		RelOsintDataSource: &osint.RelOsintDataSourceForUpsert{
@@ -144,7 +137,7 @@ func (s *sqsHandler) updateScanStatusSuccess(ctx context.Context, msg *message.O
 	return s.putRelOsintDataSource(ctx, req)
 }
 
-func (s *sqsHandler) putRelOsintDataSource(ctx context.Context, status *osint.PutRelOsintDataSourceRequest) error {
+func (s *SQSHandler) putRelOsintDataSource(ctx context.Context, status *osint.PutRelOsintDataSourceRequest) error {
 	resp, err := s.osintClient.PutRelOsintDataSource(ctx, status)
 	if err != nil {
 		return err
@@ -153,7 +146,7 @@ func (s *sqsHandler) putRelOsintDataSource(ctx context.Context, status *osint.Pu
 	return nil
 }
 
-func (s *sqsHandler) CallAnalyzeAlert(ctx context.Context, projectID uint32) error {
+func (s *SQSHandler) CallAnalyzeAlert(ctx context.Context, projectID uint32) error {
 	_, err := s.alertClient.AnalyzeAlert(ctx, &alert.AnalyzeAlertRequest{ProjectId: projectID})
 	if err != nil {
 		return err

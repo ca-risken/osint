@@ -18,27 +18,14 @@ import (
 	"github.com/ca-risken/osint/proto/osint"
 )
 
-type sqsHandler struct {
+type SQSHandler struct {
 	findingClient   finding.FindingServiceClient
 	alertClient     alert.AlertServiceClient
 	osintClient     osint.OsintServiceClient
-	harvesterConfig harvesterConfig
+	harvesterConfig HarvesterConfig
 }
 
-func newHandler() *sqsHandler {
-	h := &sqsHandler{}
-	h.harvesterConfig = newHarvesterConfig()
-	appLogger.Info("Load Harvester Config")
-	h.findingClient = newFindingClient()
-	appLogger.Info("Start Finding Client")
-	h.alertClient = newAlertClient()
-	appLogger.Info("Start Alert Client")
-	h.osintClient = newOsintClient()
-	appLogger.Info("Start Osint Client")
-	return h
-}
-
-func (s *sqsHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) error {
+func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) error {
 	msgBody := aws.StringValue(sqsMsg.Body)
 	appLogger.Infof("got message. message: %v", msgBody)
 	// Parse message
@@ -135,7 +122,7 @@ func inspectDomain(hosts *[]host, detectList *[]string) (*osintResults, error) {
 	return &osintResults{OsintResults: &arr}, nil
 }
 
-func (s *sqsHandler) CallAnalyzeAlert(ctx context.Context, projectID uint32) error {
+func (s *SQSHandler) CallAnalyzeAlert(ctx context.Context, projectID uint32) error {
 	_, err := s.alertClient.AnalyzeAlert(ctx, &alert.AnalyzeAlertRequest{ProjectId: projectID})
 	if err != nil {
 		return err
@@ -144,7 +131,7 @@ func (s *sqsHandler) CallAnalyzeAlert(ctx context.Context, projectID uint32) err
 	return nil
 }
 
-func (s *sqsHandler) putRelOsintDataSource(ctx context.Context, message *message.OsintQueueMessage, isSuccess bool, errStr string) error {
+func (s *SQSHandler) putRelOsintDataSource(ctx context.Context, message *message.OsintQueueMessage, isSuccess bool, errStr string) error {
 
 	relOsintDataSource := &osint.RelOsintDataSourceForUpsert{
 		RelOsintDataSourceId: message.RelOsintDataSourceID,

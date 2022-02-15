@@ -7,23 +7,13 @@ import (
 	"github.com/ca-risken/core/proto/alert"
 	"github.com/ca-risken/core/proto/finding"
 	"github.com/ca-risken/osint/proto/osint"
-	"github.com/gassara-kys/envconfig"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
-type findingConfig struct {
-	FindingSvcAddr string `required:"true" split_words:"true" default:"finding.core.svc.cluster.local:8001"`
-}
-
-func newFindingClient() finding.FindingServiceClient {
-	var conf findingConfig
-	err := envconfig.Process("", &conf)
-	if err != nil {
-		appLogger.Fatalf("Faild to load finding config error: err=%+v", err)
-	}
-
+func newFindingClient(svcAddr string) finding.FindingServiceClient {
 	ctx := context.Background()
-	conn, err := getGRPCConn(ctx, conf.FindingSvcAddr)
+	conn, err := getGRPCConn(ctx, svcAddr)
 	if err != nil {
 		appLogger.Fatalf("Faild to get GRPC connection: err=%+v", err)
 	}
@@ -31,19 +21,9 @@ func newFindingClient() finding.FindingServiceClient {
 	return finding.NewFindingServiceClient(conn)
 }
 
-type alertConfig struct {
-	AlertSvcAddr string `required:"true" split_words:"true" default:"alert.core.svc.cluster.local:8004"`
-}
-
-func newAlertClient() alert.AlertServiceClient {
-	var conf alertConfig
-	err := envconfig.Process("", &conf)
-	if err != nil {
-		appLogger.Fatalf("Faild to load alert config error: err=%+v", err)
-	}
-
+func newAlertClient(svcAddr string) alert.AlertServiceClient {
 	ctx := context.Background()
-	conn, err := getGRPCConn(ctx, conf.AlertSvcAddr)
+	conn, err := getGRPCConn(ctx, svcAddr)
 	if err != nil {
 		appLogger.Fatalf("Faild to get GRPC connection: err=%+v", err)
 	}
@@ -51,19 +31,9 @@ func newAlertClient() alert.AlertServiceClient {
 	return alert.NewAlertServiceClient(conn)
 }
 
-type osintConfig struct {
-	OsintSvcAddr string `required:"true" split_words:"true" default:"osint.osint.svc.cluster.local:18081"`
-}
-
-func newOsintClient() osint.OsintServiceClient {
-	var conf osintConfig
-	err := envconfig.Process("", &conf)
-	if err != nil {
-		appLogger.Fatalf("Faild to load osint config error: err=%+v", err)
-	}
-
+func newOsintClient(svcAddr string) osint.OsintServiceClient {
 	ctx := context.Background()
-	conn, err := getGRPCConn(ctx, conf.OsintSvcAddr)
+	conn, err := getGRPCConn(ctx, svcAddr)
 	if err != nil {
 		appLogger.Fatalf("Faild to get GRPC connection: err=%+v", err)
 	}
@@ -76,7 +46,8 @@ func getGRPCConn(ctx context.Context, addr string) (*grpc.ClientConn, error) {
 	//	grpc.WithUnaryInterceptor(xray.UnaryClientInterceptor()), grpc.WithInsecure(), grpc.WithTimeout(time.Second*3))
 	ctx, cancel := context.WithTimeout(ctx, time.Second*3)
 	defer cancel()
-	conn, err := grpc.DialContext(ctx, addr, grpc.WithInsecure())
+	conn, err := grpc.DialContext(ctx, addr,
+		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, err
 	}

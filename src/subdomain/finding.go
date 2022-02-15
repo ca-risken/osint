@@ -12,7 +12,7 @@ import (
 	"github.com/vikyd/zero"
 )
 
-func (s *sqsHandler) putFindings(ctx context.Context, findingMap map[string][]*finding.FindingForUpsert, resourceName string) error {
+func (s *SQSHandler) putFindings(ctx context.Context, findingMap map[string][]*finding.FindingForUpsert, resourceName string) error {
 	for key, findings := range findingMap {
 		for _, f := range findings {
 			res, err := s.findingClient.PutFinding(ctx, &finding.PutFindingRequest{Finding: f})
@@ -58,7 +58,7 @@ func (s *sqsHandler) putFindings(ctx context.Context, findingMap map[string][]*f
 	return nil
 }
 
-func (s *sqsHandler) tagFinding(ctx context.Context, projectID uint32, findingID uint64, tag string) error {
+func (s *SQSHandler) tagFinding(ctx context.Context, projectID uint32, findingID uint64, tag string) error {
 
 	_, err := s.findingClient.TagFinding(ctx, &finding.TagFindingRequest{
 		ProjectId: projectID,
@@ -74,7 +74,7 @@ func (s *sqsHandler) tagFinding(ctx context.Context, projectID uint32, findingID
 	return nil
 }
 
-func (s *sqsHandler) putRecommend(ctx context.Context, projectID uint32, findingID uint64, category string) error {
+func (s *SQSHandler) putRecommend(ctx context.Context, projectID uint32, findingID uint64, category string) error {
 	r := getRecommend(category)
 	if r.Type == "" || (r.Risk == "" && r.Recommendation == "") {
 		appLogger.Warnf("Failed to get recommendation, Unknown category=%s", category)
