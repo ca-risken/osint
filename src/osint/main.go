@@ -5,6 +5,7 @@ import (
 	"net"
 
 	"github.com/aws/aws-xray-sdk-go/xray"
+	"github.com/ca-risken/common/pkg/profiler"
 	mimosarpc "github.com/ca-risken/common/pkg/rpc"
 	mimosaxray "github.com/ca-risken/common/pkg/xray"
 	"github.com/ca-risken/osint/proto/osint"
@@ -14,11 +15,22 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
+const (
+	nameSpace   = "osint"
+	serviceName = "osint"
+)
+
+func getFullServiceName() string {
+	return fmt.Sprintf("%s.%s", nameSpace, serviceName)
+}
+
 type AppConfig struct {
 	// osintConfig
-	Port     string `default:"18081"`
-	LogLevel string `default:"debug" split_words:"true"`
-	EnvName  string `default:"local" split_words:"true"`
+	Port            string   `default:"18081"`
+	LogLevel        string   `default:"debug" split_words:"true"`
+	EnvName         string   `default:"local" split_words:"true"`
+	ProfileExporter string   `split_words:"true" default:"nop"`
+	ProfileTypes    []string `split_words:"true"`
 
 	// db
 	DBMasterHost     string `split_words:"true" default:"db.middleware.svc.cluster.local"`
@@ -54,6 +66,26 @@ func main() {
 	if err != nil {
 		appLogger.Fatal(err.Error())
 	}
+
+	pTypes, err := profiler.ConvertProfileTypeFrom(conf.ProfileTypes)
+	if err != nil {
+		appLogger.Fatal(err.Error())
+	}
+	pExporter, err := profiler.ConvertExporterTypeFrom(conf.ProfileExporter)
+	if err != nil {
+		appLogger.Fatal(err.Error())
+	}
+	pc := profiler.Config{
+		ServiceName:  getFullServiceName(),
+		EnvName:      conf.EnvName,
+		ProfileTypes: pTypes,
+		ExporterType: pExporter,
+	}
+	err = pc.Start()
+	if err != nil {
+		appLogger.Fatal(err.Error())
+	}
+	defer pc.Stop()
 
 	service := &osintService{}
 	dbConfig := &DBConfig{

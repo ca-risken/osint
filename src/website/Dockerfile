@@ -12,6 +12,8 @@ RUN go build && cp website /go/bin/
 FROM public.ecr.aws/risken/osint/website-base:v0.0.1
 COPY --from=builder /go/bin/website /usr/local/website/bin/
 ENV DEBUG= \
+  PROFILE_EXPORTER= \
+  PROFILE_TYPES= \
   AWS_REGION= \
   AWS_ACCESS_KEY_ID= \
   AWS_SECRET_ACCESS_KEY= \
