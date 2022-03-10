@@ -20,6 +20,8 @@ require (
 )
 
 require (
+	github.com/Songmu/timeout v0.4.0 // indirect
+	github.com/Songmu/wrapcommander v0.1.0 // indirect
 	github.com/andybalholm/brotli v1.0.1 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef // indirect
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible // indirect
