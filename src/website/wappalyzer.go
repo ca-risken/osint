@@ -37,17 +37,14 @@ func (c *websiteClient) run(target string) (*wappalyzerResult, error) {
 	}
 	exitStatus, err := tio.RunContext(context.Background())
 	if exitStatus.IsTimedOut() {
-		appLogger.Errorf("Timeout occured when executing wappalyzer.")
 		return nil, errors.New("Timeout occured when executing wappalyzer")
 	}
 	if err != nil {
-		appLogger.Errorf("Failed to execute wappalyzer. error: %v, stderr: %v", err, stderr.String())
 		return nil, err
 	}
 
 	var result wappalyzerResult
 	if err := json.Unmarshal(stdout.Bytes(), &result); err != nil {
-		appLogger.Errorf("Failed to parse scan result. error: %v", err)
 		return nil, err
 	}
 
