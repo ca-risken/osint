@@ -4,8 +4,12 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"os/exec"
+	"syscall"
 	"time"
+
+	"github.com/Songmu/timeout"
 )
 
 type websiteClient struct {
@@ -20,23 +24,27 @@ func newWappalyzerClient(wappalyzerPath string) (websiteClient, error) {
 }
 
 func (c *websiteClient) run(target string) (*wappalyzerResult, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Minute)
-	defer cancel()
-	cmd := exec.CommandContext(ctx, "node", c.WappalyzerPath, target, "-r")
+	cmd := exec.Command("node", c.WappalyzerPath, target, "-r")
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
-	err := cmd.Run()
-
+	tio := &timeout.Timeout{
+		Cmd:       cmd,
+		Duration:  20 * time.Minute,
+		KillAfter: 5 * time.Second,
+		Signal:    syscall.SIGTERM,
+	}
+	exitStatus, err := tio.RunContext(context.Background())
+	if exitStatus.IsTimedOut() {
+		return nil, errors.New("Timeout occured when executing wappalyzer")
+	}
 	if err != nil {
-		appLogger.Errorf("Failed to execute wappalyzer. error: %v, stderr: %v", err, stderr.String())
 		return nil, err
 	}
 
 	var result wappalyzerResult
 	if err := json.Unmarshal(stdout.Bytes(), &result); err != nil {
-		appLogger.Errorf("Failed to parse scan result. error: %v", err)
 		return nil, err
 	}
 
