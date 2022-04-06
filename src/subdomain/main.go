@@ -44,6 +44,9 @@ type AppConfig struct {
 	SubdomainQueueURL  string `split_words:"true" default:"http://queue.middleware.svc.cluster.local:9324/queue/osint-subdomain"`
 	MaxNumberOfMessage int64  `split_words:"true" default:"3"`
 	WaitTimeSecond     int64  `split_words:"true" default:"20"`
+
+	// The number of host to be inspected at a time in goroutine
+	InspectConcurrency int64 `split_words:"true" default:"50"`
 }
 
 func main() {
@@ -80,6 +83,8 @@ func main() {
 	handler := &SQSHandler{}
 	handler.harvesterConfig = newHarvesterConfig(conf.ResultPath, conf.HarvesterPath)
 	appLogger.Info("Load Harvester Config")
+	handler.inspectConcurrency = conf.InspectConcurrency
+	appLogger.Info("Load Concurrency Config")
 	handler.findingClient = newFindingClient(conf.FindingSvcAddr)
 	appLogger.Info("Start Finding Client")
 	handler.alertClient = newAlertClient(conf.AlertSvcAddr)

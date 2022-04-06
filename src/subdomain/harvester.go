@@ -116,9 +116,6 @@ func sliceUnique(target *[]host) []host {
 	return ret
 }
 
-type osintResults struct {
-	OsintResults *[]osintResult
-}
 type osintResult struct {
 	Host                  host
 	PrivateExpose         privateExpose

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"sync"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -16,13 +17,15 @@ import (
 	"github.com/ca-risken/osint/pkg/message"
 	"github.com/ca-risken/osint/pkg/model"
 	"github.com/ca-risken/osint/proto/osint"
+	"golang.org/x/sync/semaphore"
 )
 
 type SQSHandler struct {
-	findingClient   finding.FindingServiceClient
-	alertClient     alert.AlertServiceClient
-	osintClient     osint.OsintServiceClient
-	harvesterConfig HarvesterConfig
+	findingClient      finding.FindingServiceClient
+	alertClient        alert.AlertServiceClient
+	osintClient        osint.OsintServiceClient
+	harvesterConfig    HarvesterConfig
+	inspectConcurrency int64
 }
 
 func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) error {
@@ -61,14 +64,40 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 		return err
 	}
 
-	//hosts, err := tmpRun()
-	osintResults, err := inspectDomain(hosts, detectList)
+	wg := sync.WaitGroup{}
+	mutex := &sync.Mutex{}
+	osintResults := []osintResult{}
+	sem := semaphore.NewWeighted(s.inspectConcurrency)
+	for _, h := range *hosts {
+		wg.Add(1)
+		if err := sem.Acquire(ctx, 1); err != nil {
+			appLogger.Warnf("failed to acquire semaphore: %v", err)
+			wg.Done()
+			continue
+		}
+
+		go func(h host) {
+			defer func() {
+				sem.Release(1)
+				wg.Done()
+			}()
+			privateExpose := searchPrivateExpose(h, detectList)
+			takeover := searchTakeover(h.HostName)
+			certificateExpiration := privateExpose.checkCertificateExpiration()
+
+			mutex.Lock()
+			osintResults = append(osintResults, osintResult{Host: h, PrivateExpose: privateExpose, Takeover: takeover, CertificateExpiration: certificateExpiration})
+			mutex.Unlock()
+		}(h)
+	}
+	wg.Wait()
+
 	if err != nil {
 		appLogger.Errorf("Failed get osintResults, error: %v", err)
 		_ = s.putRelOsintDataSource(ctx, msg, false, "An error occured while investing resource. Ask the system administrator.")
 		return err
 	}
-	findings, err := makeFindings(osintResults.OsintResults, msg)
+	findings, err := makeFindings(&osintResults, msg)
 	if err != nil {
 		appLogger.Errorf("Failed making Findings, error: %v", err)
 		return mimosasqs.WrapNonRetryable(err)
@@ -108,18 +137,6 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 	}
 	return nil
 
-}
-
-func inspectDomain(hosts *[]host, detectList *[]string) (*osintResults, error) {
-	arr := []osintResult{}
-	for _, h := range *hosts {
-		privateExpose := searchPrivateExpose(h, detectList)
-		takeover := searchTakeover(h.HostName)
-		certificateExpiration := privateExpose.checkCertificateExpiration()
-		osintResult := osintResult{Host: h, PrivateExpose: privateExpose, Takeover: takeover, CertificateExpiration: certificateExpiration}
-		arr = append(arr, osintResult)
-	}
-	return &osintResults{OsintResults: &arr}, nil
 }
 
 func (s *SQSHandler) CallAnalyzeAlert(ctx context.Context, projectID uint32) error {
