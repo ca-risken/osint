@@ -71,9 +71,9 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 	for _, h := range *hosts {
 		wg.Add(1)
 		if err := sem.Acquire(ctx, 1); err != nil {
-			appLogger.Warnf("failed to acquire semaphore: %v", err)
+			appLogger.Errorf("failed to acquire semaphore: %v", err)
 			wg.Done()
-			continue
+			return mimosasqs.WrapNonRetryable(err)
 		}
 
 		go func(h host) {
@@ -92,11 +92,6 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 	}
 	wg.Wait()
 
-	if err != nil {
-		appLogger.Errorf("Failed get osintResults, error: %v", err)
-		_ = s.putRelOsintDataSource(ctx, msg, false, "An error occured while investing resource. Ask the system administrator.")
-		return err
-	}
 	findings, err := makeFindings(&osintResults, msg)
 	if err != nil {
 		appLogger.Errorf("Failed making Findings, error: %v", err)
