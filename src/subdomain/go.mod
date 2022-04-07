@@ -19,6 +19,7 @@ require (
 	github.com/gassara-kys/go-sqs-poller/worker/v4 v4.0.0-20210215110542-0be358599a2f
 	github.com/miekg/dns v1.1.43
 	github.com/vikyd/zero v0.0.0-20190921142904-0f738d0bc858
+	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	google.golang.org/grpc v1.45.0
 )
 
