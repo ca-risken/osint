@@ -52,6 +52,7 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 
 	// Run Harvester
 	_, segment := xray.BeginSubsegment(ctx, "runHarvester")
+	appLogger.Infof("start harvester, RequestID=%s", requestID)
 	hosts, err := s.harvesterConfig.run(msg.ResourceName, msg.RelOsintDataSourceID)
 	segment.Close(err)
 	if err != nil {
@@ -63,11 +64,13 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 		_ = s.putRelOsintDataSource(ctx, msg, false, strError)
 		return err
 	}
+	appLogger.Infof("end harvester, RequestID=%s", requestID)
 
 	wg := sync.WaitGroup{}
 	mutex := &sync.Mutex{}
 	osintResults := []osintResult{}
 	sem := semaphore.NewWeighted(s.inspectConcurrency)
+	appLogger.Infof("start scan hosts, RequestID=%s", requestID)
 	for _, h := range *hosts {
 		wg.Add(1)
 		if err := sem.Acquire(ctx, 1); err != nil {
@@ -91,6 +94,7 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 		}(h)
 	}
 	wg.Wait()
+	appLogger.Infof("end scan hosts, RequestID=%s", requestID)
 
 	findings, err := makeFindings(&osintResults, msg)
 	if err != nil {
