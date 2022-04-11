@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/aws/aws-xray-sdk-go/xray"
+	"github.com/aws/aws-sdk-go/service/sqs"
 	"github.com/ca-risken/common/pkg/profiler"
 	mimosasqs "github.com/ca-risken/common/pkg/sqs"
-	mimosaxray "github.com/ca-risken/common/pkg/xray"
 	"github.com/ca-risken/osint/pkg/message"
 	"github.com/gassara-kys/envconfig"
+	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 )
 
 const (
@@ -26,6 +26,7 @@ type AppConfig struct {
 	EnvName         string   `default:"local" split_words:"true"`
 	ProfileExporter string   `split_words:"true" default:"nop"`
 	ProfileTypes    []string `split_words:"true"`
+	TraceDebug      bool     `split_words:"true" default:"false"`
 
 	// harvester
 	ResultPath    string `required:"true" split_words:"true" default:"/results"`
@@ -55,10 +56,6 @@ func main() {
 	if err != nil {
 		appLogger.Fatal(err.Error())
 	}
-	err = mimosaxray.InitXRay(xray.Config{})
-	if err != nil {
-		appLogger.Fatal(err.Error())
-	}
 
 	pTypes, err := profiler.ConvertProfileTypeFrom(conf.ProfileTypes)
 	if err != nil {
@@ -79,6 +76,14 @@ func main() {
 		appLogger.Fatal(err.Error())
 	}
 	defer pc.Stop()
+
+	traceOpts := []tracer.StartOption{
+		tracer.WithEnv(conf.EnvName),
+		tracer.WithService(getFullServiceName()),
+		tracer.WithDebugMode(conf.TraceDebug),
+	}
+	tracer.Start(traceOpts...)
+	defer tracer.Stop()
 
 	handler := &SQSHandler{}
 	handler.harvesterConfig = newHarvesterConfig(conf.ResultPath, conf.HarvesterPath)
@@ -119,6 +124,17 @@ func main() {
 		mimosasqs.InitializeHandler(
 			mimosasqs.RetryableErrorHandler(
 				mimosasqs.StatusLoggingHandler(appLogger,
-					mimosaxray.MessageTracingHandler(conf.EnvName, getFullServiceName(),
+					messageTracingHandler(getFullServiceName(),
 						f.FinalizeHandler(handler))))))
+}
+
+func messageTracingHandler(serviceName string, next mimosasqs.Handler) mimosasqs.Handler {
+	return mimosasqs.HandlerFunc(func(ctx context.Context, msg *sqs.Message) error {
+		span, tctx := tracer.StartSpanFromContext(ctx, serviceName)
+		// TODO inherit trace from message
+		defer span.Finish()
+
+		err := next.HandleMessage(tctx, msg)
+		return err
+	})
 }
