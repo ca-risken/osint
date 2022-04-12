@@ -9,7 +9,6 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/sqs"
-	"github.com/aws/aws-xray-sdk-go/xray"
 	"github.com/ca-risken/common/pkg/logging"
 	mimosasqs "github.com/ca-risken/common/pkg/sqs"
 	"github.com/ca-risken/core/proto/alert"
@@ -18,6 +17,7 @@ import (
 	"github.com/ca-risken/osint/pkg/model"
 	"github.com/ca-risken/osint/proto/osint"
 	"golang.org/x/sync/semaphore"
+	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 )
 
 type SQSHandler struct {
@@ -51,10 +51,10 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 	}
 
 	// Run Harvester
-	_, segment := xray.BeginSubsegment(ctx, "runHarvester")
+	cspan, _ := tracer.StartSpanFromContext(ctx, "runHarvester")
 	appLogger.Infof("start harvester, RequestID=%s", requestID)
 	hosts, err := s.harvesterConfig.run(msg.ResourceName, msg.RelOsintDataSourceID)
-	segment.Close(err)
+	cspan.Finish(tracer.WithError(err))
 	if err != nil {
 		appLogger.Errorf("Failed exec theHarvester, error: %v", err)
 		strError := "An error occured while executing osint tool. Ask the system administrator."
