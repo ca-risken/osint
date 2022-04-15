@@ -28,13 +28,35 @@ type SQSHandler struct {
 	inspectConcurrency int64
 }
 
+// TODO: clean after datadog integrated test
+func logInfofWithSpan(ctx context.Context, format string, args ...interface{}) {
+	span, ok := tracer.SpanFromContext(ctx)
+	if ok {
+		m := map[string]interface{}{"dd.trace_id": span.Context().TraceID(), "dd.span_id": span.Context().SpanID()}
+		appLogger.WithItemsf(logging.InfoLevel, m, format, args)
+	} else {
+		appLogger.Infof(format, args)
+	}
+}
+
+// TODO: clean after datadog integrated test
+func logErrorfWithSpan(ctx context.Context, format string, args ...interface{}) {
+	span, ok := tracer.SpanFromContext(ctx)
+	if ok {
+		m := map[string]interface{}{"dd.trace_id": span.Context().TraceID(), "dd.span_id": span.Context().SpanID()}
+		appLogger.WithItemsf(logging.ErrorLevel, m, format, args)
+	} else {
+		appLogger.Errorf(format, args)
+	}
+}
+
 func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) error {
 	msgBody := aws.StringValue(sqsMsg.Body)
-	appLogger.Infof("got message. message: %v", msgBody)
+	logInfofWithSpan(ctx, "got message. message: %v", msgBody)
 	// Parse message
 	msg, err := message.ParseMessage(msgBody)
 	if err != nil {
-		appLogger.Errorf("Invalid message. message: %v, error: %v", msgBody, err)
+		logErrorfWithSpan(ctx, "Invalid message. message: %v, error: %v", msgBody, err)
 		return mimosasqs.WrapNonRetryable(err)
 	}
 
@@ -43,7 +65,7 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 		appLogger.Warnf("Failed to generate requestID: err=%+v", err)
 		requestID = fmt.Sprint(msg.ProjectID)
 	}
-	appLogger.Infof("start Scan, RequestID=%s", requestID)
+	logInfofWithSpan(ctx, "start Scan, RequestID=%sv", requestID)
 	detectList, err := getDetectList(msg.DetectWord)
 	if err != nil {
 		appLogger.Errorf("Failed getting detect list, error: %v", err)
@@ -51,12 +73,12 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 	}
 
 	// Run Harvester
-	cspan, _ := tracer.StartSpanFromContext(ctx, "runHarvester")
-	appLogger.Infof("start harvester, RequestID=%s", requestID)
+	cspan, cctx := tracer.StartSpanFromContext(ctx, "runHarvester")
+	logInfofWithSpan(cctx, "start harvester, RequestID=%sv", requestID)
 	hosts, err := s.harvesterConfig.run(msg.ResourceName, msg.RelOsintDataSourceID)
 	cspan.Finish(tracer.WithError(err))
 	if err != nil {
-		appLogger.Errorf("Failed exec theHarvester, error: %v", err)
+		logErrorfWithSpan(cctx, "Failed exec theHarvester, error: %vv", err)
 		strError := "An error occured while executing osint tool. Ask the system administrator."
 		if err.Error() == "signal: killed" {
 			strError = "An error occured while executing osint tool. Scan will restart in a little while."
@@ -64,17 +86,17 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 		_ = s.putRelOsintDataSource(ctx, msg, false, strError)
 		return err
 	}
-	appLogger.Infof("end harvester, RequestID=%s", requestID)
+	logInfofWithSpan(cctx, "end harvester, RequestID=%sv", requestID)
 
 	wg := sync.WaitGroup{}
 	mutex := &sync.Mutex{}
 	osintResults := []osintResult{}
 	sem := semaphore.NewWeighted(s.inspectConcurrency)
-	appLogger.Infof("start scan hosts, RequestID=%s", requestID)
+	logInfofWithSpan(ctx, "start scan hosts, RequestID=%s", requestID)
 	for _, h := range *hosts {
 		wg.Add(1)
 		if err := sem.Acquire(ctx, 1); err != nil {
-			appLogger.Errorf("failed to acquire semaphore: %v", err)
+			logErrorfWithSpan(ctx, "failed to acquire semaphore: %v", err)
 			wg.Done()
 			return mimosasqs.WrapNonRetryable(err)
 		}
@@ -94,11 +116,11 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 		}(h)
 	}
 	wg.Wait()
-	appLogger.Infof("end scan hosts, RequestID=%s", requestID)
+	logInfofWithSpan(ctx, "end scan hosts, RequestID=%s", requestID)
 
 	findings, err := makeFindings(&osintResults, msg)
 	if err != nil {
-		appLogger.Errorf("Failed making Findings, error: %v", err)
+		logErrorfWithSpan(ctx, "Failed making Findings, error: %v", err)
 		return mimosasqs.WrapNonRetryable(err)
 	}
 
@@ -108,7 +130,7 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 		ProjectId:  msg.ProjectID,
 		Tag:        []string{msg.ResourceName},
 	}); err != nil {
-		appLogger.Errorf("Failed to clear finding score. ResourceName: %v, error: %v", msg.ResourceName, err)
+		logErrorfWithSpan(ctx, "Failed to clear finding score. ResourceName: %v, error: %v", msg.ResourceName, err)
 		_ = s.putRelOsintDataSource(ctx, msg, false, err.Error())
 		return mimosasqs.WrapNonRetryable(err)
 	}
