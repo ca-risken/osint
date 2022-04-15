@@ -65,7 +65,7 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 		appLogger.Warnf("Failed to generate requestID: err=%+v", err)
 		requestID = fmt.Sprint(msg.ProjectID)
 	}
-	logInfofWithSpan(ctx, "start Scan, RequestID=%sv", requestID)
+	logInfofWithSpan(ctx, "start Scan, RequestID=%s", requestID)
 	detectList, err := getDetectList(msg.DetectWord)
 	if err != nil {
 		appLogger.Errorf("Failed getting detect list, error: %v", err)
@@ -74,11 +74,11 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 
 	// Run Harvester
 	cspan, cctx := tracer.StartSpanFromContext(ctx, "runHarvester")
-	logInfofWithSpan(cctx, "start harvester, RequestID=%sv", requestID)
+	logInfofWithSpan(cctx, "start harvester, RequestID=%s", requestID)
 	hosts, err := s.harvesterConfig.run(msg.ResourceName, msg.RelOsintDataSourceID)
 	cspan.Finish(tracer.WithError(err))
 	if err != nil {
-		logErrorfWithSpan(cctx, "Failed exec theHarvester, error: %vv", err)
+		logErrorfWithSpan(cctx, "Failed exec theHarvester, error: %v", err)
 		strError := "An error occured while executing osint tool. Ask the system administrator."
 		if err.Error() == "signal: killed" {
 			strError = "An error occured while executing osint tool. Scan will restart in a little while."
@@ -86,7 +86,7 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 		_ = s.putRelOsintDataSource(ctx, msg, false, strError)
 		return err
 	}
-	logInfofWithSpan(cctx, "end harvester, RequestID=%sv", requestID)
+	logInfofWithSpan(cctx, "end harvester, RequestID=%s", requestID)
 
 	wg := sync.WaitGroup{}
 	mutex := &sync.Mutex{}
