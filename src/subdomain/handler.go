@@ -136,7 +136,7 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 	}
 
 	// Put Finding and Tag Finding
-	if err := s.putFindings(ctx, findings, msg.ResourceName); err != nil {
+	if err := s.putFindings(ctx, findings, msg.ProjectID, msg.ResourceName); err != nil {
 		appLogger.Errorf("Failed to put findings. relOsintDataSourceID: %v, error: %v", msg.RelOsintDataSourceID, err)
 		return mimosasqs.WrapNonRetryable(err)
 	}
