@@ -8,7 +8,7 @@ require (
 	github.com/ca-risken/common/pkg/profiler v0.0.0-20220304031727-c94e2c463b27
 	github.com/ca-risken/common/pkg/sqs v0.0.0-20220405112424-88b993567364
 	github.com/ca-risken/core/proto/alert v0.0.0-20210924100500-e1499111345b
-	github.com/ca-risken/core/proto/finding v0.0.0-20220309052852-c058b4e5cb84
+	github.com/ca-risken/core/proto/finding v0.0.0-20220420065103-ec7428a46fe5
 	github.com/ca-risken/osint/pkg/common v0.0.0-20210915063551-7002685890c3
 	github.com/ca-risken/osint/pkg/message v0.0.0-20211112065816-37550cc4192d
 	github.com/ca-risken/osint/pkg/model v0.0.0-20210915063551-7002685890c3

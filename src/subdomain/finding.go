@@ -12,21 +12,15 @@ import (
 	"github.com/vikyd/zero"
 )
 
-func (s *SQSHandler) putFindings(ctx context.Context, findingMap map[string][]*finding.FindingForUpsert, resourceName string) error {
+func (s *SQSHandler) putFindings(ctx context.Context, findingMap map[string][]*finding.FindingForUpsert, projectID uint32, resourceName string) error {
+	findingBatchParam := []*finding.FindingBatchForUpsert{}
 	for key, findings := range findingMap {
 		for _, f := range findings {
-			res, err := s.findingClient.PutFinding(ctx, &finding.PutFindingRequest{Finding: f})
-			if err != nil {
-				appLogger.Errorf("Failed to put finding. finding: %v, error: %v", f, err)
-				return err
-			}
-			if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagOsint); err != nil {
-				appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", common.TagOsint, err)
-				return err
-			}
-			if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagDomain); err != nil {
-				appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", common.TagDomain, err)
-				return err
+			// tag
+			tags := []*finding.FindingTagForBatch{
+				{Tag: common.TagOsint},
+				{Tag: common.TagDomain},
+				{Tag: resourceName},
 			}
 			var tagFindingType string
 			switch key {
@@ -38,57 +32,54 @@ func (s *SQSHandler) putFindings(ctx context.Context, findingMap map[string][]*f
 				tagFindingType = common.TagCertificateExpiration
 			}
 			if !zero.IsZeroVal(tagFindingType) {
-				if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, tagFindingType); err != nil {
-					appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", tagFindingType, err)
-					return err
+				tags = append(tags, &finding.FindingTagForBatch{Tag: tagFindingType})
+			}
+
+			// recommend
+			var recommend *finding.RecommendForBatch
+			r := getRecommend(key)
+			if r.Type == "" || (r.Risk == "" && r.Recommendation == "") {
+				appLogger.Warnf("Failed to get recommendation, Unknown category=%s", key)
+			} else {
+				recommend = &finding.RecommendForBatch{
+					Type:           r.Type,
+					Risk:           r.Risk,
+					Recommendation: r.Recommendation,
 				}
 			}
-			if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, resourceName); err != nil {
-				appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", resourceName, err)
-				return err
-			}
 
-			if err = s.putRecommend(ctx, res.Finding.ProjectId, res.Finding.FindingId, key); err != nil {
-				appLogger.Errorf("Failed to put recommend. key: %v, error: %v", key, err)
-				return err
-			}
-
+			findingBatchParam = append(findingBatchParam, &finding.FindingBatchForUpsert{
+				Finding:   f,
+				Tag:       tags,
+				Recommend: recommend,
+			})
 		}
 	}
-	return nil
-}
 
-func (s *SQSHandler) tagFinding(ctx context.Context, projectID uint32, findingID uint64, tag string) error {
-
-	_, err := s.findingClient.TagFinding(ctx, &finding.TagFindingRequest{
-		ProjectId: projectID,
-		Tag: &finding.FindingTagForUpsert{
-			FindingId: findingID,
-			ProjectId: projectID,
-			Tag:       tag,
-		}})
-	if err != nil {
-		appLogger.Errorf("Failed to TagFinding. error: %v", err)
-		return err
-	}
-	return nil
-}
-
-func (s *SQSHandler) putRecommend(ctx context.Context, projectID uint32, findingID uint64, category string) error {
-	r := getRecommend(category)
-	if r.Type == "" || (r.Risk == "" && r.Recommendation == "") {
-		appLogger.Warnf("Failed to get recommendation, Unknown category=%s", category)
+	if len(findingBatchParam) == 0 {
+		appLogger.Info("No finding")
 		return nil
 	}
-	if _, err := s.findingClient.PutRecommend(ctx, &finding.PutRecommendRequest{
-		ProjectId:      projectID,
-		FindingId:      findingID,
-		DataSource:     message.SubdomainDataSource,
-		Type:           r.Type,
-		Risk:           r.Risk,
-		Recommendation: r.Recommendation,
-	}); err != nil {
+	if err := s.putFindingBatch(ctx, projectID, findingBatchParam); err != nil {
 		return err
+	}
+	appLogger.Infof("putFindings(%d) succeeded", len(findingBatchParam))
+	return nil
+}
+
+func (s *SQSHandler) putFindingBatch(ctx context.Context, projectID uint32, params []*finding.FindingBatchForUpsert) error {
+	appLogger.Infof("Putting findings(%d)...", len(params))
+	for idx := 0; idx < len(params); idx = idx + finding.PutFindingBatchMaxLength {
+		lastIdx := idx + finding.PutFindingBatchMaxLength
+		if lastIdx > len(params) {
+			lastIdx = len(params)
+		}
+		// request per API limits
+		appLogger.Debugf("Call PutFindingBatch API, (%d ~ %d / %d)", idx+1, lastIdx, len(params))
+		req := &finding.PutFindingBatchRequest{ProjectId: projectID, Finding: params[idx:lastIdx]}
+		if _, err := s.findingClient.PutFindingBatch(ctx, req); err != nil {
+			return err
+		}
 	}
 	return nil
 }

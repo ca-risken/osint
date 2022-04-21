@@ -33,8 +33,9 @@ github.com/ca-risken/common/pkg/sqs v0.0.0-20220405112424-88b993567364 h1:ZuvzMZ
 github.com/ca-risken/common/pkg/sqs v0.0.0-20220405112424-88b993567364/go.mod h1:bQKQC0i/Aa4NZqvyQNNrX/slAdSLxSJmvzBzn68gOvk=
 github.com/ca-risken/core/proto/alert v0.0.0-20210924100500-e1499111345b h1:LNF1GmQpzwWpl3PbrXj0q0+rskvgrEH4rW9d0vV0Yts=
 github.com/ca-risken/core/proto/alert v0.0.0-20210924100500-e1499111345b/go.mod h1:BYVAXJlXATb39k2UHRWbnTzl+hunqKY8GxxtBynK1K0=
-github.com/ca-risken/core/proto/finding v0.0.0-20220309052852-c058b4e5cb84 h1:QcCZ9Zek8gwBYHlONiuW9DN6XvXyql1yUPGKiKtoeCw=
 github.com/ca-risken/core/proto/finding v0.0.0-20220309052852-c058b4e5cb84/go.mod h1:3KZ1YanhizuVyAqMnCG7sI8Rt2mTvsWfB1GieIvoGRI=
+github.com/ca-risken/core/proto/finding v0.0.0-20220420065103-ec7428a46fe5 h1:1KF45HVXY0GJDiUMoH/G2U/hSPtg4dvugkEuCy0a+N8=
+github.com/ca-risken/core/proto/finding v0.0.0-20220420065103-ec7428a46fe5/go.mod h1:3KZ1YanhizuVyAqMnCG7sI8Rt2mTvsWfB1GieIvoGRI=
 github.com/ca-risken/osint/pkg/common v0.0.0-20210915063551-7002685890c3 h1:HmhFFGIfQqdvtmUis0xGeOf0athjbP/DhrVlVRFqK24=
 github.com/ca-risken/osint/pkg/common v0.0.0-20210915063551-7002685890c3/go.mod h1:E7T1A2wUUxD60Zmtyob2jv69uv5V82ZyviQRCNxzyfg=
 github.com/ca-risken/osint/pkg/message v0.0.0-20211112065816-37550cc4192d h1:Kumqtz7X/f/sQGV/O+rQuqBq3rI+56IE5ZxD78fsgh0=
