@@ -4,12 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/aws/aws-sdk-go/service/sqs"
 	"github.com/ca-risken/common/pkg/profiler"
 	mimosasqs "github.com/ca-risken/common/pkg/sqs"
+	"github.com/ca-risken/common/pkg/tracer"
 	"github.com/ca-risken/osint/pkg/message"
 	"github.com/gassara-kys/envconfig"
-	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 )
 
 const (
@@ -77,12 +76,12 @@ func main() {
 	}
 	defer pc.Stop()
 
-	traceOpts := []tracer.StartOption{
-		tracer.WithEnv(conf.EnvName),
-		tracer.WithService(getFullServiceName()),
-		tracer.WithDebugMode(conf.TraceDebug),
+	tc := &tracer.Config{
+		ServiceName: getFullServiceName(),
+		Environment: conf.EnvName,
+		Debug:       conf.TraceDebug,
 	}
-	tracer.Start(traceOpts...)
+	tracer.Start(tc)
 	defer tracer.Stop()
 
 	handler := &SQSHandler{}
@@ -124,17 +123,6 @@ func main() {
 		mimosasqs.InitializeHandler(
 			mimosasqs.RetryableErrorHandler(
 				mimosasqs.StatusLoggingHandler(appLogger,
-					messageTracingHandler(getFullServiceName(),
+					mimosasqs.TracingHandler(getFullServiceName(),
 						f.FinalizeHandler(handler))))))
-}
-
-func messageTracingHandler(serviceName string, next mimosasqs.Handler) mimosasqs.Handler {
-	return mimosasqs.HandlerFunc(func(ctx context.Context, msg *sqs.Message) error {
-		span, tctx := tracer.StartSpanFromContext(ctx, serviceName)
-		// TODO inherit trace from message
-		defer span.Finish()
-
-		err := next.HandleMessage(tctx, msg)
-		return err
-	})
 }
