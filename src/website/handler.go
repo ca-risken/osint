@@ -6,16 +6,15 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ca-risken/common/pkg/logging"
-	mimosasqs "github.com/ca-risken/common/pkg/sqs"
-
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/sqs"
-	"github.com/aws/aws-xray-sdk-go/xray"
+	"github.com/ca-risken/common/pkg/logging"
+	mimosasqs "github.com/ca-risken/common/pkg/sqs"
 	"github.com/ca-risken/core/proto/alert"
 	"github.com/ca-risken/core/proto/finding"
 	"github.com/ca-risken/osint/pkg/message"
 	"github.com/ca-risken/osint/proto/osint"
+	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 )
 
 type SQSHandler struct {
@@ -49,9 +48,9 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 	appLogger.Info("Start website Client")
 
 	// Run website
-	_, segment := xray.BeginSubsegment(ctx, "runwebsite")
+	cspan, _ := tracer.StartSpanFromContext(ctx, "runwebsite")
 	wappalyzerResult, err := websiteClient.run(msg.ResourceName)
-	segment.Close(err)
+	cspan.Finish(tracer.WithError(err))
 	if err != nil {
 		appLogger.Errorf("Failed exec wappalyzer, error: %v", err)
 		if err.Error() == "signal: killed" {
