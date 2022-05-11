@@ -54,7 +54,7 @@ type AppConfig struct {
 	WebsiteQueueURL   string `split_words:"true" required:"true" default:"http://queue.middleware.svc.cluster.local:9324/queue/osint-website"`
 
 	// grpc
-	ProjectSvcAddr string `required:"true" split_words:"true" default:"project.core.svc.cluster.local:8003"`
+	CoreAddr string `required:"true" split_words:"true" default:"core.core.svc.cluster.local:8080"`
 }
 
 func main() {
@@ -113,7 +113,7 @@ func main() {
 		WebsiteQueueURL:   conf.WebsiteQueueURL,
 	}
 	service.sqs = newSQSClient(sqsConfig)
-	service.projectClient = newProjectClient(conf.ProjectSvcAddr)
+	service.projectClient = newProjectClient(conf.CoreAddr)
 
 	l, err := net.Listen("tcp", fmt.Sprintf(":%s", conf.Port))
 	if err != nil {
