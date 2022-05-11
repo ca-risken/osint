@@ -40,6 +40,7 @@ type AppConfig struct {
 
 	// grpc
 	CoreAddr string `required:"true" split_words:"true" default:"finding.core.svc.cluster.local:8080"`
+	OsintSvcAddr   string `required:"true" split_words:"true" default:"osint.osint.svc.cluster.local:18081"`
 
 	// wappalyzer
 	WappalyzerPath string `required:"true" split_words:"true" default:"/opt/wappalyzer/src/drivers/npm/cli.js"`
