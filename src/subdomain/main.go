@@ -32,9 +32,7 @@ type AppConfig struct {
 	HarvesterPath string `required:"true" split_words:"true" default:"/theHarvester"`
 
 	// grpc
-	FindingSvcAddr string `required:"true" split_words:"true" default:"finding.core.svc.cluster.local:8001"`
-	AlertSvcAddr   string `required:"true" split_words:"true" default:"alert.core.svc.cluster.local:8004"`
-	OsintSvcAddr   string `required:"true" split_words:"true" default:"osint.osint.svc.cluster.local:18081"`
+	CoreAddr string `required:"true" split_words:"true" default:"core.core.svc.cluster.local:8080"`
 
 	// sqs
 	AWSRegion string `envconfig:"aws_region"   default:"ap-northeast-1"`
@@ -89,13 +87,13 @@ func main() {
 	appLogger.Info("Load Harvester Config")
 	handler.inspectConcurrency = conf.InspectConcurrency
 	appLogger.Info("Load Concurrency Config")
-	handler.findingClient = newFindingClient(conf.FindingSvcAddr)
+	handler.findingClient = newFindingClient(conf.CoreAddr)
 	appLogger.Info("Start Finding Client")
-	handler.alertClient = newAlertClient(conf.AlertSvcAddr)
+	handler.alertClient = newAlertClient(conf.CoreAddr)
 	appLogger.Info("Start Alert Client")
 	handler.osintClient = newOsintClient(conf.OsintSvcAddr)
 	appLogger.Info("Start Osint Client")
-	f, err := mimosasqs.NewFinalizer(message.SubdomainDataSource, settingURL, conf.FindingSvcAddr, &mimosasqs.DataSourceRecommnend{
+	f, err := mimosasqs.NewFinalizer(message.SubdomainDataSource, settingURL, conf.CoreAddr, &mimosasqs.DataSourceRecommnend{
 		ScanFailureRisk: fmt.Sprintf("Failed to scan %s, So you are not gathering the latest security threat information.", message.SubdomainDataSource),
 		ScanFailureRecommendation: `Please review the following items and rescan,
 		- Ensure the error message of the DataSource.

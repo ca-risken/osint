@@ -39,9 +39,7 @@ type AppConfig struct {
 	WaitTimeSecond     int64  `split_words:"true" default:"20"`
 
 	// grpc
-	FindingSvcAddr string `required:"true" split_words:"true" default:"finding.core.svc.cluster.local:8001"`
-	AlertSvcAddr   string `required:"true" split_words:"true" default:"alert.core.svc.cluster.local:8004"`
-	OsintSvcAddr   string `required:"true" split_words:"true" default:"osint.osint.svc.cluster.local:18081"`
+	CoreAddr string `required:"true" split_words:"true" default:"finding.core.svc.cluster.local:8080"`
 
 	// wappalyzer
 	WappalyzerPath string `required:"true" split_words:"true" default:"/opt/wappalyzer/src/drivers/npm/cli.js"`
@@ -83,11 +81,11 @@ func main() {
 	defer tracer.Stop()
 
 	handler := &SQSHandler{}
-	handler.findingClient = newFindingClient(conf.FindingSvcAddr)
-	handler.alertClient = newAlertClient(conf.AlertSvcAddr)
+	handler.findingClient = newFindingClient(conf.CoreAddr)
+	handler.alertClient = newAlertClient(conf.CoreAddr)
 	handler.osintClient = newOsintClient(conf.OsintSvcAddr)
 	handler.wappalyzerPath = conf.WappalyzerPath
-	f, err := mimosasqs.NewFinalizer(message.WebsiteDataSource, settingURL, conf.FindingSvcAddr, &mimosasqs.DataSourceRecommnend{
+	f, err := mimosasqs.NewFinalizer(message.WebsiteDataSource, settingURL, conf.CoreAddr, &mimosasqs.DataSourceRecommnend{
 		ScanFailureRisk: fmt.Sprintf("Failed to scan %s, So you are not gathering the latest security threat information.", message.WebsiteDataSource),
 		ScanFailureRecommendation: `Please review the following items and rescan,
 		- Ensure the error message of the DataSource.
