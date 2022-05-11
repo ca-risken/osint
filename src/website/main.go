@@ -39,8 +39,8 @@ type AppConfig struct {
 	WaitTimeSecond     int64  `split_words:"true" default:"20"`
 
 	// grpc
-	CoreAddr string `required:"true" split_words:"true" default:"finding.core.svc.cluster.local:8080"`
-	OsintSvcAddr   string `required:"true" split_words:"true" default:"osint.osint.svc.cluster.local:18081"`
+	CoreAddr     string `required:"true" split_words:"true" default:"core.core.svc.cluster.local:8080"`
+	OsintSvcAddr string `required:"true" split_words:"true" default:"osint.osint.svc.cluster.local:18081"`
 
 	// wappalyzer
 	WappalyzerPath string `required:"true" split_words:"true" default:"/opt/wappalyzer/src/drivers/npm/cli.js"`
