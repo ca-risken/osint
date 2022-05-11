@@ -33,6 +33,7 @@ type AppConfig struct {
 
 	// grpc
 	CoreAddr string `required:"true" split_words:"true" default:"core.core.svc.cluster.local:8080"`
+	OsintSvcAddr   string `required:"true" split_words:"true" default:"osint.osint.svc.cluster.local:18081"`
 
 	// sqs
 	AWSRegion string `envconfig:"aws_region"   default:"ap-northeast-1"`
