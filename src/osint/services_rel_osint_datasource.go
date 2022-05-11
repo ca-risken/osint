@@ -184,7 +184,8 @@ func (o *osintService) InvokeScanAll(ctx context.Context, req *osint.InvokeScanA
 			ScanOnly:             true,
 		}); err != nil {
 			// errorが出ても続行
-			appLogger.Errorf("InvokeScanAll error: err=%+v", err)
+			appLogger.Errorf("InvokeScanAll error: project_id=%d, rel_osint_data_source_id=%d, err=%+v",
+				relOsintDataSource.ProjectID, relOsintDataSource.RelOsintDataSourceID, err)
 		}
 	}
 
