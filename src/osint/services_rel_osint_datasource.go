@@ -79,24 +79,31 @@ func (s *osintService) DeleteRelOsintDataSource(ctx context.Context, req *osint.
 		return nil, err
 	}
 
-	detectWords, err := s.repository.ListOsintDetectWord(ctx, req.ProjectId, req.RelOsintDataSourceId)
-	if err != nil {
-		appLogger.Errorf("Failed to List RelOsintDataSource when delete rel_osint_data_source. error: %v", err)
+	if err := s.deleteRelOsintDataSourceDetectWord(ctx, req.ProjectId, req.RelOsintDataSourceId); err != nil {
+		appLogger.Errorf("Failed to DeleteRelOsintDataSource. error: %v", err)
 		return nil, err
+	}
+
+	return &empty.Empty{}, nil
+}
+
+func (s *osintService) deleteRelOsintDataSourceDetectWord(ctx context.Context, projectID, relOsintDataSourceID uint32) error {
+
+	detectWords, err := s.repository.ListOsintDetectWord(ctx, projectID, relOsintDataSourceID)
+	if err != nil {
+		return err
 	}
 
 	for _, d := range *detectWords {
-		if err := s.repository.DeleteOsintDetectWord(ctx, req.ProjectId, d.OsintDetectWordID); err != nil {
-			appLogger.Errorf("Failed to Delete RelOsintDataSource when delete rel_osint_data_source. error: %v", err)
-			return nil, err
+		if err := s.repository.DeleteOsintDetectWord(ctx, projectID, d.OsintDetectWordID); err != nil {
+			return err
 		}
 	}
 
-	if err := s.repository.DeleteRelOsintDataSource(ctx, req.ProjectId, req.RelOsintDataSourceId); err != nil {
-		appLogger.Errorf("Failed to Delete RelOsintDataSource. error: %v", err)
-		return nil, err
+	if err := s.repository.DeleteRelOsintDataSource(ctx, projectID, relOsintDataSourceID); err != nil {
+		return err
 	}
-	return &empty.Empty{}, nil
+	return nil
 }
 
 func convertRelOsintDataSource(data *model.RelOsintDataSource) *osint.RelOsintDataSource {
