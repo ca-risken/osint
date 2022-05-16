@@ -79,7 +79,7 @@ func (s *osintService) DeleteRelOsintDataSource(ctx context.Context, req *osint.
 		return nil, err
 	}
 
-	if err := s.deleteRelOsintDataSourceDetectWord(ctx, req.ProjectId, req.RelOsintDataSourceId); err != nil {
+	if err := s.deleteRelOsintDataSourceWithDetectWord(ctx, req.ProjectId, req.RelOsintDataSourceId); err != nil {
 		appLogger.Errorf("Failed to DeleteRelOsintDataSource. error: %v", err)
 		return nil, err
 	}
@@ -87,7 +87,7 @@ func (s *osintService) DeleteRelOsintDataSource(ctx context.Context, req *osint.
 	return &empty.Empty{}, nil
 }
 
-func (s *osintService) deleteRelOsintDataSourceDetectWord(ctx context.Context, projectID, relOsintDataSourceID uint32) error {
+func (s *osintService) deleteRelOsintDataSourceWithDetectWord(ctx context.Context, projectID, relOsintDataSourceID uint32) error {
 
 	detectWords, err := s.repository.ListOsintDetectWord(ctx, projectID, relOsintDataSourceID)
 	if err != nil {

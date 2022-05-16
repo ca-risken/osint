@@ -76,7 +76,7 @@ func (s *osintService) DeleteOsint(ctx context.Context, req *osint.DeleteOsintRe
 	}
 
 	for _, relOsintDataSource := range *relOsintDataSources {
-		if err := s.deleteRelOsintDataSourceDetectWord(ctx, relOsintDataSource.ProjectID, relOsintDataSource.RelOsintDataSourceID); err != nil {
+		if err := s.deleteRelOsintDataSourceWithDetectWord(ctx, relOsintDataSource.ProjectID, relOsintDataSource.RelOsintDataSourceID); err != nil {
 			appLogger.Errorf("Failed to DeleteRelOsintDataSource. error: %v", err)
 			return nil, err
 		}
