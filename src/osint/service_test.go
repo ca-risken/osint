@@ -163,10 +163,12 @@ func TestDeleteOsint(t *testing.T) {
 	mockDB := mockOsintRepository{}
 	svc := osintService{repository: &mockDB}
 	cases := []struct {
-		name     string
-		input    *osint.DeleteOsintRequest
-		wantErr  bool
-		mockResp error
+		name                    string
+		input                   *osint.DeleteOsintRequest
+		wantErr                 bool
+		mockResp                error
+		mockListOSINTDataSource *[]model.RelOsintDataSource
+		mockListOsintDetectWord *[]model.OsintDetectWord
 	}{
 		{
 			name:     "OK",
@@ -183,6 +185,10 @@ func TestDeleteOsint(t *testing.T) {
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
+			mockDB.On("ListRelOsintDataSource").Return(&[]model.RelOsintDataSource{{RelOsintDataSourceID: 1, ProjectID: 1}}, nil)
+			mockDB.On("ListOsintDetectWord").Return(&[]model.OsintDetectWord{{OsintDetectWordID: 1, ProjectID: 1}}, nil)
+			mockDB.On("DeleteRelOsintDataSource").Return(nil)
+			mockDB.On("DeleteOsintDetectWord").Return(nil)
 			mockDB.On("DeleteOsint").Return(c.mockResp).Once()
 			_, err := svc.DeleteOsint(ctx, c.input)
 			if err != nil && !c.wantErr {
@@ -538,6 +544,8 @@ func TestDeleteRelOsintDataSource(t *testing.T) {
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
+			mockDB.On("ListOsintDetectWord").Return(&[]model.OsintDetectWord{{OsintDetectWordID: 1, ProjectID: 1}}, nil)
+			mockDB.On("DeleteOsintDetectWord").Return(nil)
 			mockDB.On("DeleteRelOsintDataSource").Return(c.mockResp).Once()
 			_, err := svc.DeleteRelOsintDataSource(ctx, c.input)
 			if err != nil && !c.wantErr {
