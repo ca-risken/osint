@@ -25,7 +25,7 @@ func (s *osintService) ListRelOsintDataSource(ctx context.Context, req *osint.Li
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &osint.ListRelOsintDataSourceResponse{}, nil
 		}
-		appLogger.Errorf("Failed to List RelOsintDataSource. error: %v", err)
+		appLogger.Errorf(ctx, "Failed to List RelOsintDataSource. error: %v", err)
 		return nil, err
 	}
 	data := osint.ListRelOsintDataSourceResponse{}
@@ -44,7 +44,7 @@ func (s *osintService) GetRelOsintDataSource(ctx context.Context, req *osint.Get
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &osint.GetRelOsintDataSourceResponse{}, nil
 		}
-		appLogger.Errorf("Failed to Get RelOsintDataSource. error: %v", err)
+		appLogger.Errorf(ctx, "Failed to Get RelOsintDataSource. error: %v", err)
 		return nil, err
 	}
 
@@ -68,7 +68,7 @@ func (s *osintService) PutRelOsintDataSource(ctx context.Context, req *osint.Put
 
 	registerdData, err := s.repository.UpsertRelOsintDataSource(ctx, data)
 	if err != nil {
-		appLogger.Errorf("Failed to Put RelOsintDataSource. error: %v", err)
+		appLogger.Errorf(ctx, "Failed to Put RelOsintDataSource. error: %v", err)
 		return nil, err
 	}
 	return &osint.PutRelOsintDataSourceResponse{RelOsintDataSource: convertRelOsintDataSource(registerdData)}, nil
@@ -80,7 +80,7 @@ func (s *osintService) DeleteRelOsintDataSource(ctx context.Context, req *osint.
 	}
 
 	if err := s.deleteRelOsintDataSourceWithDetectWord(ctx, req.ProjectId, req.RelOsintDataSourceId); err != nil {
-		appLogger.Errorf("Failed to DeleteRelOsintDataSource. error: %v", err)
+		appLogger.Errorf(ctx, "Failed to DeleteRelOsintDataSource. error: %v", err)
 		return nil, err
 	}
 
@@ -160,7 +160,7 @@ func (s *osintService) InvokeScan(ctx context.Context, req *osint.InvokeScanRequ
 	}
 	resp, err := s.sqs.send(ctx, msg)
 	if err != nil {
-		appLogger.Errorf("Invoked scan. Error: %v", err)
+		appLogger.Errorf(ctx, "Invoked scan. Error: %v", err)
 		return nil, err
 	}
 	if _, err = s.repository.UpsertRelOsintDataSource(ctx, &model.RelOsintDataSource{
@@ -172,10 +172,10 @@ func (s *osintService) InvokeScan(ctx context.Context, req *osint.InvokeScanRequ
 		StatusDetail:         fmt.Sprintf("Start scan at %+v", time.Now().Format(time.RFC3339)),
 		ScanAt:               relOsintDataSourceData.ScanAt,
 	}); err != nil {
-		appLogger.Errorf("Failed to update scan status: %+v", err)
+		appLogger.Errorf(ctx, "Failed to update scan status: %+v", err)
 		return nil, err
 	}
-	appLogger.Infof("Invoked scan. MessageId: %v", *resp.MessageId)
+	appLogger.Infof(ctx, "Invoked scan. MessageId: %v", *resp.MessageId)
 	return &osint.InvokeScanResponse{Message: "Invoke Scan."}, nil
 }
 
@@ -186,16 +186,16 @@ func (o *osintService) InvokeScanAll(ctx context.Context, req *osint.InvokeScanA
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &empty.Empty{}, nil
 		}
-		appLogger.Errorf("Failed to List AllRelOsintDataSource. error: %v", err)
+		appLogger.Errorf(ctx, "Failed to List AllRelOsintDataSource. error: %v", err)
 		return nil, err
 	}
 
 	for _, relOsintDataSource := range *list {
 		if resp, err := o.projectClient.IsActive(ctx, &project.IsActiveRequest{ProjectId: relOsintDataSource.ProjectID}); err != nil {
-			appLogger.Errorf("Failed to project.IsActive API, err=%+v", err)
+			appLogger.Errorf(ctx, "Failed to project.IsActive API, err=%+v", err)
 			continue
 		} else if !resp.Active {
-			appLogger.Infof("Skip deactive project, project_id=%d", relOsintDataSource.ProjectID)
+			appLogger.Infof(ctx, "Skip deactive project, project_id=%d", relOsintDataSource.ProjectID)
 			continue
 		}
 
@@ -205,7 +205,7 @@ func (o *osintService) InvokeScanAll(ctx context.Context, req *osint.InvokeScanA
 			ScanOnly:             true,
 		}); err != nil {
 			// errorが出ても続行
-			appLogger.Errorf("InvokeScanAll error: project_id=%d, rel_osint_data_source_id=%d, err=%+v",
+			appLogger.Errorf(ctx, "InvokeScanAll error: project_id=%d, rel_osint_data_source_id=%d, err=%+v",
 				relOsintDataSource.ProjectID, relOsintDataSource.RelOsintDataSourceID, err)
 		}
 	}

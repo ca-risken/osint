@@ -19,7 +19,7 @@ func (s *osintService) ListOsintDetectWord(ctx context.Context, req *osint.ListO
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &osint.ListOsintDetectWordResponse{}, nil
 		}
-		appLogger.Errorf("Failed to List OsintDetectWord, error: %v", err)
+		appLogger.Errorf(ctx, "Failed to List OsintDetectWord, error: %v", err)
 		return nil, err
 	}
 	data := osint.ListOsintDetectWordResponse{}
@@ -38,7 +38,7 @@ func (s *osintService) GetOsintDetectWord(ctx context.Context, req *osint.GetOsi
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &osint.GetOsintDetectWordResponse{}, nil
 		}
-		appLogger.Errorf("Failed to Get OsintDetectWord, error: %v", err)
+		appLogger.Errorf(ctx, "Failed to Get OsintDetectWord, error: %v", err)
 		return nil, err
 	}
 
@@ -59,7 +59,7 @@ func (s *osintService) PutOsintDetectWord(ctx context.Context, req *osint.PutOsi
 
 	registerdData, err := s.repository.UpsertOsintDetectWord(ctx, data)
 	if err != nil {
-		appLogger.Errorf("Failed to Put OsintDetectWord, error: %v", err)
+		appLogger.Errorf(ctx, "Failed to Put OsintDetectWord, error: %v", err)
 		return nil, err
 	}
 	return &osint.PutOsintDetectWordResponse{OsintDetectWord: convertOsintDetectWord(registerdData)}, nil
@@ -70,7 +70,7 @@ func (s *osintService) DeleteOsintDetectWord(ctx context.Context, req *osint.Del
 		return nil, err
 	}
 	if err := s.repository.DeleteOsintDetectWord(ctx, req.ProjectId, req.OsintDetectWordId); err != nil {
-		appLogger.Errorf("Failed to Delete OsintDetectWord, error: %v", err)
+		appLogger.Errorf(ctx, "Failed to Delete OsintDetectWord, error: %v", err)
 		return nil, err
 	}
 	return &empty.Empty{}, nil

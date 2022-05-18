@@ -19,7 +19,7 @@ func (s *osintService) ListOsintDataSource(ctx context.Context, req *osint.ListO
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &osint.ListOsintDataSourceResponse{}, nil
 		}
-		appLogger.Errorf("Failed to List OsintDataSource, error: %v", err)
+		appLogger.Errorf(ctx, "Failed to List OsintDataSource, error: %v", err)
 		return nil, err
 	}
 	data := osint.ListOsintDataSourceResponse{}
@@ -38,7 +38,7 @@ func (s *osintService) GetOsintDataSource(ctx context.Context, req *osint.GetOsi
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &osint.GetOsintDataSourceResponse{}, nil
 		}
-		appLogger.Errorf("Failed to Get OsintDataSource, error: %v", err)
+		appLogger.Errorf(ctx, "Failed to Get OsintDataSource, error: %v", err)
 		return nil, err
 	}
 
@@ -59,7 +59,7 @@ func (s *osintService) PutOsintDataSource(ctx context.Context, req *osint.PutOsi
 
 	registerdData, err := s.repository.UpsertOsintDataSource(ctx, data)
 	if err != nil {
-		appLogger.Errorf("Failed to Put OsintDataSource, error: %v", err)
+		appLogger.Errorf(ctx, "Failed to Put OsintDataSource, error: %v", err)
 		return nil, err
 	}
 	return &osint.PutOsintDataSourceResponse{OsintDataSource: convertOsintDataSource(registerdData)}, nil
@@ -70,7 +70,7 @@ func (s *osintService) DeleteOsintDataSource(ctx context.Context, req *osint.Del
 		return nil, err
 	}
 	if err := s.repository.DeleteOsintDataSource(ctx, req.ProjectId, req.OsintDataSourceId); err != nil {
-		appLogger.Errorf("Failed to Delete OsintDataSource, error: %v", err)
+		appLogger.Errorf(ctx, "Failed to Delete OsintDataSource, error: %v", err)
 		return nil, err
 	}
 	return &empty.Empty{}, nil
