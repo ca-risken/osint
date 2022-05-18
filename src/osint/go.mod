@@ -7,7 +7,7 @@ require (
 	github.com/ca-risken/common/pkg/database v0.0.0-20220421051518-d57cbf184097
 	github.com/ca-risken/common/pkg/logging v0.0.0-20220518032134-ad443b601efd
 	github.com/ca-risken/common/pkg/profiler v0.0.0-20220304031727-c94e2c463b27
-	github.com/ca-risken/common/pkg/rpc v0.0.0-20220113015330-0e8462d52b5b
+	github.com/ca-risken/common/pkg/rpc v0.0.0-20220518032134-ad443b601efd
 	github.com/ca-risken/common/pkg/tracer v0.0.0-20220421051518-d57cbf184097
 	github.com/ca-risken/core/proto/project v0.0.0-20220127020945-063d14f397ed
 	github.com/ca-risken/osint/pkg/message v0.0.0-20211112065816-37550cc4192d
