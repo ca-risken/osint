@@ -19,7 +19,7 @@ func (s *osintService) ListOsint(ctx context.Context, req *osint.ListOsintReques
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &osint.ListOsintResponse{}, nil
 		}
-		appLogger.Errorf("Failed to List Osint. error: %v", err)
+		appLogger.Errorf(ctx, "Failed to List Osint. error: %v", err)
 		return nil, err
 	}
 	data := osint.ListOsintResponse{}
@@ -38,7 +38,7 @@ func (s *osintService) GetOsint(ctx context.Context, req *osint.GetOsintRequest)
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return &osint.GetOsintResponse{}, nil
 		}
-		appLogger.Errorf("Failed to Get Osint. error: %v", err)
+		appLogger.Errorf(ctx, "Failed to Get Osint. error: %v", err)
 		return nil, err
 	}
 
@@ -59,7 +59,7 @@ func (s *osintService) PutOsint(ctx context.Context, req *osint.PutOsintRequest)
 
 	registerdData, err := s.repository.UpsertOsint(ctx, data)
 	if err != nil {
-		appLogger.Errorf("Failed to Put Osint. error: %v", err)
+		appLogger.Errorf(ctx, "Failed to Put Osint. error: %v", err)
 		return nil, err
 	}
 	return &osint.PutOsintResponse{Osint: convertOsint(registerdData)}, nil
@@ -71,19 +71,19 @@ func (s *osintService) DeleteOsint(ctx context.Context, req *osint.DeleteOsintRe
 	}
 	relOsintDataSources, err := s.repository.ListRelOsintDataSource(ctx, req.ProjectId, req.OsintId, 0)
 	if err != nil {
-		appLogger.Errorf("Failed to List RelOsintDataSource when delete osint. error: %v", err)
+		appLogger.Errorf(ctx, "Failed to List RelOsintDataSource when delete osint. error: %v", err)
 		return nil, err
 	}
 
 	for _, relOsintDataSource := range *relOsintDataSources {
 		if err := s.deleteRelOsintDataSourceWithDetectWord(ctx, relOsintDataSource.ProjectID, relOsintDataSource.RelOsintDataSourceID); err != nil {
-			appLogger.Errorf("Failed to DeleteRelOsintDataSource. error: %v", err)
+			appLogger.Errorf(ctx, "Failed to DeleteRelOsintDataSource. error: %v", err)
 			return nil, err
 		}
 	}
 
 	if err := s.repository.DeleteOsint(ctx, req.ProjectId, req.OsintId); err != nil {
-		appLogger.Errorf("Failed to DeleteOsint. error: %v", err)
+		appLogger.Errorf(ctx, "Failed to DeleteOsint. error: %v", err)
 		return nil, err
 	}
 	return &empty.Empty{}, nil

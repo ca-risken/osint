@@ -57,7 +57,7 @@ func (s *sqsClient) send(ctx context.Context, msg *message.OsintQueueMessage) (*
 	}
 	buf, err := json.Marshal(msg)
 	if err != nil {
-		appLogger.Errorf("Failed to parse message error: %v", err)
+		appLogger.Errorf(ctx, "Failed to parse message error: %v", err)
 		return nil, fmt.Errorf("Failed to parse message, err=%+v", err)
 	}
 	resp, err := s.svc.SendMessageWithContext(ctx, &sqs.SendMessageInput{
@@ -66,7 +66,7 @@ func (s *sqsClient) send(ctx context.Context, msg *message.OsintQueueMessage) (*
 		DelaySeconds: aws.Int64(1),
 	})
 	if err != nil {
-		appLogger.Errorf("Failed to send message, error: %v ", err)
+		appLogger.Errorf(ctx, "Failed to send message, error: %v ", err)
 		return nil, err
 	}
 	return resp, nil
