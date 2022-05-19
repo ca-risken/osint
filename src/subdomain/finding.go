@@ -94,7 +94,7 @@ func makeFindings(osintResults *[]osintResult, message *message.OsintQueueMessag
 		findingTakeover, err := osintResult.Takeover.makeFinding(isDown, message.ProjectID, message.DataSource)
 		if err != nil {
 			appLogger.Errorf("Error occured when make Takeover finding. error: %v", err)
-			// その他のfindingを登録するため、ログだけ吐いて続行する
+			return nil, err
 		}
 		if findingTakeover != nil {
 			findingsTakeover = append(findingsTakeover, findingTakeover)
@@ -102,7 +102,7 @@ func makeFindings(osintResults *[]osintResult, message *message.OsintQueueMessag
 		findingPrivateExpose, err := osintResult.PrivateExpose.makeFinding(message.ProjectID, message.DataSource)
 		if err != nil {
 			appLogger.Errorf("Error occured when make PrivateExpose finding. error: %v", err)
-			// その他のfindingを登録するため、ログだけ吐いて続行する
+			return nil, err
 		}
 		if findingPrivateExpose != nil {
 			findingsPrivateExpose = append(findingsPrivateExpose, findingPrivateExpose)
@@ -110,7 +110,7 @@ func makeFindings(osintResults *[]osintResult, message *message.OsintQueueMessag
 		findingCertificateExpiration, err := osintResult.CertificateExpiration.makeFinding(message.ProjectID, message.DataSource)
 		if err != nil {
 			appLogger.Errorf("Error occured when make Certificate Expiration finding. error: %v", err)
-			// その他のfindingを登録するため、ログだけ吐いて続行する
+			return nil, err
 		}
 		if findingCertificateExpiration != nil {
 			findingsCertificateExpiration = append(findingsCertificateExpiration, findingCertificateExpiration)
