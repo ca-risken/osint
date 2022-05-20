@@ -32,8 +32,8 @@ type AppConfig struct {
 	HarvesterPath string `required:"true" split_words:"true" default:"/theHarvester"`
 
 	// grpc
-	CoreAddr string `required:"true" split_words:"true" default:"core.core.svc.cluster.local:8080"`
-	OsintSvcAddr   string `required:"true" split_words:"true" default:"osint.osint.svc.cluster.local:18081"`
+	CoreAddr     string `required:"true" split_words:"true" default:"core.core.svc.cluster.local:8080"`
+	OsintSvcAddr string `required:"true" split_words:"true" default:"osint.osint.svc.cluster.local:18081"`
 
 	// sqs
 	AWSRegion string `envconfig:"aws_region"   default:"ap-northeast-1"`
@@ -41,27 +41,28 @@ type AppConfig struct {
 
 	SubdomainQueueName string `split_words:"true" default:"osint-subdomain"`
 	SubdomainQueueURL  string `split_words:"true" default:"http://queue.middleware.svc.cluster.local:9324/queue/osint-subdomain"`
-	MaxNumberOfMessage int64  `split_words:"true" default:"3"`
-	WaitTimeSecond     int64  `split_words:"true" default:"20"`
+	MaxNumberOfMessage int32  `split_words:"true" default:"3"`
+	WaitTimeSecond     int32  `split_words:"true" default:"20"`
 
 	// The number of host to be inspected at a time in goroutine
 	InspectConcurrency int64 `split_words:"true" default:"50"`
 }
 
 func main() {
+	ctx := context.Background()
 	var conf AppConfig
 	err := envconfig.Process("", &conf)
 	if err != nil {
-		appLogger.Fatal(err.Error())
+		appLogger.Fatal(ctx, err.Error())
 	}
 
 	pTypes, err := profiler.ConvertProfileTypeFrom(conf.ProfileTypes)
 	if err != nil {
-		appLogger.Fatal(err.Error())
+		appLogger.Fatal(ctx, err.Error())
 	}
 	pExporter, err := profiler.ConvertExporterTypeFrom(conf.ProfileExporter)
 	if err != nil {
-		appLogger.Fatal(err.Error())
+		appLogger.Fatal(ctx, err.Error())
 	}
 	pc := profiler.Config{
 		ServiceName:  getFullServiceName(),
@@ -71,7 +72,7 @@ func main() {
 	}
 	err = pc.Start()
 	if err != nil {
-		appLogger.Fatal(err.Error())
+		appLogger.Fatal(ctx, err.Error())
 	}
 	defer pc.Stop()
 
@@ -85,15 +86,15 @@ func main() {
 
 	handler := &SQSHandler{}
 	handler.harvesterConfig = newHarvesterConfig(conf.ResultPath, conf.HarvesterPath)
-	appLogger.Info("Load Harvester Config")
+	appLogger.Info(ctx, "Load Harvester Config")
 	handler.inspectConcurrency = conf.InspectConcurrency
-	appLogger.Info("Load Concurrency Config")
+	appLogger.Info(ctx, "Load Concurrency Config")
 	handler.findingClient = newFindingClient(conf.CoreAddr)
-	appLogger.Info("Start Finding Client")
+	appLogger.Info(ctx, "Start Finding Client")
 	handler.alertClient = newAlertClient(conf.CoreAddr)
-	appLogger.Info("Start Alert Client")
+	appLogger.Info(ctx, "Start Alert Client")
 	handler.osintClient = newOsintClient(conf.OsintSvcAddr)
-	appLogger.Info("Start Osint Client")
+	appLogger.Info(ctx, "Start Osint Client")
 	f, err := mimosasqs.NewFinalizer(message.SubdomainDataSource, settingURL, conf.CoreAddr, &mimosasqs.DataSourceRecommnend{
 		ScanFailureRisk: fmt.Sprintf("Failed to scan %s, So you are not gathering the latest security threat information.", message.SubdomainDataSource),
 		ScanFailureRecommendation: `Please review the following items and rescan,
@@ -104,7 +105,7 @@ func main() {
 		- If this does not resolve the problem, or if you suspect that the problem is server-side, please contact the system administrators.`,
 	})
 	if err != nil {
-		appLogger.Fatalf("Failed to create Finalizer, err=%+v", err)
+		appLogger.Fatalf(ctx, "Failed to create Finalizer, err=%+v", err)
 	}
 
 	sqsConf := &SQSConfig{
@@ -115,13 +116,12 @@ func main() {
 		MaxNumberOfMessage: conf.MaxNumberOfMessage,
 		WaitTimeSecond:     conf.WaitTimeSecond,
 	}
-	consumer := newSQSConsumer(sqsConf)
-	appLogger.Info("Start the subdomain SQS consumer server...")
-	ctx := context.Background()
+	consumer := newSQSConsumer(ctx, sqsConf)
+	appLogger.Info(ctx, "Start the subdomain SQS consumer server...")
 	consumer.Start(ctx,
 		mimosasqs.InitializeHandler(
 			mimosasqs.RetryableErrorHandler(
-				mimosasqs.StatusLoggingHandler(appLogger,
-					mimosasqs.TracingHandler(getFullServiceName(),
+				mimosasqs.TracingHandler(getFullServiceName(),
+					mimosasqs.StatusLoggingHandler(appLogger,
 						f.FinalizeHandler(handler))))))
 }

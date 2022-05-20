@@ -39,7 +39,7 @@ func (s *SQSHandler) putFindings(ctx context.Context, findingMap map[string][]*f
 			var recommend *finding.RecommendForBatch
 			r := getRecommend(key)
 			if r.Type == "" || (r.Risk == "" && r.Recommendation == "") {
-				appLogger.Warnf("Failed to get recommendation, Unknown category=%s", key)
+				appLogger.Warnf(ctx, "Failed to get recommendation, Unknown category=%s", key)
 			} else {
 				recommend = &finding.RecommendForBatch{
 					Type:           r.Type,
@@ -57,25 +57,25 @@ func (s *SQSHandler) putFindings(ctx context.Context, findingMap map[string][]*f
 	}
 
 	if len(findingBatchParam) == 0 {
-		appLogger.Info("No finding")
+		appLogger.Info(ctx, "No finding")
 		return nil
 	}
 	if err := s.putFindingBatch(ctx, projectID, findingBatchParam); err != nil {
 		return err
 	}
-	appLogger.Infof("putFindings(%d) succeeded", len(findingBatchParam))
+	appLogger.Infof(ctx, "putFindings(%d) succeeded", len(findingBatchParam))
 	return nil
 }
 
 func (s *SQSHandler) putFindingBatch(ctx context.Context, projectID uint32, params []*finding.FindingBatchForUpsert) error {
-	appLogger.Infof("Putting findings(%d)...", len(params))
+	appLogger.Infof(ctx, "Putting findings(%d)...", len(params))
 	for idx := 0; idx < len(params); idx = idx + finding.PutFindingBatchMaxLength {
 		lastIdx := idx + finding.PutFindingBatchMaxLength
 		if lastIdx > len(params) {
 			lastIdx = len(params)
 		}
 		// request per API limits
-		appLogger.Debugf("Call PutFindingBatch API, (%d ~ %d / %d)", idx+1, lastIdx, len(params))
+		appLogger.Debugf(ctx, "Call PutFindingBatch API, (%d ~ %d / %d)", idx+1, lastIdx, len(params))
 		req := &finding.PutFindingBatchRequest{ProjectId: projectID, Finding: params[idx:lastIdx]}
 		if _, err := s.findingClient.PutFindingBatch(ctx, req); err != nil {
 			return err
@@ -84,7 +84,7 @@ func (s *SQSHandler) putFindingBatch(ctx context.Context, projectID uint32, para
 	return nil
 }
 
-func makeFindings(osintResults *[]osintResult, message *message.OsintQueueMessage) (map[string][]*finding.FindingForUpsert, error) {
+func makeFindings(ctx context.Context, osintResults *[]osintResult, message *message.OsintQueueMessage) (map[string][]*finding.FindingForUpsert, error) {
 	findings := map[string][]*finding.FindingForUpsert{}
 	findingsTakeover := []*finding.FindingForUpsert{}
 	findingsPrivateExpose := []*finding.FindingForUpsert{}
@@ -93,7 +93,7 @@ func makeFindings(osintResults *[]osintResult, message *message.OsintQueueMessag
 		isDown := osintResult.Host.isDown()
 		findingTakeover, err := osintResult.Takeover.makeFinding(isDown, message.ProjectID, message.DataSource)
 		if err != nil {
-			appLogger.Errorf("Error occured when make Takeover finding. error: %v", err)
+			appLogger.Errorf(ctx, "Error occured when make Takeover finding. error: %v", err)
 			return nil, err
 		}
 		if findingTakeover != nil {
@@ -101,7 +101,7 @@ func makeFindings(osintResults *[]osintResult, message *message.OsintQueueMessag
 		}
 		findingPrivateExpose, err := osintResult.PrivateExpose.makeFinding(message.ProjectID, message.DataSource)
 		if err != nil {
-			appLogger.Errorf("Error occured when make PrivateExpose finding. error: %v", err)
+			appLogger.Errorf(ctx, "Error occured when make PrivateExpose finding. error: %v", err)
 			return nil, err
 		}
 		if findingPrivateExpose != nil {
@@ -109,7 +109,7 @@ func makeFindings(osintResults *[]osintResult, message *message.OsintQueueMessag
 		}
 		findingCertificateExpiration, err := osintResult.CertificateExpiration.makeFinding(message.ProjectID, message.DataSource)
 		if err != nil {
-			appLogger.Errorf("Error occured when make Certificate Expiration finding. error: %v", err)
+			appLogger.Errorf(ctx, "Error occured when make Certificate Expiration finding. error: %v", err)
 			return nil, err
 		}
 		if findingCertificateExpiration != nil {
