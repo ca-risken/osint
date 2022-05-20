@@ -53,7 +53,7 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) e
 	// Run Harvester
 	cspan, cctx := tracer.StartSpanFromContext(ctx, "runHarvester")
 	appLogger.Infof(cctx, "start harvester, RequestID=%s", requestID)
-	hosts, err := s.harvesterConfig.run(ctx, msg.ResourceName, msg.RelOsintDataSourceID)
+	hosts, err := s.harvesterConfig.run(cctx, msg.ResourceName, msg.RelOsintDataSourceID)
 	cspan.Finish(tracer.WithError(err))
 	if err != nil {
 		appLogger.Errorf(cctx, "Failed exec theHarvester, error: %v", err)
