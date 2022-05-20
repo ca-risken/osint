@@ -15,9 +15,9 @@ func newFindingClient(svcAddr string) finding.FindingServiceClient {
 	ctx := context.Background()
 	conn, err := getGRPCConn(ctx, svcAddr)
 	if err != nil {
-		appLogger.Fatalf("Faild to get GRPC connection: err=%+v", err)
+		appLogger.Fatalf(ctx, "Faild to get GRPC connection: err=%+v", err)
 	}
-	appLogger.Info("Start Finding Client")
+	appLogger.Info(ctx, "Start Finding Client")
 	return finding.NewFindingServiceClient(conn)
 }
 
@@ -25,9 +25,9 @@ func newAlertClient(svcAddr string) alert.AlertServiceClient {
 	ctx := context.Background()
 	conn, err := getGRPCConn(ctx, svcAddr)
 	if err != nil {
-		appLogger.Fatalf("Faild to get GRPC connection: err=%+v", err)
+		appLogger.Fatalf(ctx, "Faild to get GRPC connection: err=%+v", err)
 	}
-	appLogger.Info("Start Alert Client")
+	appLogger.Info(ctx, "Start Alert Client")
 	return alert.NewAlertServiceClient(conn)
 }
 
@@ -35,7 +35,7 @@ func newOsintClient(svcAddr string) osint.OsintServiceClient {
 	ctx := context.Background()
 	conn, err := getGRPCConn(ctx, svcAddr)
 	if err != nil {
-		appLogger.Fatalf("Faild to get GRPC connection: err=%+v", err)
+		appLogger.Fatalf(ctx, "Faild to get GRPC connection: err=%+v", err)
 	}
 	return osint.NewOsintServiceClient(conn)
 }

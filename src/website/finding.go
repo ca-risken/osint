@@ -44,20 +44,20 @@ func (s *SQSHandler) putFinding(ctx context.Context, websiteFinding *finding.Fin
 		return err
 	}
 	if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagOsint); err != nil {
-		appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", common.TagOsint, err)
+		appLogger.Errorf(ctx, "Failed to tag finding. tag: %v, error: %v", common.TagOsint, err)
 		return err
 	}
 	if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, common.TagWebsite); err != nil {
-		appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", common.TagWebsite, err)
+		appLogger.Errorf(ctx, "Failed to tag finding. tag: %v, error: %v", common.TagWebsite, err)
 	}
 	if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, msg.ResourceName); err != nil {
-		appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", msg.ResourceName, err)
+		appLogger.Errorf(ctx, "Failed to tag finding. tag: %v, error: %v", msg.ResourceName, err)
 		return err
 	}
 
 	for _, category := range categories {
 		if err = s.tagFinding(ctx, res.Finding.ProjectId, res.Finding.FindingId, category.Name); err != nil {
-			appLogger.Errorf("Failed to tag finding. tag: %v, error: %v", category.Name, err)
+			appLogger.Errorf(ctx, "Failed to tag finding. tag: %v, error: %v", category.Name, err)
 			return err
 		}
 	}
@@ -74,7 +74,7 @@ func (s *SQSHandler) tagFinding(ctx context.Context, projectID uint32, findingID
 			Tag:       tag,
 		}})
 	if err != nil {
-		appLogger.Errorf("Failed to TagFinding. error: %v", err)
+		appLogger.Errorf(ctx, "Failed to TagFinding. error: %v", err)
 		return err
 	}
 	return nil
