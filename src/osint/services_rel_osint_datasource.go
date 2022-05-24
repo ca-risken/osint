@@ -193,7 +193,7 @@ func (o *osintService) InvokeScanAll(ctx context.Context, req *osint.InvokeScanA
 	for _, relOsintDataSource := range *list {
 		if resp, err := o.projectClient.IsActive(ctx, &project.IsActiveRequest{ProjectId: relOsintDataSource.ProjectID}); err != nil {
 			appLogger.Errorf(ctx, "Failed to project.IsActive API, err=%+v", err)
-			continue
+			return nil, err
 		} else if !resp.Active {
 			appLogger.Infof(ctx, "Skip deactive project, project_id=%d", relOsintDataSource.ProjectID)
 			continue
@@ -204,9 +204,9 @@ func (o *osintService) InvokeScanAll(ctx context.Context, req *osint.InvokeScanA
 			RelOsintDataSourceId: relOsintDataSource.RelOsintDataSourceID,
 			ScanOnly:             true,
 		}); err != nil {
-			// errorが出ても続行
 			appLogger.Errorf(ctx, "InvokeScanAll error: project_id=%d, rel_osint_data_source_id=%d, err=%+v",
 				relOsintDataSource.ProjectID, relOsintDataSource.RelOsintDataSourceID, err)
+			return nil, err
 		}
 	}
 
