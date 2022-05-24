@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/sqs"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
 	"github.com/ca-risken/common/pkg/logging"
 	mimosasqs "github.com/ca-risken/common/pkg/sqs"
 	"github.com/ca-risken/core/proto/alert"
@@ -24,35 +24,35 @@ type SQSHandler struct {
 	wappalyzerPath string
 }
 
-func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) error {
-	msgBody := aws.StringValue(sqsMsg.Body)
-	appLogger.Infof("got message. message: %v", msgBody)
+func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) error {
+	msgBody := aws.ToString(sqsMsg.Body)
+	appLogger.Infof(ctx, "got message. message: %v", msgBody)
 	// Parse message
 	msg, err := message.ParseMessage(msgBody)
 	if err != nil {
-		appLogger.Errorf("Invalid message. message: %v, error: %v", msg, err)
+		appLogger.Errorf(ctx, "Invalid message. message: %v, error: %v", msg, err)
 		return mimosasqs.WrapNonRetryable(err)
 	}
 	requestID, err := appLogger.GenerateRequestID(fmt.Sprint(msg.ProjectID))
 	if err != nil {
-		appLogger.Warnf("Failed to generate requestID: err=%+v", err)
+		appLogger.Warnf(ctx, "Failed to generate requestID: err=%+v", err)
 		requestID = fmt.Sprint(msg.ProjectID)
 	}
-	appLogger.Infof("start Scan, RequestID=%s", requestID)
+	appLogger.Infof(ctx, "start Scan, RequestID=%s", requestID)
 
 	websiteClient, err := newWappalyzerClient(s.wappalyzerPath)
 	if err != nil {
-		appLogger.Errorf("Error occured when configure: %v, error: %v", msg, err)
+		appLogger.Errorf(ctx, "Error occured when configure: %v, error: %v", msg, err)
 		return mimosasqs.WrapNonRetryable(err)
 	}
-	appLogger.Info("Start website Client")
+	appLogger.Info(ctx, "Start website Client")
 
 	// Run website
 	cspan, _ := tracer.StartSpanFromContext(ctx, "runwebsite")
 	wappalyzerResult, err := websiteClient.run(msg.ResourceName)
 	cspan.Finish(tracer.WithError(err))
 	if err != nil {
-		appLogger.Errorf("Failed exec wappalyzer, error: %v", err)
+		appLogger.Errorf(ctx, "Failed exec wappalyzer, error: %v", err)
 		if err.Error() == "signal: killed" {
 			err = errors.New("An error occured while executing wappalyzer. Scan will restart in a little while.")
 			_ = s.handleErrorWithUpdateStatus(ctx, msg, err)
@@ -67,29 +67,29 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 		ProjectId:  msg.ProjectID,
 		Tag:        []string{msg.ResourceName},
 	}); err != nil {
-		appLogger.Errorf("Failed to clear finding score. ResourceName: %v, error: %v", msg.ResourceName, err)
+		appLogger.Errorf(ctx, "Failed to clear finding score. ResourceName: %v, error: %v", msg.ResourceName, err)
 		return s.handleErrorWithUpdateStatus(ctx, msg, err)
 	}
 
 	// Put Finding and Tag Finding
 	if err := s.putFindings(ctx, wappalyzerResult, msg); err != nil {
-		appLogger.Errorf("Faild to put findings. ResourceName: %v, error: %v", msg.ResourceName, err)
+		appLogger.Errorf(ctx, "Faild to put findings. ResourceName: %v, error: %v", msg.ResourceName, err)
 		return s.handleErrorWithUpdateStatus(ctx, msg, err)
 	}
 
 	// Update status
 	if err := s.updateScanStatusSuccess(ctx, msg); err != nil {
-		appLogger.Errorf("Faild to update scan status. ResourceName: %v, error: %v", msg.ResourceName, err)
+		appLogger.Errorf(ctx, "Faild to update scan status. ResourceName: %v, error: %v", msg.ResourceName, err)
 		return mimosasqs.WrapNonRetryable(err)
 	}
-	appLogger.Infof("end Scan, RequestID=%s", requestID)
+	appLogger.Infof(ctx, "end Scan, RequestID=%s", requestID)
 
 	if msg.ScanOnly {
 		return nil
 	}
 	// Call AnalyzeAlert
 	if err := s.CallAnalyzeAlert(ctx, msg.ProjectID); err != nil {
-		appLogger.Notifyf(logging.ErrorLevel, "Failed to analyzeAlert, project_id=%d, err=%+v", msg.ProjectID, err)
+		appLogger.Notifyf(ctx, logging.ErrorLevel, "Failed to analyzeAlert, project_id=%d, err=%+v", msg.ProjectID, err)
 		return mimosasqs.WrapNonRetryable(err)
 	}
 	return nil
@@ -97,7 +97,7 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *sqs.Message) err
 
 func (s *SQSHandler) handleErrorWithUpdateStatus(ctx context.Context, msg *message.OsintQueueMessage, err error) error {
 	if updateErr := s.updateScanStatusError(ctx, msg, err.Error()); updateErr != nil {
-		appLogger.Warnf("Failed to update scan status error: err=%+v", updateErr)
+		appLogger.Warnf(ctx, "Failed to update scan status error: err=%+v", updateErr)
 	}
 	return mimosasqs.WrapNonRetryable(err)
 }
@@ -141,7 +141,7 @@ func (s *SQSHandler) putRelOsintDataSource(ctx context.Context, status *osint.Pu
 	if err != nil {
 		return err
 	}
-	appLogger.Infof("Success to update osint status, response=%+v", resp)
+	appLogger.Infof(ctx, "Success to update osint status, response=%+v", resp)
 	return nil
 }
 
@@ -150,6 +150,6 @@ func (s *SQSHandler) CallAnalyzeAlert(ctx context.Context, projectID uint32) err
 	if err != nil {
 		return err
 	}
-	appLogger.Info("Success to analyze alert.")
+	appLogger.Info(ctx, "Success to analyze alert.")
 	return nil
 }

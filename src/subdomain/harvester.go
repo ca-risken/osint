@@ -28,11 +28,11 @@ func newHarvesterConfig(resultPath, harvesterPath string) HarvesterConfig {
 	return conf
 }
 
-func (h *HarvesterConfig) run(domain string, relAlertFindingID uint32) (*[]host, error) {
+func (h *HarvesterConfig) run(ctx context.Context, domain string, relAlertFindingID uint32) (*[]host, error) {
 	now := time.Now().Unix()
 	filePath := fmt.Sprintf("%s/%v_%v", h.ResultPath, relAlertFindingID, now)
 	harvesterPath := fmt.Sprintf("%s/theHarvester.py", h.HarvesterPath)
-	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Minute)
+	ctx, cancel := context.WithTimeout(ctx, 60*time.Minute)
 	defer cancel()
 	cmd := exec.CommandContext(ctx, "python3", harvesterPath, "-d", domain, "-b", "all", "-f", filePath)
 	cmd.Dir = h.HarvesterPath
@@ -40,7 +40,7 @@ func (h *HarvesterConfig) run(domain string, relAlertFindingID uint32) (*[]host,
 	cmd.Stderr = &stderr
 	err := cmd.Run()
 	if err != nil {
-		appLogger.Errorf("Failed to execute theHarvester. error: %v", stderr.String())
+		appLogger.Errorf(ctx, "Failed to execute theHarvester. error: %v", stderr.String())
 		return nil, err
 	}
 
@@ -51,11 +51,11 @@ func (h *HarvesterConfig) run(domain string, relAlertFindingID uint32) (*[]host,
 	hostsWithIP := hostsWithIP{}
 	hostsWithoutIP := hostsWithoutIP{}
 	if err = xml.Unmarshal(bytes, &hostsWithIP); err != nil {
-		appLogger.Errorf("Failed to unmarshal result. error: %v", err)
+		appLogger.Errorf(ctx, "Failed to unmarshal result. error: %v", err)
 		return nil, err
 	}
 	if err = xml.Unmarshal(bytes, &hostsWithoutIP); err != nil {
-		appLogger.Errorf("Failed to unmarshal result. error: %v", err)
+		appLogger.Errorf(ctx, "Failed to unmarshal result. error: %v", err)
 		return nil, err
 	}
 

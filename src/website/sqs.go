@@ -1,12 +1,10 @@
 package main
 
 import (
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/sqs"
+	"context"
+
 	"github.com/ca-risken/common/pkg/logging"
-	"github.com/gassara-kys/go-sqs-poller/worker/v4"
-	"github.com/vikyd/zero"
+	"github.com/ca-risken/go-sqs-poller/worker/v5"
 )
 
 type SQSConfig struct {
@@ -17,31 +15,20 @@ type SQSConfig struct {
 
 	WebsiteQueueName   string
 	WebsiteQueueURL    string
-	MaxNumberOfMessage int64
-	WaitTimeSecond     int64
+	MaxNumberOfMessage int32
+	WaitTimeSecond     int32
 }
 
-func newSQSConsumer(conf *SQSConfig) *worker.Worker {
+func newSQSConsumer(ctx context.Context, conf *SQSConfig) *worker.Worker {
 	if conf.Debug == "true" {
 		appLogger.Level(logging.DebugLevel)
 	}
-	var sqsClient *sqs.SQS
-	sess, err := session.NewSessionWithOptions(session.Options{
-		SharedConfigState: session.SharedConfigEnable,
-	})
+
+	client, err := worker.CreateSqsClient(ctx, conf.AWSRegion, conf.SQSEndpoint)
 	if err != nil {
-		appLogger.Fatalf("Failed to create a new session, %v", err)
+		appLogger.Fatalf(ctx, "Failed to create a new client, %v", err)
 	}
-	if !zero.IsZeroVal(&conf.SQSEndpoint) {
-		sqsClient = sqs.New(sess, &aws.Config{
-			Region:   &conf.AWSRegion,
-			Endpoint: &conf.SQSEndpoint,
-		})
-	} else {
-		sqsClient = sqs.New(sess, &aws.Config{
-			Region: &conf.AWSRegion,
-		})
-	}
+
 	return &worker.Worker{
 		Config: &worker.Config{
 			QueueName:          conf.WebsiteQueueName,
@@ -50,6 +37,6 @@ func newSQSConsumer(conf *SQSConfig) *worker.Worker {
 			WaitTimeSecond:     conf.WaitTimeSecond,
 		},
 		Log:       appLogger,
-		SqsClient: sqsClient,
+		SqsClient: client,
 	}
 }
