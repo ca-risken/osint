@@ -4,14 +4,15 @@ go 1.17
 
 require (
 	github.com/Songmu/timeout v0.4.0
-	github.com/aws/aws-sdk-go v1.43.16
+	github.com/aws/aws-sdk-go-v2 v1.16.4
+	github.com/aws/aws-sdk-go-v2/service/sqs v1.18.5
 	github.com/ca-risken/common/pkg/logging v0.0.0-20220520051921-497abce3e602
 	github.com/ca-risken/common/pkg/profiler v0.0.0-20220304031727-c94e2c463b27
-	github.com/ca-risken/common/pkg/sqs v0.0.0-20220520051921-497abce3e602
+	github.com/ca-risken/common/pkg/sqs v0.0.0-20220525094706-413e91572a52
 	github.com/ca-risken/common/pkg/tracer v0.0.0-20220425094653-eace2e0a3d4a
 	github.com/ca-risken/core/proto/alert v0.0.0-20220309052852-c058b4e5cb84
 	github.com/ca-risken/core/proto/finding v0.0.0-20220309052852-c058b4e5cb84
-	github.com/ca-risken/go-sqs-poller/worker/v5 v5.0.0-20220502103103-3ea0e54c7692
+	github.com/ca-risken/go-sqs-poller/worker/v5 v5.0.0-20220525093235-9148d33b6aee
 	github.com/ca-risken/osint/pkg/common v0.0.0-20220309052814-1ee65d0c7e82
 	github.com/ca-risken/osint/pkg/message v0.0.0-20220309052814-1ee65d0c7e82
 	github.com/ca-risken/osint/proto/osint v0.0.0-20220309052814-1ee65d0c7e82
@@ -30,7 +31,6 @@ require (
 	github.com/Microsoft/go-winio v0.5.2 // indirect
 	github.com/Songmu/wrapcommander v0.1.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
-	github.com/aws/aws-sdk-go-v2 v1.16.4 // indirect
 	github.com/aws/aws-sdk-go-v2/config v1.15.4 // indirect
 	github.com/aws/aws-sdk-go-v2/credentials v1.12.0 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.12.4 // indirect
@@ -38,7 +38,6 @@ require (
 	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.5 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.3.11 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.4 // indirect
-	github.com/aws/aws-sdk-go-v2/service/sqs v1.18.5 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sso v1.11.4 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.16.4 // indirect
 	github.com/aws/smithy-go v1.11.2 // indirect
@@ -51,7 +50,6 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/pprof v0.0.0-20220218203455-0368bd9e19a7 // indirect
 	github.com/google/uuid v1.3.0 // indirect
-	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/philhofer/fwd v1.1.1 // indirect

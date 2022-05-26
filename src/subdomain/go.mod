@@ -7,11 +7,11 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sqs v1.18.5
 	github.com/ca-risken/common/pkg/logging v0.0.0-20220520051921-497abce3e602
 	github.com/ca-risken/common/pkg/profiler v0.0.0-20220304031727-c94e2c463b27
-	github.com/ca-risken/common/pkg/sqs v0.0.0-20220520051921-497abce3e602
+	github.com/ca-risken/common/pkg/sqs v0.0.0-20220525094706-413e91572a52
 	github.com/ca-risken/common/pkg/tracer v0.0.0-20220425094653-eace2e0a3d4a
 	github.com/ca-risken/core/proto/alert v0.0.0-20210924100500-e1499111345b
 	github.com/ca-risken/core/proto/finding v0.0.0-20220420065103-ec7428a46fe5
-	github.com/ca-risken/go-sqs-poller/worker/v5 v5.0.0-20220502103103-3ea0e54c7692
+	github.com/ca-risken/go-sqs-poller/worker/v5 v5.0.0-20220525093235-9148d33b6aee
 	github.com/ca-risken/osint/pkg/common v0.0.0-20210915063551-7002685890c3
 	github.com/ca-risken/osint/pkg/message v0.0.0-20211112065816-37550cc4192d
 	github.com/ca-risken/osint/pkg/model v0.0.0-20210915063551-7002685890c3
