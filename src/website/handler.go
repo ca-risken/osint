@@ -65,7 +65,7 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) e
 	if _, err := s.findingClient.ClearScore(ctx, &finding.ClearScoreRequest{
 		DataSource: msg.DataSource,
 		ProjectId:  msg.ProjectID,
-		Tag:        []string{msg.ResourceName},
+		Tag:        []string{fmt.Sprintf("osint_id:%v", msg.OsintID)},
 	}); err != nil {
 		appLogger.Errorf(ctx, "Failed to clear finding score. ResourceName: %v, error: %v", msg.ResourceName, err)
 		return s.handleErrorWithUpdateStatus(ctx, msg, err)
