@@ -10,10 +10,10 @@ type SQSConfig struct {
 	AWSRegion string
 	Endpoint  string
 
-	SubdomainQueueName string
-	SubdomainQueueURL  string
-	MaxNumberOfMessage int32
-	WaitTimeSecond     int32
+	OSINTSubdomainQueueName string
+	OSINTSubdomainQueueURL  string
+	MaxNumberOfMessage      int32
+	WaitTimeSecond          int32
 }
 
 func newSQSConsumer(ctx context.Context, conf *SQSConfig) *worker.Worker {
@@ -25,8 +25,8 @@ func newSQSConsumer(ctx context.Context, conf *SQSConfig) *worker.Worker {
 
 	return &worker.Worker{
 		Config: &worker.Config{
-			QueueName:          conf.SubdomainQueueName,
-			QueueURL:           conf.SubdomainQueueURL,
+			QueueName:          conf.OSINTSubdomainQueueName,
+			QueueURL:           conf.OSINTSubdomainQueueURL,
 			MaxNumberOfMessage: conf.MaxNumberOfMessage,
 			WaitTimeSecond:     conf.WaitTimeSecond,
 		},

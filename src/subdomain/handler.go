@@ -13,9 +13,9 @@ import (
 	mimosasqs "github.com/ca-risken/common/pkg/sqs"
 	"github.com/ca-risken/core/proto/alert"
 	"github.com/ca-risken/core/proto/finding"
-	"github.com/ca-risken/osint/pkg/message"
-	"github.com/ca-risken/osint/pkg/model"
-	"github.com/ca-risken/osint/proto/osint"
+	"github.com/ca-risken/datasource-api/pkg/message"
+	"github.com/ca-risken/datasource-api/pkg/model"
+	"github.com/ca-risken/datasource-api/proto/osint"
 	"golang.org/x/sync/semaphore"
 	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 )
@@ -32,7 +32,7 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) e
 	msgBody := aws.ToString(sqsMsg.Body)
 	appLogger.Infof(ctx, "got message. message: %v", msgBody)
 	// Parse message
-	msg, err := message.ParseMessage(msgBody)
+	msg, err := message.ParseMessageOSINT(msgBody)
 	if err != nil {
 		appLogger.Errorf(ctx, "Invalid message. message: %v, error: %v", msgBody, err)
 		return mimosasqs.WrapNonRetryable(err)
