@@ -13,7 +13,7 @@ require (
 	github.com/ca-risken/core/proto/finding v0.0.0-20220420065103-ec7428a46fe5
 	github.com/ca-risken/datasource-api v0.0.0-20220615043958-794d01b2e367
 	github.com/ca-risken/go-sqs-poller/worker/v5 v5.0.0-20220525093235-9148d33b6aee
-	github.com/ca-risken/osint/pkg/common v0.0.0-20210915063551-7002685890c3
+	github.com/ca-risken/osint/pkg/common v0.0.0-20220616040440-249977ee18c3
 	github.com/gassara-kys/envconfig v1.4.4
 	github.com/miekg/dns v1.1.43
 	github.com/vikyd/zero v0.0.0-20190921142904-0f738d0bc858
