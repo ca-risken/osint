@@ -44,7 +44,6 @@ Deploy the pre-built containers to the Kubernetes environment on your local mach
 
 | service   | spec                                | before (public images)                         | after (pre-build images on your machine) |
 | --------- | ----------------------------------- | ---------------------------------------------- | ---------------------------------------- |
-| osint     | spec.template.spec.containers.image | `public.ecr.aws/risken/osint/code:latest`      | `osint/code:latest`                      |
 | subdomain | spec.template.spec.containers.image | `public.ecr.aws/risken/osint/subdomain:latest` | `osint/subdomain:latest`                 |
 | website   | spec.template.spec.containers.image | `public.ecr.aws/risken/osint/website:latest`   | `osint/website:latest`                   |
 
