@@ -7,7 +7,7 @@ import (
 	"github.com/ca-risken/common/pkg/profiler"
 	mimosasqs "github.com/ca-risken/common/pkg/sqs"
 	"github.com/ca-risken/common/pkg/tracer"
-	"github.com/ca-risken/osint/pkg/message"
+	"github.com/ca-risken/datasource-api/pkg/message"
 	"github.com/gassara-kys/envconfig"
 )
 
@@ -32,17 +32,17 @@ type AppConfig struct {
 	HarvesterPath string `required:"true" split_words:"true" default:"/theHarvester"`
 
 	// grpc
-	CoreAddr     string `required:"true" split_words:"true" default:"core.core.svc.cluster.local:8080"`
-	OsintSvcAddr string `required:"true" split_words:"true" default:"osint.osint.svc.cluster.local:18081"`
+	CoreAddr             string `required:"true" split_words:"true" default:"core.core.svc.cluster.local:8080"`
+	DataSourceAPISvcAddr string `required:"true" split_words:"true" default:"datasource-api.core.svc.cluster.local:8081"`
 
 	// sqs
 	AWSRegion string `envconfig:"aws_region"   default:"ap-northeast-1"`
 	Endpoint  string `envconfig:"sqs_endpoint" default:"http://queue.middleware.svc.cluster.local:9324"`
 
-	SubdomainQueueName string `split_words:"true" default:"osint-subdomain"`
-	SubdomainQueueURL  string `split_words:"true" default:"http://queue.middleware.svc.cluster.local:9324/queue/osint-subdomain"`
-	MaxNumberOfMessage int32  `split_words:"true" default:"3"`
-	WaitTimeSecond     int32  `split_words:"true" default:"20"`
+	OSINTSubdomainQueueName string `split_words:"true" default:"osint-subdomain"`
+	OSINTSubdomainQueueURL  string `split_words:"true" default:"http://queue.middleware.svc.cluster.local:9324/queue/osint-subdomain"`
+	MaxNumberOfMessage      int32  `split_words:"true" default:"3"`
+	WaitTimeSecond          int32  `split_words:"true" default:"20"`
 
 	// The number of host to be inspected at a time in goroutine
 	InspectConcurrency int64 `split_words:"true" default:"50"`
@@ -93,7 +93,7 @@ func main() {
 	appLogger.Info(ctx, "Start Finding Client")
 	handler.alertClient = newAlertClient(conf.CoreAddr)
 	appLogger.Info(ctx, "Start Alert Client")
-	handler.osintClient = newOsintClient(conf.OsintSvcAddr)
+	handler.osintClient = newOsintClient(conf.DataSourceAPISvcAddr)
 	appLogger.Info(ctx, "Start Osint Client")
 	f, err := mimosasqs.NewFinalizer(message.SubdomainDataSource, settingURL, conf.CoreAddr, &mimosasqs.DataSourceRecommnend{
 		ScanFailureRisk: fmt.Sprintf("Failed to scan %s, So you are not gathering the latest security threat information.", message.SubdomainDataSource),
@@ -111,8 +111,8 @@ func main() {
 	sqsConf := &SQSConfig{
 		AWSRegion:          conf.AWSRegion,
 		Endpoint:           conf.Endpoint,
-		SubdomainQueueName: conf.SubdomainQueueName,
-		SubdomainQueueURL:  conf.SubdomainQueueURL,
+		QueueName:          conf.OSINTSubdomainQueueName,
+		QueueURL:           conf.OSINTSubdomainQueueURL,
 		MaxNumberOfMessage: conf.MaxNumberOfMessage,
 		WaitTimeSecond:     conf.WaitTimeSecond,
 	}

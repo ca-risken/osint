@@ -68,6 +68,7 @@ go-mod-update:
 	cd src/subdomain \
 		&& go get -u \
 			github.com/ca-risken/core/... \
+			github.com/ca-risken/datasource-api/... \
 			github.com/ca-risken/osint/...
 
 PHONY: go-mod-tidy

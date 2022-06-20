@@ -7,7 +7,7 @@ import (
 	"github.com/ca-risken/common/pkg/profiler"
 	mimosasqs "github.com/ca-risken/common/pkg/sqs"
 	"github.com/ca-risken/common/pkg/tracer"
-	"github.com/ca-risken/osint/pkg/message"
+	"github.com/ca-risken/datasource-api/pkg/message"
 	"github.com/gassara-kys/envconfig"
 )
 
@@ -39,8 +39,8 @@ type AppConfig struct {
 	WaitTimeSecond     int32  `split_words:"true" default:"20"`
 
 	// grpc
-	CoreAddr     string `required:"true" split_words:"true" default:"core.core.svc.cluster.local:8080"`
-	OsintSvcAddr string `required:"true" split_words:"true" default:"osint.osint.svc.cluster.local:18081"`
+	CoreAddr             string `required:"true" split_words:"true" default:"core.core.svc.cluster.local:8080"`
+	DataSourceAPISvcAddr string `required:"true" split_words:"true" default:"datasource-api.core.svc.cluster.local:8081"`
 
 	// wappalyzer
 	WappalyzerPath string `required:"true" split_words:"true" default:"/opt/wappalyzer/src/drivers/npm/cli.js"`
@@ -85,7 +85,7 @@ func main() {
 	handler := &SQSHandler{}
 	handler.findingClient = newFindingClient(conf.CoreAddr)
 	handler.alertClient = newAlertClient(conf.CoreAddr)
-	handler.osintClient = newOsintClient(conf.OsintSvcAddr)
+	handler.osintClient = newOsintClient(conf.DataSourceAPISvcAddr)
 	handler.wappalyzerPath = conf.WappalyzerPath
 	f, err := mimosasqs.NewFinalizer(message.WebsiteDataSource, settingURL, conf.CoreAddr, &mimosasqs.DataSourceRecommnend{
 		ScanFailureRisk: fmt.Sprintf("Failed to scan %s, So you are not gathering the latest security threat information.", message.WebsiteDataSource),
@@ -105,8 +105,8 @@ func main() {
 		Debug:              conf.Debug,
 		AWSRegion:          conf.AWSRegion,
 		SQSEndpoint:        conf.SQSEndpoint,
-		WebsiteQueueName:   conf.WebsiteQueueName,
-		WebsiteQueueURL:    conf.WebsiteQueueURL,
+		QueueName:          conf.WebsiteQueueName,
+		QueueURL:           conf.WebsiteQueueURL,
 		MaxNumberOfMessage: conf.MaxNumberOfMessage,
 		WaitTimeSecond:     conf.WaitTimeSecond,
 	}

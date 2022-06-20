@@ -10,8 +10,8 @@ import (
 	"github.com/vikyd/zero"
 
 	"github.com/ca-risken/core/proto/finding"
+	"github.com/ca-risken/datasource-api/pkg/message"
 	"github.com/ca-risken/osint/pkg/common"
-	"github.com/ca-risken/osint/pkg/message"
 )
 
 func (s *SQSHandler) putFindings(ctx context.Context, result *wappalyzerResult, message *message.OsintQueueMessage) error {
