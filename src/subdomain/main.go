@@ -109,12 +109,12 @@ func main() {
 	}
 
 	sqsConf := &SQSConfig{
-		AWSRegion:               conf.AWSRegion,
-		Endpoint:                conf.Endpoint,
-		OSINTSubdomainQueueName: conf.OSINTSubdomainQueueName,
-		OSINTSubdomainQueueURL:  conf.OSINTSubdomainQueueURL,
-		MaxNumberOfMessage:      conf.MaxNumberOfMessage,
-		WaitTimeSecond:          conf.WaitTimeSecond,
+		AWSRegion:          conf.AWSRegion,
+		Endpoint:           conf.Endpoint,
+		QueueName:          conf.OSINTSubdomainQueueName,
+		QueueURL:           conf.OSINTSubdomainQueueURL,
+		MaxNumberOfMessage: conf.MaxNumberOfMessage,
+		WaitTimeSecond:     conf.WaitTimeSecond,
 	}
 	consumer := newSQSConsumer(ctx, sqsConf)
 	appLogger.Info(ctx, "Start the subdomain SQS consumer server...")

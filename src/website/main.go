@@ -105,8 +105,8 @@ func main() {
 		Debug:              conf.Debug,
 		AWSRegion:          conf.AWSRegion,
 		SQSEndpoint:        conf.SQSEndpoint,
-		WebsiteQueueName:   conf.WebsiteQueueName,
-		WebsiteQueueURL:    conf.WebsiteQueueURL,
+		QueueName:          conf.WebsiteQueueName,
+		QueueURL:           conf.WebsiteQueueURL,
 		MaxNumberOfMessage: conf.MaxNumberOfMessage,
 		WaitTimeSecond:     conf.WaitTimeSecond,
 	}
