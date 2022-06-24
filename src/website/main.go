@@ -33,8 +33,8 @@ type AppConfig struct {
 	AWSRegion   string `envconfig:"aws_region" default:"ap-northeast-1"`
 	SQSEndpoint string `envconfig:"sqs_endpoint" default:"http://queue.middleware.svc.cluster.local:9324"`
 
-	WebsiteQueueName   string `split_words:"true" default:"osint-website"`
-	WebsiteQueueURL    string `split_words:"true" default:"http://queue.middleware.svc.cluster.local:9324/queue/osint-website"`
+	OSINTWebsiteQueueName   string `split_words:"true" default:"osint-website"`
+	OSINTWebsiteQueueURL    string `split_words:"true" default:"http://queue.middleware.svc.cluster.local:9324/queue/osint-website"`
 	MaxNumberOfMessage int32  `split_words:"true" default:"5"`
 	WaitTimeSecond     int32  `split_words:"true" default:"20"`
 
@@ -105,8 +105,8 @@ func main() {
 		Debug:              conf.Debug,
 		AWSRegion:          conf.AWSRegion,
 		SQSEndpoint:        conf.SQSEndpoint,
-		QueueName:          conf.WebsiteQueueName,
-		QueueURL:           conf.WebsiteQueueURL,
+		QueueName:          conf.OSINTWebsiteQueueName,
+		QueueURL:           conf.OSINTWebsiteQueueURL,
 		MaxNumberOfMessage: conf.MaxNumberOfMessage,
 		WaitTimeSecond:     conf.WaitTimeSecond,
 	}
