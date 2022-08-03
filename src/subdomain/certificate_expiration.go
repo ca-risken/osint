@@ -27,6 +27,7 @@ func (p *privateExpose) checkCertificateExpiration() certificateExpiration {
 
 func checkCertificateExpiration(url string) time.Time {
 	client := &http.Client{}
+	// Only normally accessible URLs, exclude temporarily inaccessible URLs ex. service unavailable, are scanned, so error is ignored.
 	req, _ := http.NewRequest("GET", url, nil)
 	client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
 		return http.ErrUseLastResponse
