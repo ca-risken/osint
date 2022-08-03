@@ -13,8 +13,8 @@ import (
 
 func searchPrivateExpose(host host, detectList *[]string) privateExpose {
 	if !zero.IsZeroVal(host.IP) && !zero.IsZeroVal(host.HostName) {
-		http, urlHTTP, _ := getHTTPStatus(host.HostName, "http")
-		https, urlHTTPS, _ := getHTTPStatus(host.HostName, "https")
+		http, urlHTTP := getHTTPStatus(host.HostName, "http")
+		https, urlHTTPS := getHTTPStatus(host.HostName, "https")
 		isDetect := isDetected(host.HostName, detectList)
 		if !zero.IsZeroVal(http) && !zero.IsZeroVal(https) {
 			return privateExpose{HostName: host.HostName, HTTP: http, URLHTTP: urlHTTP, HTTPS: https, URLHTTPS: urlHTTPS, IsDetected: isDetect}
@@ -23,8 +23,9 @@ func searchPrivateExpose(host host, detectList *[]string) privateExpose {
 	return privateExpose{}
 }
 
-func getHTTPStatus(host, protocol string) (int, string, error) {
+func getHTTPStatus(host, protocol string) (int, string) {
 	url := fmt.Sprintf("%s://%s", protocol, host)
+	// Only normally accessible URLs, exclude temporarily inaccessible URLs ex. service unavailable, are scanned, so error is ignored.
 	req, _ := http.NewRequest("GET", url, nil)
 	client := http.Client{
 		Timeout: 5 * time.Second,
@@ -34,11 +35,11 @@ func getHTTPStatus(host, protocol string) (int, string, error) {
 
 	// Timeoutもエラーに入るので、特にログも出さないでスルー(ドメインを見つけてもHTTPで使われているとは限らないため)
 	if err != nil {
-		return 0, "", err
+		return 0, ""
 	}
 
 	defer res.Body.Close()
-	return res.StatusCode, res.Request.URL.String(), nil
+	return res.StatusCode, res.Request.URL.String()
 }
 
 func isDetected(host string, detectList *[]string) bool {
