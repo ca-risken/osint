@@ -33,10 +33,10 @@ type AppConfig struct {
 	AWSRegion   string `envconfig:"aws_region" default:"ap-northeast-1"`
 	SQSEndpoint string `envconfig:"sqs_endpoint" default:"http://queue.middleware.svc.cluster.local:9324"`
 
-	OSINTWebsiteQueueName   string `split_words:"true" default:"osint-website"`
-	OSINTWebsiteQueueURL    string `split_words:"true" default:"http://queue.middleware.svc.cluster.local:9324/queue/osint-website"`
-	MaxNumberOfMessage int32  `split_words:"true" default:"5"`
-	WaitTimeSecond     int32  `split_words:"true" default:"20"`
+	OSINTWebsiteQueueName string `split_words:"true" default:"osint-website"`
+	OSINTWebsiteQueueURL  string `split_words:"true" default:"http://queue.middleware.svc.cluster.local:9324/queue/osint-website"`
+	MaxNumberOfMessage    int32  `split_words:"true" default:"5"`
+	WaitTimeSecond        int32  `split_words:"true" default:"20"`
 
 	// grpc
 	CoreAddr             string `required:"true" split_words:"true" default:"core.core.svc.cluster.local:8080"`
@@ -82,11 +82,24 @@ func main() {
 	tracer.Start(tc)
 	defer tracer.Stop()
 
-	handler := &SQSHandler{}
-	handler.findingClient = newFindingClient(conf.CoreAddr)
-	handler.alertClient = newAlertClient(conf.CoreAddr)
-	handler.osintClient = newOsintClient(conf.DataSourceAPISvcAddr)
-	handler.wappalyzerPath = conf.WappalyzerPath
+	fc, err := newFindingClient(ctx, conf.CoreAddr)
+	if err != nil {
+		appLogger.Fatalf(ctx, "failed to create finding client, err=%+v", err)
+	}
+	ac, err := newAlertClient(ctx, conf.CoreAddr)
+	if err != nil {
+		appLogger.Fatalf(ctx, "failed to create alert client, err=%+v", err)
+	}
+	oc, err := newOsintClient(ctx, conf.DataSourceAPISvcAddr)
+	if err != nil {
+		appLogger.Fatalf(ctx, "failed to create osint client, err=%+v", err)
+	}
+	handler := &SQSHandler{
+		findingClient:  fc,
+		alertClient:    ac,
+		osintClient:    oc,
+		wappalyzerPath: conf.WappalyzerPath,
+	}
 	f, err := mimosasqs.NewFinalizer(message.WebsiteDataSource, settingURL, conf.CoreAddr, &mimosasqs.DataSourceRecommnend{
 		ScanFailureRisk: fmt.Sprintf("Failed to scan %s, So you are not gathering the latest security threat information.", message.WebsiteDataSource),
 		ScanFailureRecommendation: `Please review the following items and rescan,
