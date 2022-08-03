@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/ca-risken/core/proto/alert"
@@ -11,31 +12,28 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func newFindingClient(svcAddr string) finding.FindingServiceClient {
-	ctx := context.Background()
+func newFindingClient(ctx context.Context, svcAddr string) (finding.FindingServiceClient, error) {
 	conn, err := getGRPCConn(ctx, svcAddr)
 	if err != nil {
-		panic(err)
+		return nil, fmt.Errorf("failed to get GRPC connection: err=%w", err)
 	}
-	return finding.NewFindingServiceClient(conn)
+	return finding.NewFindingServiceClient(conn), nil
 }
 
-func newAlertClient(svcAddr string) alert.AlertServiceClient {
-	ctx := context.Background()
+func newAlertClient(ctx context.Context, svcAddr string) (alert.AlertServiceClient, error) {
 	conn, err := getGRPCConn(ctx, svcAddr)
 	if err != nil {
-		panic(err)
+		return nil, fmt.Errorf("failed to get GRPC connection: err=%w", err)
 	}
-	return alert.NewAlertServiceClient(conn)
+	return alert.NewAlertServiceClient(conn), nil
 }
 
-func newOsintClient(svcAddr string) osint.OsintServiceClient {
-	ctx := context.Background()
+func newOsintClient(ctx context.Context, svcAddr string) (osint.OsintServiceClient, error) {
 	conn, err := getGRPCConn(ctx, svcAddr)
 	if err != nil {
-		panic(err)
+		return nil, fmt.Errorf("failed to get GRPC connection: err=%w", err)
 	}
-	return osint.NewOsintServiceClient(conn)
+	return osint.NewOsintServiceClient(conn), nil
 }
 
 func getGRPCConn(ctx context.Context, addr string) (*grpc.ClientConn, error) {
