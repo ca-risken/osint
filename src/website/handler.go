@@ -54,11 +54,12 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) e
 	if err != nil {
 		appLogger.Errorf(ctx, "Failed exec wappalyzer, error: %v", err)
 		if err.Error() == "signal: killed" {
-			err = errors.New("An error occured while executing wappalyzer. Scan will restart in a little while.")
-			_ = s.handleErrorWithUpdateStatus(ctx, msg, err)
+			err = errors.New("an error occurred while executing wappalyzer. Scan will restart in a little while")
+			s.updateStatusToError(ctx, msg, err)
 			return err
 		}
-		return s.handleErrorWithUpdateStatus(ctx, msg, err)
+		s.updateStatusToError(ctx, msg, err)
+		return mimosasqs.WrapNonRetryable(err)
 	}
 
 	// Clear finding score
@@ -68,13 +69,15 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) e
 		Tag:        []string{fmt.Sprintf("osint_id:%v", msg.OsintID)},
 	}); err != nil {
 		appLogger.Errorf(ctx, "Failed to clear finding score. ResourceName: %v, error: %v", msg.ResourceName, err)
-		return s.handleErrorWithUpdateStatus(ctx, msg, err)
+		s.updateStatusToError(ctx, msg, err)
+		return mimosasqs.WrapNonRetryable(err)
 	}
 
 	// Put Finding and Tag Finding
 	if err := s.putFindings(ctx, wappalyzerResult, msg); err != nil {
 		appLogger.Errorf(ctx, "Faild to put findings. ResourceName: %v, error: %v", msg.ResourceName, err)
-		return s.handleErrorWithUpdateStatus(ctx, msg, err)
+		s.updateStatusToError(ctx, msg, err)
+		return mimosasqs.WrapNonRetryable(err)
 	}
 
 	// Update status
@@ -95,11 +98,10 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) e
 	return nil
 }
 
-func (s *SQSHandler) handleErrorWithUpdateStatus(ctx context.Context, msg *message.OsintQueueMessage, err error) error {
+func (s *SQSHandler) updateStatusToError(ctx context.Context, msg *message.OsintQueueMessage, err error) {
 	if updateErr := s.updateScanStatusError(ctx, msg, err.Error()); updateErr != nil {
 		appLogger.Warnf(ctx, "Failed to update scan status error: err=%+v", updateErr)
 	}
-	return mimosasqs.WrapNonRetryable(err)
 }
 
 func (s *SQSHandler) updateScanStatusError(ctx context.Context, msg *message.OsintQueueMessage, statusDetail string) error {
