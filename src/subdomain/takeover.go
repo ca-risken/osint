@@ -12,28 +12,28 @@ import (
 )
 
 func searchTakeover(domain string) takeover {
-	cname, _ := resolveCName(domain)
+	cname := resolveCName(domain)
 	if !zero.IsZeroVal(cname) {
 		return takeover{Domain: domain, CName: cname}
 	}
 	return takeover{}
 }
 
-func resolveCName(domain string) (string, error) {
+func resolveCName(domain string) string {
 	c := new(dns.Client)
 	m := new(dns.Msg)
 
 	m.SetQuestion(dns.Fqdn(domain), dns.TypeCNAME)
 	m.RecursionDesired = true
+	// Only normally accessible domains, exclude temporarily inaccessible ex. service unavailable, are scanned, so error is ignored.
 	r, _, err := c.Exchange(m, net.JoinHostPort("8.8.8.8", "53"))
 	if err != nil {
-		return "", nil
+		return ""
 	}
 	if zero.IsZeroVal(r.Answer) {
-		return "", nil
+		return ""
 	}
-	return r.Answer[0].(*dns.CNAME).Target, nil
-	//	return r.Answer[0].(*dns.CNAME).Target, nil
+	return r.Answer[0].(*dns.CNAME).Target
 }
 
 func (c *takeover) makeFinding(isDown bool, projectID uint32, dataSource string) (*finding.FindingForUpsert, error) {
