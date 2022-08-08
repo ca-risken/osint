@@ -84,17 +84,26 @@ func main() {
 	tracer.Start(tc)
 	defer tracer.Stop()
 
-	handler := &SQSHandler{}
-	handler.harvesterConfig = newHarvesterConfig(conf.ResultPath, conf.HarvesterPath)
-	appLogger.Info(ctx, "Load Harvester Config")
-	handler.inspectConcurrency = conf.InspectConcurrency
-	appLogger.Info(ctx, "Load Concurrency Config")
-	handler.findingClient = newFindingClient(conf.CoreAddr)
-	appLogger.Info(ctx, "Start Finding Client")
-	handler.alertClient = newAlertClient(conf.CoreAddr)
-	appLogger.Info(ctx, "Start Alert Client")
-	handler.osintClient = newOsintClient(conf.DataSourceAPISvcAddr)
-	appLogger.Info(ctx, "Start Osint Client")
+	fc, err := newFindingClient(ctx, conf.CoreAddr)
+	if err != nil {
+		appLogger.Fatalf(ctx, "Failed to create finding client, err=%+v", err)
+	}
+	ac, err := newAlertClient(ctx, conf.CoreAddr)
+	if err != nil {
+		appLogger.Fatalf(ctx, "Failed to create alert client, err=%+v", err)
+	}
+	oc, err := newOsintClient(ctx, conf.DataSourceAPISvcAddr)
+	if err != nil {
+		appLogger.Fatalf(ctx, "Failed to create osint client, err=%+v", err)
+	}
+	handler := &SQSHandler{
+		findingClient:      fc,
+		alertClient:        ac,
+		osintClient:        oc,
+		harvesterConfig:    newHarvesterConfig(conf.ResultPath, conf.HarvesterPath),
+		inspectConcurrency: conf.InspectConcurrency,
+	}
+
 	f, err := mimosasqs.NewFinalizer(message.SubdomainDataSource, settingURL, conf.CoreAddr, &mimosasqs.DataSourceRecommnend{
 		ScanFailureRisk: fmt.Sprintf("Failed to scan %s, So you are not gathering the latest security threat information.", message.SubdomainDataSource),
 		ScanFailureRecommendation: `Please review the following items and rescan,
@@ -116,7 +125,10 @@ func main() {
 		MaxNumberOfMessage: conf.MaxNumberOfMessage,
 		WaitTimeSecond:     conf.WaitTimeSecond,
 	}
-	consumer := newSQSConsumer(ctx, sqsConf)
+	consumer, err := newSQSConsumer(ctx, sqsConf)
+	if err != nil {
+		appLogger.Fatalf(ctx, "Failed to create SQS consumer, err=%+v", err)
+	}
 	appLogger.Info(ctx, "Start the subdomain SQS consumer server...")
 	consumer.Start(ctx,
 		mimosasqs.InitializeHandler(

@@ -81,6 +81,7 @@ func makeHosts(hostsWithIP *hostsWithIP, hostsWithoutIP *hostsWithoutIP, domain 
 }
 
 func getIPAddr(domain string) string {
+	// Only normally accessible domains, exclude temporarily inaccessible ex. service unavailable, are scanned, so error is ignored.
 	ips, _ := net.LookupIP(domain)
 	for _, ip := range ips {
 		return ip.String()

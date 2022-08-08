@@ -61,7 +61,10 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) e
 		if err.Error() == "signal: killed" {
 			strError = "An error occured while executing osint tool. Scan will restart in a little while."
 		}
-		_ = s.putRelOsintDataSource(ctx, msg, false, strError)
+		updateErr := s.putRelOsintDataSource(ctx, msg, false, strError)
+		if updateErr != nil {
+			appLogger.Warnf(ctx, "Failed to update scan status error: err=%+v", updateErr)
+		}
 		return err
 	}
 	appLogger.Infof(cctx, "end harvester, RequestID=%s", requestID)
@@ -109,7 +112,10 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) e
 		Tag:        []string{msg.ResourceName},
 	}); err != nil {
 		appLogger.Errorf(ctx, "Failed to clear finding score. ResourceName: %v, error: %v", msg.ResourceName, err)
-		_ = s.putRelOsintDataSource(ctx, msg, false, err.Error())
+		updateErr := s.putRelOsintDataSource(ctx, msg, false, err.Error())
+		if updateErr != nil {
+			appLogger.Warnf(ctx, "Failed to update scan status error: err=%+v", updateErr)
+		}
 		return mimosasqs.WrapNonRetryable(err)
 	}
 
