@@ -1,4 +1,4 @@
-FROM golang:1.17 AS builder
+FROM golang:1.18.2 AS builder
 WORKDIR /go/src/github.com/ca-risken/osint/src/subdomain/
 ADD *.go go.* ./
 ENV CGO_ENABLED=0
@@ -7,7 +7,8 @@ ARG GITHUB_TOKEN
 RUN echo "machine github.com" > ~/.netrc
 RUN echo "login $GITHUB_USER" >> ~/.netrc
 RUN echo "password $GITHUB_TOKEN" >> ~/.netrc
-RUN go build && cp subdomain /go/bin/
+RUN go mod download
+RUN GO_ENABLED=0 GOOS=linux go build -buildvcs=false -o /go/bin/
 
 FROM public.ecr.aws/risken/osint/subdomain-base:v0.0.1
 COPY --from=builder /go/bin/subdomain /usr/local/subdomain/bin/

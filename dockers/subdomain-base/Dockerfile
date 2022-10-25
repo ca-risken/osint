@@ -1,4 +1,4 @@
-FROM golang:1.16 AS builder
+FROM golang:1.18.2 AS builder
 ENV CGO_ENABLED=0
 ARG ENV_INJECTOR_VERSION=v0.0.6
 
