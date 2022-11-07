@@ -4,3 +4,4 @@ env_local.sh
 .perman-aws-vault
 
 .idea/
+go.work*
