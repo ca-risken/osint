@@ -22,35 +22,35 @@ build: $(BUILD_TARGETS)
 %.build: go-test
 	TARGET=$(*) IMAGE_TAG=$(IMAGE_TAG) IMAGE_PREFIX=$(IMAGE_PREFIX) BUILD_OPT="$(BUILD_OPT)" . hack/docker-build.sh
 
-.PHONY: build-ci $(BUILD_CI_TARGETS)
+.PHONY: build-ci
 build-ci: $(BUILD_CI_TARGETS)
 %.build-ci: FAKE
 	TARGET=$(*) IMAGE_TAG=$(IMAGE_TAG) IMAGE_PREFIX=$(IMAGE_PREFIX) BUILD_OPT="$(BUILD_OPT)" . hack/docker-build.sh
 	docker tag $(IMAGE_PREFIX)/$(*):$(IMAGE_TAG) $(IMAGE_REGISTRY)/$(IMAGE_PREFIX)/$(*):$(IMAGE_TAG)
 
-.PHONY: push-image $(IMAGE_PUSH_TARGETS)
+.PHONY: push-image
 push-image: $(IMAGE_PUSH_TARGETS)
 %.push-image: FAKE
 	docker push $(IMAGE_REGISTRY)/$(IMAGE_PREFIX)/$(*):$(IMAGE_TAG)
 
-.PHONY: pull-image $(IMAGE_PULL_TARGETS)
+.PHONY: pull-image
 pull-image: $(IMAGE_PULL_TARGETS)
 %.pull-image: FAKE
 	docker pull $(IMAGE_REGISTRY)/$(IMAGE_PREFIX)/$(*):$(IMAGE_TAG)
 
-.PHONY: tag-image $(IMAGE_TAG_TARGETS)
+.PHONY: tag-image
 tag-image: $(IMAGE_TAG_TARGETS)
 %.tag-image: FAKE
 	docker tag $(SOURCE_IMAGE_PREFIX)/$(*):$(SOURCE_IMAGE_TAG) $(IMAGE_REGISTRY)/$(IMAGE_PREFIX)/$(*):$(IMAGE_TAG)
 
-.PHONY: create-manifest $(MANIFEST_CREATE_TARGETS)
+.PHONY: create-manifest
 create-manifest: $(MANIFEST_CREATE_TARGETS)
 %.create-manifest: FAKE
 	docker manifest create $(IMAGE_REGISTRY)/$(IMAGE_PREFIX)/$(*):$(MANIFEST_TAG) $(IMAGE_REGISTRY)/$(IMAGE_PREFIX)/$(*):$(IMAGE_TAG_BASE)_linux_amd64 $(IMAGE_REGISTRY)/$(IMAGE_PREFIX)/$(*):$(IMAGE_TAG_BASE)_linux_arm64
 	docker manifest annotate --arch amd64 $(IMAGE_REGISTRY)/$(IMAGE_PREFIX)/$(*):$(MANIFEST_TAG) $(IMAGE_REGISTRY)/$(IMAGE_PREFIX)/$(*):$(IMAGE_TAG_BASE)_linux_amd64
 	docker manifest annotate --arch arm64 $(IMAGE_REGISTRY)/$(IMAGE_PREFIX)/$(*):$(MANIFEST_TAG) $(IMAGE_REGISTRY)/$(IMAGE_PREFIX)/$(*):$(IMAGE_TAG_BASE)_linux_arm64
 
-.PHONY: push-manifest $(MANIFEST_PUSH_TARGETS)
+.PHONY: push-manifest
 push-manifest: $(MANIFEST_PUSH_TARGETS)
 %.push-manifest: FAKE
 	docker manifest push $(IMAGE_REGISTRY)/$(IMAGE_PREFIX)/$(*):$(MANIFEST_TAG)
