@@ -10,8 +10,7 @@ require (
 	github.com/ca-risken/common/pkg/profiler v0.0.0-20221119073224-9db027bda6f8
 	github.com/ca-risken/common/pkg/sqs v0.0.0-20221119073224-9db027bda6f8
 	github.com/ca-risken/common/pkg/tracer v0.0.0-20221119073224-9db027bda6f8
-	github.com/ca-risken/core/proto/alert v0.0.0-20220428031553-0579e204c316
-	github.com/ca-risken/core/proto/finding v0.0.0-20220428031553-0579e204c316
+	github.com/ca-risken/core v0.5.1-0.20230131022604-6ee078ff449c
 	github.com/ca-risken/datasource-api v0.4.1
 	github.com/ca-risken/go-sqs-poller/worker/v5 v5.0.0-20220525093235-9148d33b6aee
 	github.com/gassara-kys/envconfig v1.4.4

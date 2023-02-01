@@ -51,6 +51,8 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) e
 		s.logger.Errorf(ctx, "Invalid message. message: %v, error: %v", msg, err)
 		return mimosasqs.WrapNonRetryable(err)
 	}
+
+	beforeScanAt := time.Now()
 	requestID, err := s.logger.GenerateRequestID(fmt.Sprint(msg.ProjectID))
 	if err != nil {
 		s.logger.Warnf(ctx, "Failed to generate requestID: err=%+v", err)
@@ -73,20 +75,21 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) e
 		return mimosasqs.WrapNonRetryable(err)
 	}
 
+	// Put Finding and Tag Finding
+	if err := s.putFindings(ctx, wappalyzerResult, msg); err != nil {
+		s.logger.Errorf(ctx, "Faild to put findings. ResourceName: %v, error: %v", msg.ResourceName, err)
+		s.updateStatusToError(ctx, msg, err)
+		return mimosasqs.WrapNonRetryable(err)
+	}
+
 	// Clear finding score
 	if _, err := s.findingClient.ClearScore(ctx, &finding.ClearScoreRequest{
 		DataSource: msg.DataSource,
 		ProjectId:  msg.ProjectID,
 		Tag:        []string{fmt.Sprintf("osint_id:%v", msg.OsintID)},
+		BeforeAt:   beforeScanAt.Unix(),
 	}); err != nil {
 		s.logger.Errorf(ctx, "Failed to clear finding score. ResourceName: %v, error: %v", msg.ResourceName, err)
-		s.updateStatusToError(ctx, msg, err)
-		return mimosasqs.WrapNonRetryable(err)
-	}
-
-	// Put Finding and Tag Finding
-	if err := s.putFindings(ctx, wappalyzerResult, msg); err != nil {
-		s.logger.Errorf(ctx, "Faild to put findings. ResourceName: %v, error: %v", msg.ResourceName, err)
 		s.updateStatusToError(ctx, msg, err)
 		return mimosasqs.WrapNonRetryable(err)
 	}
