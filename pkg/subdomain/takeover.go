@@ -11,12 +11,16 @@ import (
 	"github.com/vikyd/zero"
 )
 
-func searchTakeover(domain string) takeover {
-	cname := resolveCName(domain)
-	if !zero.IsZeroVal(cname) {
-		return takeover{Domain: domain, CName: cname}
+func checkTakeover(h host) takeover {
+	cname := resolveCName(h.HostName)
+	if cname == "" {
+		return takeover{}
 	}
-	return takeover{}
+	return takeover{
+		Domain: h.HostName,
+		CName:  cname,
+		IsDown: h.isDown(),
+	}
 }
 
 func resolveCName(domain string) string {
@@ -36,34 +40,32 @@ func resolveCName(domain string) string {
 	return r.Answer[0].(*dns.CNAME).Target
 }
 
-func (c *takeover) makeFinding(isDown bool, projectID uint32, dataSource string) (*finding.FindingForUpsert, error) {
-	if zero.IsZeroVal(*c) {
+func (t *takeover) makeFinding(projectID uint32, dataSource string) (*finding.FindingForUpsert, error) {
+	if zero.IsZeroVal(*t) {
 		return nil, nil
 	}
-	score := c.getScore(isDown)
-	description := c.getDescription(isDown)
-	data, err := json.Marshal(map[string]takeover{"data": *c})
+	data, err := json.Marshal(map[string]takeover{"data": *t})
 	if err != nil {
 		return nil, err
 	}
 	finding := &finding.FindingForUpsert{
-		Description:      description,
+		Description:      t.getDescription(),
 		DataSource:       dataSource,
-		DataSourceId:     generateDataSourceID(fmt.Sprintf("%v_%v", c.Domain, c.CName)),
-		ResourceName:     c.Domain,
+		DataSourceId:     generateDataSourceID(fmt.Sprintf("%v_%v", t.Domain, t.CName)),
+		ResourceName:     t.Domain,
 		ProjectId:        projectID,
-		OriginalScore:    score,
+		OriginalScore:    t.getScore(),
 		OriginalMaxScore: 10.0,
 		Data:             string(data),
 	}
 	return finding, nil
 }
 
-func (c *takeover) getScore(isDown bool) float32 {
+func (t *takeover) getScore() float32 {
 	var score float32
-	if isDown {
+	if t.IsDown {
 		score = 6.0
-		if c.matchTakeoverList() {
+		if t.matchTakeoverList() {
 			score = score + 2.0
 		}
 		return score
@@ -71,14 +73,14 @@ func (c *takeover) getScore(isDown bool) float32 {
 	return 1.0
 }
 
-func (c *takeover) getDescription(isDown bool) string {
+func (t *takeover) getDescription() string {
 	var desc string
-	if isDown {
-		desc = fmt.Sprintf("%s seems to be down. It has subdomain takeover risk.", c.Domain)
-		desc = desc + fmt.Sprintf("(CName: %s)", c.CName)
+	if t.IsDown {
+		desc = fmt.Sprintf("%s seems to be down. It has subdomain takeover risk.", t.Domain)
+		desc = desc + fmt.Sprintf("(CName: %s)", t.CName)
 	} else {
-		desc = fmt.Sprintf("%s has a CName record.", c.Domain)
-		desc = desc + fmt.Sprintf("(CName: %s)", c.CName)
+		desc = fmt.Sprintf("%s has a CName record.", t.Domain)
+		desc = desc + fmt.Sprintf("(CName: %s)", t.CName)
 	}
 	if len(desc) > 200 {
 		desc = desc[:196] + " ..." // cut long text
@@ -86,10 +88,10 @@ func (c *takeover) getDescription(isDown bool) string {
 	return desc
 }
 
-func (c *takeover) matchTakeoverList() bool {
+func (t *takeover) matchTakeoverList() bool {
 	takeoverList := GetTakeOverList()
 	for _, takeoverDomain := range takeoverList {
-		if strings.Contains(c.CName, takeoverDomain) {
+		if strings.Contains(t.CName, takeoverDomain) {
 			return true
 		}
 	}
@@ -99,4 +101,5 @@ func (c *takeover) matchTakeoverList() bool {
 type takeover struct {
 	Domain string `json:"domain"`
 	CName  string `json:"forwarding_domain"`
+	IsDown bool   `json:"is_down"`
 }

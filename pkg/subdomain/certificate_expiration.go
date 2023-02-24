@@ -46,8 +46,6 @@ func (c *certificateExpiration) makeFinding(projectID uint32, dataSource string)
 	if zero.IsZeroVal(*c) {
 		return nil, nil
 	}
-	score := c.getScore()
-	description := c.getDescription()
 	data, err := json.Marshal(map[string]certificateExpiration{"data": *c})
 	if err != nil {
 		return nil, err
@@ -57,12 +55,12 @@ func (c *certificateExpiration) makeFinding(projectID uint32, dataSource string)
 		resourceName = resourceName[:255]
 	}
 	finding := &finding.FindingForUpsert{
-		Description:      description,
+		Description:      c.getDescription(),
 		DataSource:       dataSource,
 		DataSourceId:     generateDataSourceID(fmt.Sprintf("%v_%v_%v", c.URL, "certificate", c.ExpireDate.Format("2006-01-02"))),
 		ResourceName:     resourceName,
 		ProjectId:        projectID,
-		OriginalScore:    score,
+		OriginalScore:    c.getScore(),
 		OriginalMaxScore: 10.0,
 		Data:             string(data),
 	}

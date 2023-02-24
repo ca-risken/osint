@@ -109,7 +109,7 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) e
 			}()
 			// TODO
 			privateExpose := searchPrivateExpose(h, detectList)
-			takeover := searchTakeover(h.HostName)
+			takeover := checkTakeover(h)
 			certificateExpiration := privateExpose.checkCertificateExpiration()
 
 			mutex.Lock()

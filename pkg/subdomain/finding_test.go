@@ -22,32 +22,32 @@ func TestGetTakeOverScore(t *testing.T) {
 			baseTakeover: takeover{
 				Domain: "hogehogedomain.com",
 				CName:  "cname.com",
+				IsDown: true,
 			},
-			isDown: true,
-			want:   6.0,
+			want: 6.0,
 		},
 		{
 			name: "Domain matches list. Server is down.",
 			baseTakeover: takeover{
 				Domain: "hogehogedomain.com",
 				CName:  "cname.github.io",
+				IsDown: true,
 			},
-			isDown: true,
-			want:   8.0,
+			want: 8.0,
 		},
 		{
 			name: "Domain matches list. Server is up.",
 			baseTakeover: takeover{
 				Domain: "hogehogedomain.com",
 				CName:  "cname.github.io",
+				IsDown: false,
 			},
-			isDown: false,
-			want:   1.0,
+			want: 1.0,
 		},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			got := c.baseTakeover.getScore(c.isDown)
+			got := c.baseTakeover.getScore()
 			if !reflect.DeepEqual(c.want, got) {
 				t.Fatalf("Unexpected data: want=%v, got=%v", c.want, got)
 			}
@@ -67,23 +67,23 @@ func TestGetTakeOverDescription(t *testing.T) {
 			baseTakeover: takeover{
 				Domain: "hogehogedomain.com",
 				CName:  "cname.com",
+				IsDown: true,
 			},
-			isDown: true,
-			want:   "hogehogedomain.com seems to be down. It has subdomain takeover risk.(CName: cname.com)",
+			want: "hogehogedomain.com seems to be down. It has subdomain takeover risk.(CName: cname.com)",
 		},
 		{
 			name: "Server is up.",
 			baseTakeover: takeover{
 				Domain: "hogehogedomain.com",
 				CName:  "cname.github.io",
+				IsDown: false,
 			},
-			isDown: false,
-			want:   "hogehogedomain.com has a CName record.(CName: cname.github.io)",
+			want: "hogehogedomain.com has a CName record.(CName: cname.github.io)",
 		},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			got := c.baseTakeover.getDescription(c.isDown)
+			got := c.baseTakeover.getDescription()
 			if !reflect.DeepEqual(c.want, got) {
 				t.Fatalf("Unexpected data: want=%v, got=%v", c.want, got)
 			}
@@ -106,8 +106,8 @@ func TestMakeTakeoverFinding(t *testing.T) {
 			baseTakeover: takeover{
 				Domain: "hogehogedomain.com",
 				CName:  "cname.com",
+				IsDown: true,
 			},
-			isDown:     true,
 			projectID:  1,
 			dataSource: "dataSource",
 			want: &finding.FindingForUpsert{
@@ -135,12 +135,12 @@ func TestMakeTakeoverFinding(t *testing.T) {
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
 			if c.want != nil {
-				c.want.Description = c.baseTakeover.getDescription(c.isDown)
-				c.want.OriginalScore = c.baseTakeover.getScore(c.isDown)
+				c.want.Description = c.baseTakeover.getDescription()
+				c.want.OriginalScore = c.baseTakeover.getScore()
 				data, _ := json.Marshal(map[string]takeover{"data": c.baseTakeover})
 				c.want.Data = string(data)
 			}
-			got, err := c.baseTakeover.makeFinding(c.isDown, c.projectID, c.dataSource)
+			got, err := c.baseTakeover.makeFinding(c.projectID, c.dataSource)
 			if !reflect.DeepEqual(c.want, got) {
 				t.Fatalf("Unexpected data: \nwant=%v, \n got=%v", c.want, got)
 			}
