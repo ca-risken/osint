@@ -90,8 +90,7 @@ func (s *SQSHandler) makeFindings(ctx context.Context, osintResults *[]osintResu
 	findingsPrivateExpose := []*finding.FindingForUpsert{}
 	findingsCertificateExpiration := []*finding.FindingForUpsert{}
 	for _, osintResult := range *osintResults {
-		isDown := osintResult.Host.isDown()
-		findingTakeover, err := osintResult.Takeover.makeFinding(isDown, message.ProjectID, message.DataSource)
+		findingTakeover, err := osintResult.Takeover.makeFinding(message.ProjectID, message.DataSource)
 		if err != nil {
 			s.logger.Errorf(ctx, "Error occured when make Takeover finding. error: %v", err)
 			return nil, err

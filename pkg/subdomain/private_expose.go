@@ -55,19 +55,17 @@ func (p *privateExpose) makeFinding(projectID uint32, dataSource string) (*findi
 	if zero.IsZeroVal(*p) || !p.IsDetected {
 		return nil, nil
 	}
-	score := p.getScore()
-	description := p.getDescription()
 	data, err := json.Marshal(map[string]privateExpose{"data": *p})
 	if err != nil {
 		return nil, err
 	}
 	finding := &finding.FindingForUpsert{
-		Description:      description,
+		Description:      p.getDescription(),
 		DataSource:       dataSource,
 		DataSourceId:     generateDataSourceID(fmt.Sprintf("private_expose_%v", p.HostName)),
 		ResourceName:     p.HostName,
 		ProjectId:        projectID,
-		OriginalScore:    score,
+		OriginalScore:    p.getScore(),
 		OriginalMaxScore: 10.0,
 		Data:             string(data),
 	}

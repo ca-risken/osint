@@ -16,16 +16,16 @@ func (p *privateExpose) checkCertificateExpiration() certificateExpiration {
 	}
 	target := fmt.Sprintf("https://%v", p.HostName)
 	certificateExpired := checkCertificateExpiration(target)
-	if (certificateExpired == time.Time{}) {
+	if certificateExpired == nil {
 		return certificateExpiration{}
 	}
 	return certificateExpiration{
 		URL:        target,
-		ExpireDate: certificateExpired,
+		ExpireDate: *certificateExpired,
 	}
 }
 
-func checkCertificateExpiration(url string) time.Time {
+func checkCertificateExpiration(url string) *time.Time {
 	client := &http.Client{}
 	// Only normally accessible URLs, exclude temporarily inaccessible URLs ex. service unavailable, are scanned, so error is ignored.
 	req, _ := http.NewRequest("GET", url, nil)
@@ -34,20 +34,18 @@ func checkCertificateExpiration(url string) time.Time {
 	}
 	resp, err := client.Do(req)
 	if err != nil {
-		return time.Time{}
+		return nil
 	}
 	if resp != nil && resp.TLS != nil && resp.TLS.PeerCertificates[0] != nil {
-		return resp.TLS.PeerCertificates[0].NotAfter
+		return &resp.TLS.PeerCertificates[0].NotAfter
 	}
-	return time.Time{}
+	return nil
 }
 
 func (c *certificateExpiration) makeFinding(projectID uint32, dataSource string) (*finding.FindingForUpsert, error) {
 	if zero.IsZeroVal(*c) {
 		return nil, nil
 	}
-	score := c.getScore()
-	description := c.getDescription()
 	data, err := json.Marshal(map[string]certificateExpiration{"data": *c})
 	if err != nil {
 		return nil, err
@@ -57,12 +55,12 @@ func (c *certificateExpiration) makeFinding(projectID uint32, dataSource string)
 		resourceName = resourceName[:255]
 	}
 	finding := &finding.FindingForUpsert{
-		Description:      description,
+		Description:      c.getDescription(),
 		DataSource:       dataSource,
 		DataSourceId:     generateDataSourceID(fmt.Sprintf("%v_%v_%v", c.URL, "certificate", c.ExpireDate.Format("2006-01-02"))),
 		ResourceName:     resourceName,
 		ProjectId:        projectID,
-		OriginalScore:    score,
+		OriginalScore:    c.getScore(),
 		OriginalMaxScore: 10.0,
 		Data:             string(data),
 	}
