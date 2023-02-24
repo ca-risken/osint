@@ -16,16 +16,16 @@ func (p *privateExpose) checkCertificateExpiration() certificateExpiration {
 	}
 	target := fmt.Sprintf("https://%v", p.HostName)
 	certificateExpired := checkCertificateExpiration(target)
-	if (certificateExpired == time.Time{}) {
+	if certificateExpired == nil {
 		return certificateExpiration{}
 	}
 	return certificateExpiration{
 		URL:        target,
-		ExpireDate: certificateExpired,
+		ExpireDate: *certificateExpired,
 	}
 }
 
-func checkCertificateExpiration(url string) time.Time {
+func checkCertificateExpiration(url string) *time.Time {
 	client := &http.Client{}
 	// Only normally accessible URLs, exclude temporarily inaccessible URLs ex. service unavailable, are scanned, so error is ignored.
 	req, _ := http.NewRequest("GET", url, nil)
@@ -34,12 +34,12 @@ func checkCertificateExpiration(url string) time.Time {
 	}
 	resp, err := client.Do(req)
 	if err != nil {
-		return time.Time{}
+		return nil
 	}
 	if resp != nil && resp.TLS != nil && resp.TLS.PeerCertificates[0] != nil {
-		return resp.TLS.PeerCertificates[0].NotAfter
+		return &resp.TLS.PeerCertificates[0].NotAfter
 	}
-	return time.Time{}
+	return nil
 }
 
 func (c *certificateExpiration) makeFinding(projectID uint32, dataSource string) (*finding.FindingForUpsert, error) {
