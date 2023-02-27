@@ -61,9 +61,9 @@ func getTakeoverDomain(subdomain string) *TakeoverDomain {
 	return nil
 }
 
-// Domains that have takeover vulnerable,
+// Domains that have takeover vulnerable status,
 // source: https://github.com/EdOverflow/can-i-take-over-xyz/blob/44e2da47ecb95fc38a0976812fc173e553996189/fingerprints.json
-// Cannot test domain below:
+// Cannot test domains below:
 //   - agilecrm.com
 //   - airee.ru
 //   - youtrack.cloud
@@ -76,15 +76,15 @@ var TakeoverDomains = []TakeoverDomain{
 	// https://docs.aws.amazon.com/AmazonS3/latest/userguide/WebsiteEndpoints.html
 	{
 		ServiceName: "AWS/S3",
-		Domain:      regexp.MustCompile(`s3.*\.amazonaws\.com`),
+		Domain:      regexp.MustCompile(`s3.*\.amazonaws\.com`), // fix from source
 		Type:        VHO,
-		Fingerprint: "NoSuchBucket",
+		Fingerprint: "NoSuchBucket", // fix from source
 	},
 	{
 		ServiceName: "Anima",
 		Domain:      regexp.MustCompile("animaapp.io"),
 		Type:        VHO,
-		Fingerprint: "Anima - Page Not Found",
+		Fingerprint: "Anima - Page Not Found", // fix from source
 	},
 	{
 		ServiceName: "Bitbucket",
@@ -102,7 +102,7 @@ var TakeoverDomains = []TakeoverDomain{
 		ServiceName: "Ghost",
 		Domain:      regexp.MustCompile("ghost.io"),
 		Type:        VHO,
-		Fingerprint: "Domain error",
+		Fingerprint: "Domain error", // fix from source
 	},
 	{
 		ServiceName: "HatenaBlog",
