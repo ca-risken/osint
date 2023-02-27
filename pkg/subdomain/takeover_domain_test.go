@@ -21,7 +21,7 @@ func TestIsDownVHODomain(t *testing.T) {
 		},
 		{
 			name:  "AWS/S3",
-			input: ZETTAI_SONZAI_SHINAI + ".s3.amazonaws.com",
+			input: ZETTAI_SONZAI_SHINAI + ".s3-website-ap-northeast-1.amazonaws.com",
 			want:  true,
 		},
 		{
