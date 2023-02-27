@@ -29,9 +29,10 @@ func TestGetTakeOverScore(t *testing.T) {
 		{
 			name: "Domain matches list. Server is down.",
 			baseTakeover: takeover{
-				Domain: "hogehogedomain.com",
-				CName:  "cname.github.io",
-				IsDown: true,
+				Domain:     "hogehogedomain.com",
+				CName:      "cname.github.io",
+				IsDown:     true,
+				Vulnerable: true,
 			},
 			want: 8.0,
 		},
