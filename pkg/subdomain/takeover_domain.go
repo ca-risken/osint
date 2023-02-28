@@ -21,16 +21,16 @@ type TakeoverDomain struct {
 }
 
 func isDownVHODomain(cname string, fingerprint string) bool {
-	if existsVirtialHost(cname, "http", fingerprint) {
+	if existsVirtualHost(cname, "http", fingerprint) {
 		return false
 	}
-	if existsVirtialHost(cname, "https", fingerprint) {
+	if existsVirtualHost(cname, "https", fingerprint) {
 		return false
 	}
 	return true
 }
 
-func existsVirtialHost(cname, protocol, fingerprint string) bool {
+func existsVirtualHost(cname, protocol, fingerprint string) bool {
 	resp := requestHTTP(cname, protocol)
 	if resp == nil || resp.Body == nil {
 		return false
@@ -70,7 +70,7 @@ func getTakeoverDomain(subdomain string) *TakeoverDomain {
 var TakeoverDomains = []TakeoverDomain{
 	{
 		ServiceName: "AWS/Elastic Beanstalk",
-		Domain:      regexp.MustCompile("us-east-1.elasticbeanstalk.com"),
+		Domain:      regexp.MustCompile(regexp.QuoteMeta("us-east-1.elasticbeanstalk.com")),
 		Type:        NVHO,
 	},
 	// https://docs.aws.amazon.com/AmazonS3/latest/userguide/WebsiteEndpoints.html
@@ -82,43 +82,43 @@ var TakeoverDomains = []TakeoverDomain{
 	},
 	{
 		ServiceName: "Anima",
-		Domain:      regexp.MustCompile("animaapp.io"),
+		Domain:      regexp.MustCompile(regexp.QuoteMeta("animaapp.io")),
 		Type:        VHO,
 		Fingerprint: "Anima - Page Not Found", // fix from source
 	},
 	{
 		ServiceName: "Bitbucket",
-		Domain:      regexp.MustCompile("bitbucket.io"),
+		Domain:      regexp.MustCompile(regexp.QuoteMeta("bitbucket.io")),
 		Type:        VHO,
 		Fingerprint: "Repository not found",
 	},
 	{
 		ServiceName: "Gemfury",
-		Domain:      regexp.MustCompile("furyns.com"),
+		Domain:      regexp.MustCompile(regexp.QuoteMeta("furyns.com")),
 		Type:        VHO,
 		Fingerprint: "404: This page could not be found.",
 	},
 	{
 		ServiceName: "Ghost",
-		Domain:      regexp.MustCompile("ghost.io"),
+		Domain:      regexp.MustCompile(regexp.QuoteMeta("ghost.io")),
 		Type:        VHO,
 		Fingerprint: "Domain error", // fix from source
 	},
 	{
 		ServiceName: "HatenaBlog",
-		Domain:      regexp.MustCompile("hatenablog.com"),
+		Domain:      regexp.MustCompile(regexp.QuoteMeta("hatenablog.com")),
 		Type:        VHO,
 		Fingerprint: "404 Blog is not found",
 	},
 	{
 		ServiceName: "Help Juice",
-		Domain:      regexp.MustCompile("helpjuice.com"),
+		Domain:      regexp.MustCompile(regexp.QuoteMeta("helpjuice.com")),
 		Type:        VHO,
 		Fingerprint: "We could not find what you're looking for.",
 	},
 	{
 		ServiceName: "Help Scout",
-		Domain:      regexp.MustCompile("helpscoutdocs.com"),
+		Domain:      regexp.MustCompile(regexp.QuoteMeta("helpscoutdocs.com")),
 		Type:        VHO,
 		Fingerprint: "No settings were found for this company:",
 	},
