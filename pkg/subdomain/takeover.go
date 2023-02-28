@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net"
-	"strings"
 
 	"github.com/ca-risken/core/proto/finding"
 	"github.com/miekg/dns"
@@ -16,11 +15,21 @@ func checkTakeover(h host) takeover {
 	if cname == "" {
 		return takeover{}
 	}
-	return takeover{
-		Domain: h.HostName,
-		CName:  cname,
-		IsDown: h.isDown(),
+	t := takeover{
+		Domain:     h.HostName,
+		CName:      cname,
+		Vulnerable: false,
 	}
+	td := getTakeoverDomain(cname)
+	if td != nil {
+		t.Vulnerable = true
+		if td.Type == VHO {
+			t.IsDown = isDownVHODomain(cname, td.Fingerprint)
+		} else {
+			t.IsDown = h.isDown()
+		}
+	}
+	return t
 }
 
 func resolveCName(domain string) string {
@@ -65,7 +74,7 @@ func (t *takeover) getScore() float32 {
 	var score float32
 	if t.IsDown {
 		score = 6.0
-		if t.matchTakeoverList() {
+		if t.Vulnerable {
 			score = score + 2.0
 		}
 		return score
@@ -88,18 +97,9 @@ func (t *takeover) getDescription() string {
 	return desc
 }
 
-func (t *takeover) matchTakeoverList() bool {
-	takeoverList := GetTakeOverList()
-	for _, takeoverDomain := range takeoverList {
-		if strings.Contains(t.CName, takeoverDomain) {
-			return true
-		}
-	}
-	return false
-}
-
 type takeover struct {
-	Domain string `json:"domain"`
-	CName  string `json:"forwarding_domain"`
-	IsDown bool   `json:"is_down"`
+	Domain     string `json:"domain"`
+	CName      string `json:"forwarding_domain"`
+	IsDown     bool   `json:"is_down"`
+	Vulnerable bool   `json:"vulnerable"`
 }

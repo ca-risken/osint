@@ -24,6 +24,15 @@ func searchPrivateExpose(host host, detectList *[]string) privateExpose {
 }
 
 func getHTTPStatus(host, protocol string) (int, string) {
+	res := requestHTTP(host, protocol)
+	if res == nil {
+		return 0, ""
+	}
+	defer res.Body.Close()
+	return res.StatusCode, res.Request.URL.String()
+}
+
+func requestHTTP(host, protocol string) *http.Response {
 	url := fmt.Sprintf("%s://%s", protocol, host)
 	// Only normally accessible URLs, exclude temporarily inaccessible URLs ex. service unavailable, are scanned, so error is ignored.
 	req, _ := http.NewRequest("GET", url, nil)
@@ -32,14 +41,11 @@ func getHTTPStatus(host, protocol string) (int, string) {
 	}
 
 	res, err := client.Do(req)
-
 	// Timeoutもエラーに入るので、特にログも出さないでスルー(ドメインを見つけてもHTTPで使われているとは限らないため)
 	if err != nil {
-		return 0, ""
+		return nil
 	}
-
-	defer res.Body.Close()
-	return res.StatusCode, res.Request.URL.String()
+	return res
 }
 
 func isDetected(host string, detectList *[]string) bool {
