@@ -6,7 +6,7 @@ RUN go mod download
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -buildvcs=false -o /go/bin/website cmd/website/main.go
 
-FROM public.ecr.aws/risken/osint/website-base:v0.0.1
+FROM public.ecr.aws/risken/osint/website-base:v0.0.2
 COPY --from=builder /go/bin/website /usr/local/website/bin/
 ENV DEBUG= \
   PROFILE_EXPORTER= \
