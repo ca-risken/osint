@@ -6,7 +6,7 @@ RUN go mod download
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -buildvcs=false -o /go/bin/subdomain cmd/subdomain/main.go
 
-FROM public.ecr.aws/risken/osint/subdomain-base:v0.0.1
+FROM public.ecr.aws/risken/osint/subdomain-base:v0.0.2
 COPY --from=builder /go/bin/subdomain /usr/local/subdomain/bin/
 ENV PORT=19003 \
   PROFILE_EXPORTER= \
