@@ -3,7 +3,9 @@ package subdomain
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"net"
 	"sync"
 	"time"
 
@@ -64,6 +66,16 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) e
 		requestID = fmt.Sprint(msg.ProjectID)
 	}
 	s.logger.Infof(ctx, "start Scan, RequestID=%s", requestID)
+	isNxDomain := isNXDomain(msg.ResourceName)
+	if isNxDomain {
+		errStr := fmt.Sprintf("The domain does not exist. It is an NXDOMAIN, domain: %s", msg.ResourceName)
+		s.logger.Errorf(ctx, errStr)
+		updateErr := s.putRelOsintDataSource(ctx, msg, false, errStr)
+		if updateErr != nil {
+			s.logger.Warnf(ctx, "Failed to update scan status error: err=%+v", updateErr)
+		}
+		return mimosasqs.WrapNonRetryable(errors.New(errStr))
+	}
 	detectList, err := getDetectList(msg.DetectWord)
 	if err != nil {
 		s.logger.Errorf(ctx, "Failed getting detect list, error: %v", err)
@@ -216,4 +228,18 @@ func getStatus(isSuccess bool) osint.Status {
 		return osint.Status_OK
 	}
 	return osint.Status_ERROR
+}
+
+func isNXDomain(domain string) bool {
+	_, err := net.LookupIP(domain)
+	if err != nil {
+		if dnsErr, ok := err.(*net.DNSError); ok {
+			if dnsErr.IsNotFound {
+				return true
+			}
+		}
+		// Other errors are not considered as NXDOMAIN
+		return false
+	}
+	return false
 }
