@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"net"
 	"sync"
 	"time"
 
@@ -18,6 +17,7 @@ import (
 	"github.com/ca-risken/datasource-api/pkg/message"
 	"github.com/ca-risken/datasource-api/pkg/model"
 	"github.com/ca-risken/datasource-api/proto/osint"
+	"github.com/miekg/dns"
 	"golang.org/x/sync/semaphore"
 	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 )
@@ -66,9 +66,8 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) e
 		requestID = fmt.Sprint(msg.ProjectID)
 	}
 	s.logger.Infof(ctx, "start Scan, RequestID=%s", requestID)
-	isNxDomain := isNXDomain(msg.ResourceName)
-	if isNxDomain {
-		errStr := fmt.Sprintf("The domain does not exist. It is an NXDOMAIN, domain: %s", msg.ResourceName)
+	if isDomainAvailable(msg.ResourceName) {
+		errStr := fmt.Sprintf("An error occurred or domain does not exist, domain: %s", msg.ResourceName)
 		s.logger.Errorf(ctx, errStr)
 		updateErr := s.putRelOsintDataSource(ctx, msg, false, errStr)
 		if updateErr != nil {
@@ -230,16 +229,17 @@ func getStatus(isSuccess bool) osint.Status {
 	return osint.Status_ERROR
 }
 
-func isNXDomain(domain string) bool {
-	_, err := net.LookupIP(domain)
+func isDomainAvailable(domain string) bool {
+	c := new(dns.Client)
+	m := new(dns.Msg)
+	m.SetQuestion(dns.Fqdn(domain), dns.TypeA)
+	r, _, err := c.Exchange(m, "8.8.8.8:53") // Using Google's public DNS resolver
 	if err != nil {
-		if dnsErr, ok := err.(*net.DNSError); ok {
-			if dnsErr.IsNotFound {
-				return true
-			}
-		}
-		// Other errors are not considered as NXDOMAIN
-		return false
+		return true
 	}
+	if r.Rcode != dns.RcodeSuccess {
+		return true
+	}
+
 	return false
 }
