@@ -68,8 +68,8 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) e
 	s.logger.Infof(ctx, "start Scan, RequestID=%s", requestID)
 	isDomainUnavailable, err := isDomainUnavailable(msg.ResourceName)
 	if err != nil {
-		s.logger.Errorf(ctx, "Failed to validate domain availavility: err=%+v", err)
-		updateErr := s.putRelOsintDataSource(ctx, msg, false, err.Error())
+		s.logger.Errorf(ctx, "Failed to validate domain availability: err=%+v", err)
+		updateErr := s.putRelOsintDataSource(ctx, msg, false, fmt.Sprintf("invalid domain(%s): DNS query error=%v", msg.ResourceName, err))
 		if updateErr != nil {
 			s.logger.Warnf(ctx, "Failed to update scan status error: err=%+v", updateErr)
 		}
