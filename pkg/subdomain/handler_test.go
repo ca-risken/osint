@@ -28,7 +28,7 @@ func TestIsNXDomain(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		got := isDomainAvailable(c.domain)
+		got := isDomainUnavailable(c.domain)
 		if got != c.want {
 			t.Fatalf("Unexpected return: %v, want: %v", got, c.want)
 		}

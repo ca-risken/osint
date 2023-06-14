@@ -66,7 +66,7 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) e
 		requestID = fmt.Sprint(msg.ProjectID)
 	}
 	s.logger.Infof(ctx, "start Scan, RequestID=%s", requestID)
-	if isDomainAvailable(msg.ResourceName) {
+	if isDomainUnavailable(msg.ResourceName) {
 		errStr := fmt.Sprintf("An error occurred or domain does not exist, domain: %s", msg.ResourceName)
 		s.logger.Errorf(ctx, errStr)
 		updateErr := s.putRelOsintDataSource(ctx, msg, false, errStr)
@@ -229,7 +229,7 @@ func getStatus(isSuccess bool) osint.Status {
 	return osint.Status_ERROR
 }
 
-func isDomainAvailable(domain string) bool {
+func isDomainUnavailable(domain string) bool {
 	c := new(dns.Client)
 	m := new(dns.Msg)
 	m.SetQuestion(dns.Fqdn(domain), dns.TypeA)
