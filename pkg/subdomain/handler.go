@@ -66,7 +66,16 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) e
 		requestID = fmt.Sprint(msg.ProjectID)
 	}
 	s.logger.Infof(ctx, "start Scan, RequestID=%s", requestID)
-	if isDomainUnavailable(msg.ResourceName) {
+	isDomainUnavailable, err := isDomainUnavailable(msg.ResourceName)
+	if err != nil {
+		s.logger.Errorf(ctx, "Failed to validate domain availavility: err=%+v", err)
+		updateErr := s.putRelOsintDataSource(ctx, msg, false, err.Error())
+		if updateErr != nil {
+			s.logger.Warnf(ctx, "Failed to update scan status error: err=%+v", updateErr)
+		}
+		return mimosasqs.WrapNonRetryable(err)
+	}
+	if isDomainUnavailable {
 		errStr := fmt.Sprintf("An error occurred or domain does not exist, domain: %s", msg.ResourceName)
 		s.logger.Errorf(ctx, errStr)
 		updateErr := s.putRelOsintDataSource(ctx, msg, false, errStr)
@@ -229,17 +238,17 @@ func getStatus(isSuccess bool) osint.Status {
 	return osint.Status_ERROR
 }
 
-func isDomainUnavailable(domain string) bool {
+func isDomainUnavailable(domain string) (bool, error) {
 	c := new(dns.Client)
 	m := new(dns.Msg)
 	m.SetQuestion(dns.Fqdn(domain), dns.TypeA)
 	r, _, err := c.Exchange(m, "8.8.8.8:53") // Using Google's public DNS resolver
 	if err != nil {
-		return true
+		return true, err
 	}
 	if r.Rcode != dns.RcodeSuccess {
-		return true
+		return true, nil
 	}
 
-	return false
+	return false, nil
 }
