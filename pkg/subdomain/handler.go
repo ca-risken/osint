@@ -3,6 +3,7 @@ package subdomain
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"sync"
 	"time"
@@ -16,6 +17,7 @@ import (
 	"github.com/ca-risken/datasource-api/pkg/message"
 	"github.com/ca-risken/datasource-api/pkg/model"
 	"github.com/ca-risken/datasource-api/proto/osint"
+	"github.com/miekg/dns"
 	"golang.org/x/sync/semaphore"
 	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 )
@@ -64,6 +66,24 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) e
 		requestID = fmt.Sprint(msg.ProjectID)
 	}
 	s.logger.Infof(ctx, "start Scan, RequestID=%s", requestID)
+	isDomainUnavailable, err := isDomainUnavailable(msg.ResourceName)
+	if err != nil {
+		s.logger.Errorf(ctx, "Failed to validate domain availability: err=%+v", err)
+		updateErr := s.putRelOsintDataSource(ctx, msg, false, fmt.Sprintf("invalid domain(%s): DNS query error=%v", msg.ResourceName, err))
+		if updateErr != nil {
+			s.logger.Warnf(ctx, "Failed to update scan status error: err=%+v", updateErr)
+		}
+		return mimosasqs.WrapNonRetryable(err)
+	}
+	if isDomainUnavailable {
+		errStr := fmt.Sprintf("An error occurred or domain does not exist, domain: %s", msg.ResourceName)
+		s.logger.Errorf(ctx, errStr)
+		updateErr := s.putRelOsintDataSource(ctx, msg, false, errStr)
+		if updateErr != nil {
+			s.logger.Warnf(ctx, "Failed to update scan status error: err=%+v", updateErr)
+		}
+		return mimosasqs.WrapNonRetryable(errors.New(errStr))
+	}
 	detectList, err := getDetectList(msg.DetectWord)
 	if err != nil {
 		s.logger.Errorf(ctx, "Failed getting detect list, error: %v", err)
@@ -216,4 +236,19 @@ func getStatus(isSuccess bool) osint.Status {
 		return osint.Status_OK
 	}
 	return osint.Status_ERROR
+}
+
+func isDomainUnavailable(domain string) (bool, error) {
+	c := new(dns.Client)
+	m := new(dns.Msg)
+	m.SetQuestion(dns.Fqdn(domain), dns.TypeA)
+	r, _, err := c.Exchange(m, "8.8.8.8:53") // Using Google's public DNS resolver
+	if err != nil {
+		return true, err
+	}
+	if r.Rcode != dns.RcodeSuccess {
+		return true, nil
+	}
+
+	return false, nil
 }
