@@ -3,7 +3,6 @@ package subdomain
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"sync"
 	"time"
@@ -69,7 +68,7 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) e
 	isDomainUnavailable, err := isDomainUnavailable(msg.ResourceName)
 	if err != nil {
 		s.logger.Errorf(ctx, "Failed to validate domain availability: err=%+v", err)
-		updateErr := s.putRelOsintDataSource(ctx, msg, false, fmt.Sprintf("invalid domain(%s): DNS query error=%v", msg.ResourceName, err))
+		updateErr := s.updateScanStatusError(ctx, msg, fmt.Sprintf("invalid domain(%s): DNS query error=%v", msg.ResourceName, err))
 		if updateErr != nil {
 			s.logger.Warnf(ctx, "Failed to update scan status error: err=%+v", updateErr)
 		}
@@ -77,12 +76,7 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) e
 	}
 	if isDomainUnavailable {
 		errStr := fmt.Sprintf("An error occurred or domain does not exist, domain: %s", msg.ResourceName)
-		s.logger.Errorf(ctx, errStr)
-		updateErr := s.putRelOsintDataSource(ctx, msg, false, errStr)
-		if updateErr != nil {
-			s.logger.Warnf(ctx, "Failed to update scan status error: err=%+v", updateErr)
-		}
-		return mimosasqs.WrapNonRetryable(errors.New(errStr))
+		s.logger.Warnf(ctx, errStr)
 	}
 	detectList, err := getDetectList(msg.DetectWord)
 	if err != nil {
@@ -101,7 +95,7 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) e
 		if err.Error() == "signal: killed" {
 			strError = "An error occured while executing osint tool. Scan will restart in a little while."
 		}
-		updateErr := s.putRelOsintDataSource(ctx, msg, false, strError)
+		updateErr := s.updateScanStatusError(ctx, msg, strError)
 		if updateErr != nil {
 			s.logger.Warnf(ctx, "Failed to update scan status error: err=%+v", updateErr)
 		}
@@ -159,7 +153,7 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) e
 		BeforeAt:   beforeScanAt.Unix(),
 	}); err != nil {
 		s.logger.Errorf(ctx, "Failed to clear finding score. ResourceName: %v, error: %v", msg.ResourceName, err)
-		updateErr := s.putRelOsintDataSource(ctx, msg, false, err.Error())
+		updateErr := s.updateScanStatusError(ctx, msg, err.Error())
 		if updateErr != nil {
 			s.logger.Warnf(ctx, "Failed to update scan status error: err=%+v", updateErr)
 		}
@@ -167,7 +161,11 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) e
 	}
 
 	// Put RelOsintDataSource
-	if err := s.putRelOsintDataSource(ctx, msg, true, ""); err != nil {
+	statusDetail := ""
+	if isDomainUnavailable {
+		statusDetail = fmt.Sprintf("An error occurred or domain does not exist, domain: %s\nPlease correct it, if there is a problem with the target domain settings.", msg.ResourceName)
+	}
+	if err := s.updateScanStatusSuccess(ctx, msg, statusDetail); err != nil {
 		s.logger.Errorf(ctx, "Failed to put rel_osint_data_source. relOsintDataSourceID: %v, error: %v", msg.RelOsintDataSourceID, err)
 		return mimosasqs.WrapNonRetryable(err)
 	}
@@ -194,28 +192,37 @@ func (s *SQSHandler) CallAnalyzeAlert(ctx context.Context, projectID uint32) err
 	return nil
 }
 
-func (s *SQSHandler) putRelOsintDataSource(ctx context.Context, message *message.OsintQueueMessage, isSuccess bool, errStr string) error {
-
+func (s *SQSHandler) updateScanStatusError(ctx context.Context, msg *message.OsintQueueMessage, errStr string) error {
 	relOsintDataSource := &osint.RelOsintDataSourceForUpsert{
-		RelOsintDataSourceId: message.RelOsintDataSourceID,
-		OsintId:              message.OsintID,
-		OsintDataSourceId:    message.OsintDataSourceID,
-		ProjectId:            message.ProjectID,
+		RelOsintDataSourceId: msg.RelOsintDataSourceID,
+		OsintId:              msg.OsintID,
+		OsintDataSourceId:    msg.OsintDataSourceID,
+		ProjectId:            msg.ProjectID,
+		Status:               getStatus(false),
 		ScanAt:               time.Now().Unix(),
+		StatusDetail:         errStr,
 	}
+	return s.putRelOsintDataSource(ctx, relOsintDataSource)
+}
 
-	relOsintDataSource.Status = getStatus(isSuccess)
-	if isSuccess {
-		relOsintDataSource.StatusDetail = ""
-	} else {
-		errDetail := errStr
-		relOsintDataSource.StatusDetail = errDetail
+func (s *SQSHandler) updateScanStatusSuccess(ctx context.Context, msg *message.OsintQueueMessage, warnStr string) error {
+	relOsintDataSource := &osint.RelOsintDataSourceForUpsert{
+		RelOsintDataSourceId: msg.RelOsintDataSourceID,
+		OsintId:              msg.OsintID,
+		OsintDataSourceId:    msg.OsintDataSourceID,
+		ProjectId:            msg.ProjectID,
+		Status:               getStatus(true),
+		ScanAt:               time.Now().Unix(),
+		StatusDetail:         warnStr,
 	}
+	return s.putRelOsintDataSource(ctx, relOsintDataSource)
+}
+
+func (s *SQSHandler) putRelOsintDataSource(ctx context.Context, relOsintDataSource *osint.RelOsintDataSourceForUpsert) error {
 	_, err := s.osintClient.PutRelOsintDataSource(ctx, &osint.PutRelOsintDataSourceRequest{ProjectId: relOsintDataSource.ProjectId, RelOsintDataSource: relOsintDataSource})
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
 
