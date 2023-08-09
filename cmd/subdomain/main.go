@@ -8,7 +8,6 @@ import (
 	"github.com/ca-risken/common/pkg/profiler"
 	mimosasqs "github.com/ca-risken/common/pkg/sqs"
 	"github.com/ca-risken/common/pkg/tracer"
-	"github.com/ca-risken/datasource-api/pkg/message"
 	"github.com/ca-risken/osint/pkg/grpc"
 	"github.com/ca-risken/osint/pkg/sqs"
 	"github.com/ca-risken/osint/pkg/subdomain"
@@ -108,19 +107,6 @@ func main() {
 	}
 	harvesterConfg := subdomain.NewHarvesterConfig(conf.ResultPath, conf.HarvesterPath, appLogger)
 	handler := subdomain.NewSQSHandler(fc, ac, oc, harvesterConfg, conf.InspectConcurrency, appLogger)
-	f, err := mimosasqs.NewFinalizer(message.SubdomainDataSource, settingURL, conf.CoreAddr, &mimosasqs.DataSourceRecommnend{
-		ScanFailureRisk: fmt.Sprintf("Failed to scan %s, So you are not gathering the latest security threat information.", message.SubdomainDataSource),
-		ScanFailureRecommendation: `Please review the following items and rescan,
-		- Ensure the error message of the DataSource.
-		- Refer to the documentation to make sure you have not omitted any of the steps you have set up.
-		- https://docs.security-hub.jp/osint/datasource/
-		- For Domain type, make sure the FQDN format is registered.
-		- If this does not resolve the problem, or if you suspect that the problem is server-side, please contact the system administrators.`,
-	})
-	if err != nil {
-		appLogger.Fatalf(ctx, "Failed to create Finalizer, err=%+v", err)
-	}
-
 	sqsConf := &sqs.SQSConfig{
 		AWSRegion:          conf.AWSRegion,
 		SQSEndpoint:        conf.Endpoint,
@@ -138,6 +124,5 @@ func main() {
 		mimosasqs.InitializeHandler(
 			mimosasqs.RetryableErrorHandler(
 				mimosasqs.TracingHandler(getFullServiceName(),
-					mimosasqs.StatusLoggingHandler(appLogger,
-						f.FinalizeHandler(handler))))))
+					mimosasqs.StatusLoggingHandler(appLogger, handler)))))
 }

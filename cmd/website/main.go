@@ -8,7 +8,6 @@ import (
 	"github.com/ca-risken/common/pkg/profiler"
 	mimosasqs "github.com/ca-risken/common/pkg/sqs"
 	"github.com/ca-risken/common/pkg/tracer"
-	"github.com/ca-risken/datasource-api/pkg/message"
 	"github.com/ca-risken/osint/pkg/grpc"
 	"github.com/ca-risken/osint/pkg/sqs"
 	"github.com/ca-risken/osint/pkg/website"
@@ -106,21 +105,6 @@ func main() {
 	}
 	wc := website.NewWappalyzerClient(conf.WappalyzerPath)
 	handler := website.NewSQSHandler(fc, ac, oc, wc, appLogger)
-
-	f, err := mimosasqs.NewFinalizer(message.WebsiteDataSource, settingURL, conf.CoreAddr, &mimosasqs.DataSourceRecommnend{
-		ScanFailureRisk: fmt.Sprintf("Failed to scan %s, So you are not gathering the latest security threat information.", message.WebsiteDataSource),
-		ScanFailureRecommendation: `Please review the following items and rescan,
-		- Ensure the error message of the DataSource.
-		- Ensure the network is reachable to the target host.
-		- Refer to the documentation to make sure you have not omitted any of the steps you have set up.
-		- https://docs.security-hub.jp/osint/datasource/
-		- For Website type, make sure the URL format(e.g. http://example.com ) is registerd.
-		- If this does not resolve the problem, or if you suspect that the problem is server-side, please contact the system administrators.`,
-	})
-	if err != nil {
-		appLogger.Fatalf(ctx, "Failed to create Finalizer, err=%+v", err)
-	}
-
 	sqsConf := &sqs.SQSConfig{
 		Debug:              conf.Debug,
 		AWSRegion:          conf.AWSRegion,
@@ -139,6 +123,5 @@ func main() {
 		mimosasqs.InitializeHandler(
 			mimosasqs.RetryableErrorHandler(
 				mimosasqs.TracingHandler(getFullServiceName(),
-					mimosasqs.StatusLoggingHandler(appLogger,
-						f.FinalizeHandler(handler))))))
+					mimosasqs.StatusLoggingHandler(appLogger, handler)))))
 }
