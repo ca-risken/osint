@@ -246,7 +246,9 @@ func getStatus(isSuccess bool) osint.Status {
 }
 
 func isDomainUnavailable(domain string) (bool, error) {
-	c := new(dns.Client)
+	c := &dns.Client{
+		Timeout: 10 * time.Second,
+	}
 	m := new(dns.Msg)
 	m.SetQuestion(dns.Fqdn(domain), dns.TypeA)
 	r, _, err := c.Exchange(m, "8.8.8.8:53") // Using Google's public DNS resolver
