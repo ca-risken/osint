@@ -13,7 +13,9 @@ require (
 	github.com/ca-risken/core v0.5.1-0.20230131022604-6ee078ff449c
 	github.com/ca-risken/datasource-api v0.4.1
 	github.com/ca-risken/go-sqs-poller/worker/v5 v5.0.0-20220525093235-9148d33b6aee
+	github.com/cenkalti/backoff/v4 v4.2.0
 	github.com/gassara-kys/envconfig v1.4.4
+	github.com/jarcoal/httpmock v1.1.0
 	github.com/miekg/dns v1.1.54
 	github.com/vikyd/zero v0.0.0-20190921142904-0f738d0bc858
 	golang.org/x/sync v0.1.0
