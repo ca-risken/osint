@@ -16,6 +16,7 @@ import (
 	"github.com/ca-risken/datasource-api/pkg/message"
 	"github.com/ca-risken/datasource-api/pkg/model"
 	"github.com/ca-risken/datasource-api/proto/osint"
+	"github.com/cenkalti/backoff/v4"
 	"github.com/miekg/dns"
 	"golang.org/x/sync/semaphore"
 	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
@@ -28,6 +29,7 @@ type SQSHandler struct {
 	harvesterConfig    *HarvesterConfig
 	inspectConcurrency int64
 	logger             logging.Logger
+	retryer            backoff.BackOff
 }
 
 func NewSQSHandler(
@@ -45,6 +47,7 @@ func NewSQSHandler(
 		harvesterConfig:    harvesterConfig,
 		inspectConcurrency: inspectConcurrency,
 		logger:             l,
+		retryer:            backoff.WithMaxRetries(backoff.NewExponentialBackOff(), 5),
 	}
 }
 
@@ -65,7 +68,7 @@ func (s *SQSHandler) HandleMessage(ctx context.Context, sqsMsg *types.Message) e
 		requestID = fmt.Sprint(msg.ProjectID)
 	}
 	s.logger.Infof(ctx, "start Scan, RequestID=%s", requestID)
-	isDomainUnavailable, err := isDomainUnavailable(msg.ResourceName)
+	isDomainUnavailable, err := s.isDomainUnavailableWithRetry(ctx, msg.ResourceName)
 	if err != nil {
 		s.logger.Errorf(ctx, "Failed to validate domain availability: err=%+v", err)
 		updateErr := s.updateScanStatusError(ctx, msg, fmt.Sprintf("invalid domain(%s): DNS query error=%v", msg.ResourceName, err))
@@ -245,8 +248,17 @@ func getStatus(isSuccess bool) osint.Status {
 	return osint.Status_ERROR
 }
 
+func (s *SQSHandler) isDomainUnavailableWithRetry(ctx context.Context, domain string) (bool, error) {
+	operation := func() (bool, error) {
+		return isDomainUnavailable(domain)
+	}
+	return backoff.RetryNotifyWithData(operation, s.retryer, s.newRetryLogger(ctx, "isDomainUnavailable"))
+}
+
 func isDomainUnavailable(domain string) (bool, error) {
-	c := new(dns.Client)
+	c := &dns.Client{
+		Timeout: 10 * time.Second,
+	}
 	m := new(dns.Msg)
 	m.SetQuestion(dns.Fqdn(domain), dns.TypeA)
 	r, _, err := c.Exchange(m, "8.8.8.8:53") // Using Google's public DNS resolver
@@ -258,4 +270,10 @@ func isDomainUnavailable(domain string) (bool, error) {
 	}
 
 	return false, nil
+}
+
+func (s *SQSHandler) newRetryLogger(ctx context.Context, funcName string) func(error, time.Duration) {
+	return func(err error, t time.Duration) {
+		s.logger.Warnf(ctx, "[RetryLogger] %s error: duration=%+v, err=%+v", funcName, t, err)
+	}
 }
