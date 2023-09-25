@@ -4,6 +4,8 @@ import (
 	"io"
 	"regexp"
 	"strings"
+
+	"github.com/ca-risken/common/pkg/logging"
 )
 
 type TakeoverType int
@@ -20,18 +22,18 @@ type TakeoverDomain struct {
 	Fingerprint string // how to check whether the subdomain has already been takeovered.
 }
 
-func isDownVHODomain(cname string, fingerprint string) bool {
-	if existsVirtualHost(cname, "http", fingerprint) {
+func isDownVHODomain(cname string, fingerprint string, logger logging.Logger) bool {
+	if existsVirtualHost(cname, "http", fingerprint, logger) {
 		return false
 	}
-	if existsVirtualHost(cname, "https", fingerprint) {
+	if existsVirtualHost(cname, "https", fingerprint, logger) {
 		return false
 	}
 	return true
 }
 
-func existsVirtualHost(cname, protocol, fingerprint string) bool {
-	resp := requestHTTP(cname, protocol)
+func existsVirtualHost(cname, protocol, fingerprint string, logger logging.Logger) bool {
+	resp := requestHTTP(cname, protocol, logger)
 	if resp == nil || resp.Body == nil {
 		return false
 	}

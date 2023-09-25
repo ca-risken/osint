@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/ca-risken/common/pkg/logging"
 	"github.com/jarcoal/httpmock"
 )
 
@@ -12,6 +13,7 @@ const (
 )
 
 func TestIsDownVHODomain(t *testing.T) {
+	logger := logging.NewLogger()
 	cases := []struct {
 		name     string
 		input    string
@@ -88,7 +90,7 @@ func TestIsDownVHODomain(t *testing.T) {
 			if td == nil {
 				t.Fatalf("Could not get takeover domain, input=%s", c.input)
 			}
-			got := isDownVHODomain(c.input, td.Fingerprint)
+			got := isDownVHODomain(c.input, td.Fingerprint, logger)
 			if got != c.want {
 				t.Fatalf("Unexpected return: got=%t, want=%t", got, c.want)
 			}
