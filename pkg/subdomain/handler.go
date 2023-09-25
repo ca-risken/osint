@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"sync"
 	"time"
 
@@ -270,6 +271,26 @@ func isDomainUnavailable(domain string) (bool, error) {
 	}
 
 	return false, nil
+}
+
+func requestHTTP(host, protocol string, logger logging.Logger) *http.Response {
+	url := fmt.Sprintf("%s://%s", protocol, host)
+	// Only normally accessible URLs, exclude temporarily inaccessible URLs ex. service unavailable, are scanned, so error is ignored.
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		logger.Warnf(context.TODO(), "new request error: %s, url: %s", err.Error(), url)
+		return nil
+	}
+	client := http.Client{
+		Timeout: 5 * time.Second,
+	}
+
+	res, err := client.Do(req)
+	// Timeoutもエラーに入るので、特にログも出さないでスルー(ドメインを見つけてもHTTPで使われているとは限らないため)
+	if err != nil {
+		return nil
+	}
+	return res
 }
 
 func (s *SQSHandler) newRetryLogger(ctx context.Context, funcName string) func(error, time.Duration) {

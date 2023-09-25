@@ -1,12 +1,9 @@
 package subdomain
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
-	"net/http"
 	"strings"
-	"time"
 
 	"github.com/ca-risken/common/pkg/logging"
 	"github.com/ca-risken/core/proto/finding"
@@ -32,26 +29,6 @@ func getHTTPStatus(host, protocol string, logger logging.Logger) (int, string) {
 	}
 	defer res.Body.Close()
 	return res.StatusCode, res.Request.URL.String()
-}
-
-func requestHTTP(host, protocol string, logger logging.Logger) *http.Response {
-	url := fmt.Sprintf("%s://%s", protocol, host)
-	// Only normally accessible URLs, exclude temporarily inaccessible URLs ex. service unavailable, are scanned, so error is ignored.
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		logger.Warnf(context.TODO(), "new request error: %s, url: %s", err.Error(), url)
-		return nil
-	}
-	client := http.Client{
-		Timeout: 5 * time.Second,
-	}
-
-	res, err := client.Do(req)
-	// Timeoutもエラーに入るので、特にログも出さないでスルー(ドメインを見つけてもHTTPで使われているとは限らないため)
-	if err != nil {
-		return nil
-	}
-	return res
 }
 
 func isDetected(host string, detectList *[]string) bool {
