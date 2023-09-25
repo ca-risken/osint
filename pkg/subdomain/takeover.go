@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"net"
 
+	"github.com/ca-risken/common/pkg/logging"
 	"github.com/ca-risken/core/proto/finding"
 	"github.com/miekg/dns"
 	"github.com/vikyd/zero"
 )
 
-func checkTakeover(h host) takeover {
+func checkTakeover(h host, logger logging.Logger) takeover {
 	cname := resolveCName(h.HostName)
 	if cname == "" {
 		return takeover{}
@@ -24,7 +25,7 @@ func checkTakeover(h host) takeover {
 	if td != nil {
 		t.Vulnerable = true
 		if td.Type == VHO {
-			t.IsDown = isDownVHODomain(cname, td.Fingerprint)
+			t.IsDown = isDownVHODomain(cname, td.Fingerprint, logger)
 		} else {
 			t.IsDown = h.isDown()
 		}
